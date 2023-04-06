@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{63B765BA-0CD8-47B7-B04E-71F1D7A7846C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>AudioChannelLibrary</RootNamespace>
+    <AssemblyName>AudioChannelLibrary</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>AudioChannelLibrary.xml</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>AudioChannelLibrary.xml</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>On</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.9.0\lib\net35\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsBase.4.6.1055.0\lib\WindowsBase.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.vb">
+      <Link>CommonAssemblyInfo.vb</Link>
+    </Compile>
+    <Compile Include="Audio channels\AudioChannelLink.vb" />
+    <Compile Include="Audio channels\AudioChannelLinkMapping.vb" />
+    <Compile Include="Audio channels\AudioChannelMappingItem.vb" />
+    <Compile Include="Audio channels\AudioEnvironmentStorage.vb" />
+    <Compile Include="Audio channels\AudioLogicalChannel.vb" />
+    <Compile Include="Audio channels\AudioPhysicalChannel.vb" />
+    <Compile Include="Audio channels\IAudioChannelStorage.vb" />
+    <Compile Include="Audio channels\IAudioEnvironmentStorage.vb" />
+    <Compile Include="Audio interfaces\WasapiAudioInterface.vb" />
+    <Compile Include="Audio interfaces\WasapiInterfaceInfo.vb" />
+    <Compile Include="Room layout\Distances.vb" />
+    <Compile Include="Room layout\SourcePanning3DCollection.vb" />
+    <Compile Include="Sound utility\EnabledChannelsCollection.vb" />
+    <Compile Include="Panning\PanningCoefficientGenerator.vb" />
+    <Compile Include="Panning\PanningCoefficientGeneratorFactory.vb" />
+    <Compile Include="Sound utility\SourcePanningInfo.vb" />
+    <Compile Include="Room layout\PositionCoefficientGenerator.vb" />
+    <Compile Include="Sample providers\ChannelModifier.vb" />
+    <Compile Include="Sample providers\ICoefficientGenerator.vb" />
+    <Compile Include="Sample providers\ICoefficientGeneratorFactory.vb" />
+    <Compile Include="Room layout\PositionCoefficientGeneratorFactory.vb" />
+    <Compile Include="Sample providers\ChannelModifierCollection.vb" />
+    <Compile Include="Audio interfaces\AsioAudioInterface.vb" />
+    <Compile Include="Audio interfaces\AsioInterfaceInfo.vb" />
+    <Compile Include="Audio interfaces\AudioChangedListener.vb" />
+    <Compile Include="Audio interfaces\AudioOutputInterfaceBase.vb" />
+    <Compile Include="Audio interfaces\DirectSoundAudioInterface.vb" />
+    <Compile Include="Audio interfaces\DirectSoundInterfaceInfo.vb" />
+    <Compile Include="Audio interfaces\IAudioOutputInterface.vb" />
+    <Compile Include="Audio interfaces\IInputStreamProvider.vb" />
+    <Compile Include="Audio interfaces\ITestDataWriter.vb" />
+    <Compile Include="Audio interfaces\IVolumeController.vb" />
+    <Compile Include="Audio interfaces\WaveOutAudioInterface.vb" />
+    <Compile Include="Audio interfaces\WaveOutInterfaceInfo.vb" />
+    <Compile Include="Data types\AudioPlaybackInfo.vb" />
+    <Compile Include="Data types\AudioRouteManager.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Sample providers\DelayedBuffer.vb" />
+    <Compile Include="Sample providers\DelayedBufferItem.vb" />
+    <Compile Include="Sound utility\SoundPositionUtility.vb" />
+    <Compile Include="Sample providers\VolumeProvider.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Docs\Storage.dgml">
+      <Link>Storage.dgml</Link>
+    </None>
+    <None Include="app.config" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.vbproj">
+      <Project>{6cc6bb6d-6251-4e5c-a607-5cd8df63ae7c}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LicenseLibrary\LicenseLibrary.vbproj">
+      <Project>{f6cdc516-ec09-48f6-85b1-c5716979d6ab}</Project>
+      <Name>LicenseLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RoomDivisionLibrary\RoomDivisionLibrary.vbproj">
+      <Project>{cfa433b8-85e2-4ab8-9ac1-5f65056d0748}</Project>
+      <Name>RoomDivisionLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,388 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+	xmlns:common="http://nextplayer.nikitins.dk/Common"
+	xmlns:audioch="clr-namespace:AudioChannelLibrary;assembly=AudioChannelLibrary"
+	xmlns:res="http://nextplayer.nikitins.dk/Resources"
+	xmlns:local="clr-namespace:NextPlayer">
+
+
+	<!-- Converters -->
+    <res:BooleanNotConverter x:Key="BooleanNotConverter"/>
+    <res:AudioChannelLinkCellConverter x:Key="AudioChannelLinkCellConverter"/>
+    <res:PassThroughConverter x:Key="PassThroughConverter"/>
+	<res:IconPathConverter x:Key="IconPathConverter"/>
+    <res:MappingHasMoreThanOneSetConverter x:Key="MappingHasMoreThanOneSetConverter"/>
+
+
+    <!-- Interface type selector -->
+    <DataTemplate x:Key="AudioInterfaceInfoTemplate" DataType="{x:Type common:TypeImplementationInfo}">
+        <TextBlock Style="{DynamicResource MainTextStyle}" Text="{Binding Name}"/>
+    </DataTemplate>
+
+
+	<!-- Audio interface templates -->
+    <DataTemplate DataType="{x:Type audioch:WaveOutAudioInterface}">
+		<DataTemplate.Resources>
+			<DataTemplate x:Key="WaveOutDeviceTemplate" DataType="{x:Type audioch:WaveOutInterfaceInfo}">
+				<TextBlock Style="{DynamicResource MainTextStyle}" Text="{Binding Name}"/>
+			</DataTemplate>
+		</DataTemplate.Resources>
+
+		<ComboBox Style="{DynamicResource ComboBoxStyle}"
+				  ItemsSource="{Binding DeviceList}"
+				  ItemTemplate="{StaticResource WaveOutDeviceTemplate}"
+				  SelectedValue="{Binding DeviceNumber}"
+				  SelectedValuePath="DeviceNumber"
+				  ToolTip="{Binding SelectedItem.Name, RelativeSource={RelativeSource Self}}"/>
+    </DataTemplate>
+
+
+    <DataTemplate DataType="{x:Type audioch:DirectSoundAudioInterface}">
+		<DataTemplate.Resources>
+			<DataTemplate x:Key="DirectSoundDeviceTemplate" DataType="{x:Type audioch:DirectSoundInterfaceInfo}">
+				<TextBlock Style="{DynamicResource MainTextStyle}" Text="{Binding Name}"/>
+			</DataTemplate>
+		</DataTemplate.Resources>
+
+		<ComboBox Style="{DynamicResource ComboBoxStyle}"
+				  ItemsSource="{Binding DeviceList}"
+				  ItemTemplate="{StaticResource DirectSoundDeviceTemplate}"
+				  SelectedValue="{Binding DeviceGuid}"
+				  SelectedValuePath="DeviceGuid"
+				  ToolTip="{Binding SelectedItem.Name, RelativeSource={RelativeSource Self}}"/>
+    </DataTemplate>
+
+
+	<DataTemplate DataType="{x:Type audioch:WasapiAudioInterface}">
+		<DataTemplate.Resources>
+			<DataTemplate x:Key="WasapiDeviceTemplate" DataType="{x:Type audioch:WasapiInterfaceInfo}">
+				<StackPanel Orientation="Horizontal">
+					<Image Source="{Binding Icon, Converter={StaticResource IconPathConverter}}"/>
+					
+					<TextBlock Name="NameText"
+							   Style="{DynamicResource MainTextStyle}" VerticalAlignment="Center"
+							   Text="{Binding Name}">
+					</TextBlock>
+				</StackPanel>
+
+				<DataTemplate.Triggers>
+					<DataTrigger Binding="{Binding IsDefault}" Value="True">
+						<Setter Property="FontStyle" TargetName="NameText" Value="Italic"/>
+					</DataTrigger>
+				</DataTemplate.Triggers>
+			</DataTemplate>
+
+			<DataTemplate x:Key="WasapiDeviceSelectedTemplate" DataType="{x:Type audioch:WasapiInterfaceInfo}">
+				<TextBlock Style="{DynamicResource MainTextStyle}" Text="{Binding Name}"/>
+			</DataTemplate>
+
+			<res:ComboBoxItemTemplateSelector x:Key="WasapiAudioInterfaceSelector"
+											  DropDownTemplate="{StaticResource WasapiDeviceTemplate}"
+											  SelectedTemplate="{StaticResource WasapiDeviceSelectedTemplate}"/>
+		</DataTemplate.Resources>
+
+		<ComboBox Style="{DynamicResource ComboBoxStyle}"
+				  ItemsSource="{Binding DeviceList}"
+				  ItemTemplateSelector="{StaticResource WasapiAudioInterfaceSelector}"
+				  SelectedValue="{Binding DeviceId}"
+				  SelectedValuePath="Id"
+				  ToolTip="{Binding SelectedItem.Name, RelativeSource={RelativeSource Self}}"/>
+	</DataTemplate>
+
+
+	<DataTemplate DataType="{x:Type audioch:AsioAudioInterface}">
+		<DataTemplate.Resources>
+			<DataTemplate x:Key="AsioDeviceTemplate" DataType="{x:Type audioch:AsioInterfaceInfo}">
+				<TextBlock Style="{DynamicResource MainTextStyle}" Text="{Binding DriverName}"/>
+			</DataTemplate>
+		</DataTemplate.Resources>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			
+			<ComboBox Style="{DynamicResource ComboBoxStyle}"
+					  ItemsSource="{Binding DeviceList}"
+					  ItemTemplate="{StaticResource AsioDeviceTemplate}"
+					  SelectedValue="{Binding DriverName}"
+					  SelectedValuePath="DriverName"
+					  ToolTip="{Binding DriverName}"/>
+
+            <Button Grid.Column="1"
+					Style="{DynamicResource SquareImageButtonStyle}"
+					Content="{DynamicResource SettingsImage}"
+					Command="{Binding OpenAsioControlCommand}"
+					ToolTip="Open ASIO driver control panel"/>
+        </Grid>
+    </DataTemplate>
+
+	
+    <!-- Physical channel, table header -->
+    <Style x:Key="AudioPhysicalChannelRowStyle" TargetType="{x:Type res:CustomizableGrid}">
+        <Setter Property="Padding" Value="2,0"/>
+        <Setter Property="ColumnDefList">
+            <Setter.Value>
+                <res:ColumnDefinitionList>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="EnabledFlag"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="ChannelNumber"/>
+                    <ColumnDefinition Width="*" MinWidth="80"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="InterfaceType"/>
+                    <ColumnDefinition Width="*" MinWidth="60"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="DeviceChannel"/>
+					<ColumnDefinition Width="Auto" SharedSizeGroup="ButtonSettings"/>
+					<ColumnDefinition Width="Auto" SharedSizeGroup="ButtonTest"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonDelete"/>
+                </res:ColumnDefinitionList>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    
+	<!-- DataContext is ChannelCollection(Of AudioPhysicalChannel) -->
+	<DataTemplate x:Key="AudioPhysicalHeaderTemplate">
+        <res:CustomizableGrid Style="{DynamicResource AudioPhysicalChannelRowStyle}">
+            <TextBlock Grid.Column="0" Style="{DynamicResource ColumnHeaderStyle}" Text="Use"/>
+            <TextBlock Grid.Column="1" Style="{DynamicResource ColumnHeaderStyle}" Text="Ch #"/>
+            <TextBlock Grid.Column="2" Style="{DynamicResource ColumnHeaderStyle}" Text="Description"/>
+            <TextBlock Grid.Column="3" Style="{DynamicResource ColumnHeaderStyle}" Text="Interface"/>
+            <TextBlock Grid.Column="4" Style="{DynamicResource ColumnHeaderStyle}" Text="Device"/>
+            <TextBlock Grid.Column="5" Style="{DynamicResource ColumnHeaderStyle}" Text="Out ch"/>
+        </res:CustomizableGrid>
+    </DataTemplate>
+
+    
+	<!-- DataContext is ChannelCollection(Of AudioPhysicalChannel) -->
+	<DataTemplate x:Key="AudioPhysicalFooterTemplate">
+        <StackPanel Orientation="Horizontal">
+            <Button Style="{DynamicResource SquareImageButtonStyle}"
+					Content="{DynamicResource LayoutImage}"
+					Command="{Binding PhysicalLayoutCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AudioOutputEditorControl}}}"
+					CommandParameter="{Binding}"
+					ToolTipService.ShowOnDisabled="True"
+					ToolTip="Define channel locations"/>
+
+			<Button Style="{DynamicResource SquareImageButtonStyle}"
+					Content="{DynamicResource ExportImage}"
+					Command="{Binding ExportLayoutCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AudioOutputEditorControl}}}"
+					CommandParameter="{Binding}"
+					ToolTipService.ShowOnDisabled="True"
+					ToolTip="Export channel configuration"/>
+
+			<Button Style="{DynamicResource SquareImageButtonStyle}" HorizontalAlignment="Left"
+					Content="{DynamicResource ImportImage}"
+					Command="{Binding ImportLayoutCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AudioOutputEditorControl}}}"
+					CommandParameter="{Binding}"
+					ToolTipService.ShowOnDisabled="True"
+					ToolTip="Import channel configuration"/>
+		</StackPanel>
+    </DataTemplate>
+
+
+    <!-- Physical channel, table row -->
+    <DataTemplate DataType="{x:Type audioch:AudioPhysicalChannel}">
+        <res:CustomizableGrid Style="{DynamicResource AudioPhysicalChannelRowStyle}">
+			<!-- Base properties -->
+			<CheckBox Style="{DynamicResource CheckBoxNoTextStyle}" IsChecked="{Binding IsEnabled}"/>
+            <TextBlock Grid.Column="1" Style="{DynamicResource MainTextStyle}"
+					   VerticalAlignment="Center" HorizontalAlignment="Center"
+					   Text="{Binding Channel}"/>
+
+            <TextBox Grid.Column="2" Style="{DynamicResource TextBoxStyle}"
+					 Text="{Binding Description}"/>
+
+			<!-- Interface type selector -->
+            <ComboBox Grid.Column="3" Style="{DynamicResource ComboBoxStyle}"
+					  SelectedItem="{Binding AudioInterfaceType}"
+					  ItemTemplate="{StaticResource AudioInterfaceInfoTemplate}"
+					  ItemsSource="{Binding AudioInterfaceTypeList, Mode=OneWay}"/>
+			
+			<!-- Interface presentation -->
+            <ContentPresenter Grid.Column="4" Content="{Binding AudioInterface}"/>
+			
+			<!-- Device channel -->
+            <xctk:IntegerUpDown Grid.Column="5"
+								Style="{DynamicResource IntegerUpDownStyle}"
+								ParsingNumberStyle="Integer"
+								Value="{Binding DeviceChannel}"
+                                Maximum="{Binding AudioInterface.Channels}"/>
+
+            <Button Grid.Column="6" Style="{DynamicResource SquareImageButtonStyle}"
+					Command="{Binding SetupPhysicalCommand, RelativeSource={RelativeSource AncestorType={x:Type local:AudioOutputEditorControl}}}"
+					CommandParameter="{Binding}"
+					Content="{StaticResource SettingsImage}"
+					ToolTipService.ShowOnDisabled="True"
+					ToolTip="Setup channel"/>
+			
+            <!-- Common actions -->
+            <ToggleButton Grid.Column="7" Style="{DynamicResource ToggleImageButtonStyle}"
+						  Command="{Binding TestPhysicalCommand, RelativeSource={RelativeSource AncestorType={x:Type res:ChannelEditorControlBase}}}"
+						  CommandParameter="{Binding}"
+						  IsChecked="{Binding IsActive, Mode=OneWay}"
+						  Content="{StaticResource PreviewImage}"
+						  ToolTip="Test channel"/>
+
+            <Button Grid.Column="8" Style="{DynamicResource SquareImageButtonStyle}"
+					Command="{Binding DeletePhysicalCommand, RelativeSource={RelativeSource AncestorType={x:Type res:ChannelEditorControlBase}}}"
+					CommandParameter="{Binding}"
+					Content="{StaticResource DeleteWindowImage}"
+					ToolTipService.ShowOnDisabled="True"
+					ToolTip="Delete channel"/>
+        </res:CustomizableGrid>
+    </DataTemplate>
+
+	
+	<!-- Channel link in a cell -->
+    <DataTemplate x:Key="AudioLinkCellTemplate" DataType="{x:Type audioch:AudioChannelLink}">
+        <DataTemplate.Resources>
+            <Style x:Key="CellBorderStyle" TargetType="{x:Type Border}">
+				<Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="Margin" Value="3"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ActionButtonPlainBrush}"/>
+				
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsEnabled}" Value="False">
+						<Setter Property="BorderBrush" Value="{DynamicResource FrameBrush}"/>
+					</DataTrigger>
+				</Style.Triggers>
+			</Style>
+		</DataTemplate.Resources>
+
+        <Border Style="{StaticResource CellBorderStyle}"
+				Opacity="{Binding Volume}">
+
+			<Border.ToolTip>
+				<ToolTip Content="{Binding Volume}" ContentStringFormat="{}{0:p0}"/>
+			</Border.ToolTip>
+
+            <Image Stretch="Fill">
+                <Image.Source>
+                    <DrawingImage>
+                        <DrawingImage.Drawing>
+                            <DrawingGroup>
+                                <DrawingGroup.Children>
+                                    <!-- Make sure the Ymax is 1 -->
+                                    <GeometryDrawing Brush="Transparent" Geometry="M0,0 V1 H1 V0 Z"/>
+                                    <!-- The drawing itself, generated -->
+                                    <GeometryDrawing Brush="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType={x:Type Border}}}"
+													 Geometry="{Binding MappingCollection, Converter={StaticResource AudioChannelLinkCellConverter}}"/>
+                                </DrawingGroup.Children>
+                            </DrawingGroup>
+                        </DrawingImage.Drawing>
+                    </DrawingImage>
+                </Image.Source>
+            </Image>
+        </Border>
+	</DataTemplate>
+
+
+    <!-- Channel link in editor -->
+    <DataTemplate x:Key="AudioMappingItemTemplate" DataType="{x:Type audioch:AudioChannelMappingItem}">
+		<CheckBox Style="{DynamicResource CheckBoxNoTextStyle}"
+				  Margin="2"
+				  IsChecked="{Binding IsSet}"/>
+    </DataTemplate>
+
+
+    <DataTemplate x:Key="AudioMappingTemplate" DataType="{x:Type audioch:AudioChannelLinkMapping}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" SharedSizeGroup="Name"/>
+				<ColumnDefinition Width="Auto" SharedSizeGroup="Checks"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+            <TextBlock Style="{DynamicResource MainTextStyle}" VerticalAlignment="Center"
+					   Text="{Binding Title}"/>
+
+            <ItemsControl Grid.Column="1" HorizontalAlignment="Center"
+						  ItemsSource="{Binding MappingList}"
+						  ItemTemplate="{StaticResource AudioMappingItemTemplate}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+
+			<res:BalanceControl Grid.Column="2" Style="{DynamicResource BalanceControlStyle}"
+								Value="{Binding Panning}"
+                                IsEnabled="{Binding MappingList, Converter={StaticResource MappingHasMoreThanOneSetConverter}}"
+								IsIndicatorMoveable="True"/>
+		</Grid>
+	</DataTemplate>
+	
+
+	<!-- Channel link in window -->
+    <DataTemplate x:Key="AudioLinkEditorTemplate" DataType="{x:Type audioch:AudioChannelLink}">
+        <StackPanel>
+            <Expander Style="{DynamicResource ExpanderStyle}"
+					  Header="Input channel mapping">
+
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition/>
+					</Grid.RowDefinitions>
+
+					<StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+						<TextBlock Style="{StaticResource MainTextStyle}"
+								   VerticalAlignment="Center" Margin="0,0,12,0"
+								   Text="Maximum number of inputs"/>
+						
+						<xctk:IntegerUpDown Style="{DynamicResource IntegerUpDownStyle}"
+										ParsingNumberStyle="Integer"
+										Value="{Binding MaxInputs}"
+										Minimum="2" Maximum="8"/>
+					</StackPanel>
+					
+					<ItemsControl Grid.Row="1"
+								  Grid.IsSharedSizeScope="True"
+								  ItemsSource="{Binding MappingCollection}"
+								  ItemTemplate="{StaticResource AudioMappingTemplate}"/>
+				</Grid>
+			</Expander>
+			
+            <Expander Style="{DynamicResource ExpanderStyle}"
+					  Header="Link setup">
+				
+				<StackPanel>
+					<res:VolumeControl Style="{DynamicResource VolumeControlStyle}"
+									   Value="{Binding Volume}"
+									   IsIndicatorMoveable="True"/>
+
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Style="{DynamicResource MainTextStyle}"
+								   VerticalAlignment="Center" Margin="0,0,12,0"
+								   Text="Delay (ms)"/>
+				
+						<xctk:SingleUpDown Style="{DynamicResource SingleUpDownStyle}"
+										   Value="{Binding Delay}"
+										   Maximum="{x:Static audioch:VolumeProvider.MaxDelayMilliseconds}"
+										   Increment="0.1"/>
+					</StackPanel>
+					
+					<CheckBox Style="{DynamicResource CheckBoxWithTextStyle}"
+							  IsChecked="{Binding ReversedPhase}"
+							  Content="Reverse phase"/>
+				</StackPanel>
+            </Expander>
+        </StackPanel>
+    </DataTemplate>
+
+
+    <!-- Style -->
+    <Style x:Key="AudioOutputEditorStyle" TargetType="{x:Type local:AudioOutputEditorControl}" BasedOn="{StaticResource ChannelEditorStyle}">
+        <Setter Property="LogicalChannels" Value="{res:PlaylistBinding AudioLogicalChannels, Mode=OneWay}"/>
+        <Setter Property="ChannelStorage" Value="{res:PlaylistBinding AudioOutput, Mode=OneWay}"/>
+		<Setter Property="PhysicalHeaderTemplate" Value="{StaticResource AudioPhysicalHeaderTemplate}"/>
+		<Setter Property="PhysicalFooterTemplate" Value="{StaticResource AudioPhysicalFooterTemplate}"/>
+        <Setter Property="LinkCellTemplate" Value="{StaticResource AudioLinkCellTemplate}"/>
+        <Setter Property="LinkEditorTemplate" Value="{StaticResource AudioLinkEditorTemplate}"/>
+    </Style>
+
+</ResourceDictionary>

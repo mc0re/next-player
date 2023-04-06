@@ -1,0 +1,453 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:common="http://nextplayer.nikitins.dk/Common"
+	xmlns:audio="http://schemas.nikitins.dk/audio"
+	xmlns:act="http://schemas.nikitins.dk/actions"
+	xmlns:res="http://nextplayer.nikitins.dk/Resources"
+	xmlns:local="clr-namespace:NextPlayer">
+
+	<common:StringFormatConverter x:Key="StringFormatConverter"/>
+    <res:StringToVisibilityConverter x:Key="StringToVisibleCollapsedConverter"/>
+	<res:BooleanToVisibilityConverter x:Key="BooleanToVisibleCollapsedConverter"/>
+	<res:EnumToBooleanConverter x:Key="EnumToFalseTrueConverter" MatchValue="False" NonMatchValue="True"/>
+	<res:TimeSpanFormatConverter x:Key="TimeSpanFormatConverter"/>
+	<res:EnumToVisibilityConverter x:Key="EnumToVisibleCollapsedConverter"/>
+	<local:MaxSampleConverter x:Key="MaxSampleConverter"/>
+
+
+	<!-- Channel ComboBox template -->
+    <DataTemplate x:Key="ChannelSelectorTemplate" DataType="{x:Type common:ChannelBase}">
+        <TextBlock Name="ChannelDescription" Style="{DynamicResource MainTextStyle}">
+            <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource StringFormatConverter}" ConverterParameter="{}{0} {1}">
+                    <Binding Path="Channel"/>
+                    <Binding Path="Description"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+
+		<DataTemplate.Triggers>
+			<DataTrigger Binding="{Binding Channel}" Value="0">
+				<Setter Property="Text" TargetName="ChannelDescription" Value="{Binding Description}"/>
+			</DataTrigger>
+		</DataTemplate.Triggers>
+    </DataTemplate>
+
+
+    <!-- Unsupported action -->
+	<DataTemplate x:Key="PlayerActionUnsupportedTemplate">
+		<TextBlock Style="{DynamicResource MainTextStyle}" Text="Unsupported action selected"/>
+	</DataTemplate>
+	
+
+	<!-- No action -->
+	<DataTemplate x:Key="PlayerActionPlaceholderTemplate" DataType="{x:Type act:PlayerActionPlaceholder}">
+		<TextBlock Style="{DynamicResource MainTextStyle}" Text="No action selected"/>
+	</DataTemplate>
+	
+	
+	<!-- Header part -->
+	<ControlTemplate x:Key="ActionHeaderTemplate" TargetType="{x:Type res:ActionHeaderControl}">
+		<DockPanel LastChildFill="False">
+			<TextBlock DockPanel.Dock="Left"
+					   Style="{DynamicResource ActionLabelForTextBoxStyle}"
+					   Text="{Binding Index}"
+                       ToolTip="Action number"/>
+			
+			<TextBlock DockPanel.Dock="Left"
+					   Style="{DynamicResource ItemHeaderStyle}"
+					   VerticalAlignment="Center"
+					   Text="{TemplateBinding HeaderText}"
+                       ToolTip="Action type"/>
+			
+			<CheckBox DockPanel.Dock="Right" Style="{DynamicResource CheckBoxWithTextStyle}"
+					  IsChecked="{Binding IsEnabled}"
+					  Content="Enabled"
+					  ToolTipService.ShowOnDisabled="True"
+					  ToolTip="Whether the action is enabled"/>
+		</DockPanel>
+	</ControlTemplate>
+	
+	
+	<!-- Common part -->
+	<DataTemplate x:Key="CommonPropertiesTemplate" DataType="{x:Type act:PlayerAction}">
+		<StackPanel>
+			<TextBox Style="{DynamicResource TextBoxStyle}" Margin="0,0,0,7"
+					 Text="{Binding Name}"/>
+
+            <DockPanel>
+				<!-- Play and Next buttons -->
+				<res:PlaySequenceControl DockPanel.Dock="Right"
+										 Style="{DynamicResource PlaySequenceControlStyle}"/>
+
+				<res:SetParallelControl Style="{DynamicResource SetParallelControlStyle}"/>
+            </DockPanel>
+
+            <DockPanel Visibility="{Binding ExecutionType, Converter={StaticResource EnumToCollapsedVisibleConverter}, ConverterParameter=MainCrossFade}">
+                <res:DelayReferenceControl DockPanel.Dock="Right"
+											Style="{DynamicResource DelayReferenceControlStyle}"
+											IsEnabled="{Binding DelayType, ConverterParameter={x:Static audio:DelayTypes.Manual}, Converter={StaticResource EnumToFalseTrueConverter}}"/>
+
+				<res:StartDelayControl DockPanel.Dock="Left"
+										Style="{DynamicResource StartDelayControlStyle}"/>
+			</DockPanel>
+        </StackPanel>
+	</DataTemplate>
+	
+	
+	<!-- Play file action -->
+	<DataTemplate x:Key="PlayerActionFileTemplate" DataType="{x:Type act:PlayerActionFile}">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+
+			<res:ActionHeaderControl Template="{DynamicResource ActionHeaderTemplate}" HeaderText="File"/>
+			
+			<Expander Grid.Row="1" Style="{DynamicResource ExpanderStyle}" Header="Common">
+				<ContentControl Content="{Binding}" ContentTemplate="{DynamicResource CommonPropertiesTemplate}"/>
+			</Expander>
+
+			<Expander Grid.Row="2" Style="{DynamicResource ExpanderStyle}" Header="Playback control">
+				<Grid Name="FileInnerGrid">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+
+					<!-- File name -->
+                    <DockPanel Grid.Row="0" Margin="0,0,0,7">
+                        <Button DockPanel.Dock="Right" Style="{DynamicResource SquareImageButtonStyle}"
+								Content="{DynamicResource OpenFileImage}" Height="22"
+								Command="{StaticResource ReplaceFileCommand}" CommandParameter="{Binding}"
+								ToolTipService.ShowOnDisabled="True"
+								ToolTip="Replace file"/>
+
+                        <TextBlock Style="{DynamicResource MainTextStyle}" VerticalAlignment="Center"
+								   Text="{Binding ShortFileName}"
+								   ToolTip="{Binding AbsFileToPlay}"/>
+                    </DockPanel>
+
+					<!-- Playback channel -->
+                    <DockPanel Grid.Row="1" Margin="0,0,0,7">
+                        <TextBlock DockPanel.Dock="Left" Style="{DynamicResource LabelForTextBoxStyle}"
+								   Text="Channel"/>
+
+                        <ToggleButton DockPanel.Dock="Right" Style="{DynamicResource ToggleImageButtonStyle}"
+									  Command="{StaticResource PlaySampleCommand}" CommandParameter="{Binding Channel}"
+									  Content="{StaticResource PreviewImage}"
+									  IsChecked="{Binding SelectedItem.IsActive, ElementName=SelectedChannel, Mode=OneWay}"
+									  ToolTipService.ShowOnDisabled="True"
+									  ToolTip="Test channel"/>
+
+                        <ComboBox Name="SelectedChannel" Style="{DynamicResource ComboBoxStyle}"
+								  ItemTemplate="{DynamicResource ChannelSelectorTemplate}"
+								  SelectedValuePath="Channel"
+								  SelectedValue="{Binding Channel}"
+								  ItemsSource="{res:PlaylistBinding AudioLogicalChannels, Mode=OneWay}"/>
+                    </DockPanel>
+					
+                    <!-- Volume control -->
+                    <DockPanel Grid.Row="2">
+						<ToggleButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+									  Content="{DynamicResource MuteImage}"
+									  IsChecked="{Binding IsMuted}"
+									  ToolTipService.ShowOnDisabled="True"
+									  ToolTip="Mute"/>
+
+						<Button DockPanel.Dock="Right" Style="{DynamicResource RoundImageButtonStyle}"
+								Content="{DynamicResource MaxVolumeImage}"
+								Command="{StaticResource MaxVolumeCommand}" CommandParameter="{Binding}"
+								ToolTipService.ShowOnDisabled="True">
+							
+							<Button.ToolTip>
+								<ToolTip>
+									<ToolTip.Content>
+										<MultiBinding Converter="{StaticResource StringFormatConverter}">
+											<Binding Source="Set max no-clip volume\nMaximum sample: {0:f2}"/>
+											<Binding Path="AbsFileToPlay" Converter="{StaticResource MaxSampleConverter}"/>
+										</MultiBinding>
+									</ToolTip.Content>
+								</ToolTip>
+							</Button.ToolTip>
+						</Button>
+
+						<res:NumberEditor DockPanel.Dock="Right" Style="{DynamicResource NumberEditorStyle}"
+										  Number="{Binding Volume}" ViewerFormat="{}{0:p0}"/>
+						
+						<res:VolumeControl Style="{DynamicResource VolumeControlStyle}"
+										   Value="{Binding Volume}"
+										   IsIndicatorMoveable="True"/>
+					</DockPanel>
+
+					<!-- Panning control -->
+					<DockPanel Grid.Row="3">
+						<res:SoundPositionModeControl Style="{DynamicResource SoundPositionModeControlStyle}"/>
+
+						<Grid>
+							<DockPanel Visibility="{Binding SoundPositionMode, Converter={StaticResource EnumToVisibleCollapsedConverter}, ConverterParameter=Panning}">
+								<res:NumberEditor DockPanel.Dock="Right" Style="{DynamicResource NumberEditorStyle}"
+												  Number="{Binding Balance}" ViewerFormat="{}{0:p0}"/>
+
+								<res:BalanceControl Style="{DynamicResource BalanceControlStyle}"
+													Value="{Binding Balance}"
+													IsIndicatorMoveable="True"/>
+							</DockPanel>
+
+							<res:CoordinatesEditorControl Style="{DynamicResource CoordinatesEditorControlStyle}"
+														  Visibility="{Binding SoundPositionMode, Converter={StaticResource EnumToVisibleCollapsedConverter}, ConverterParameter=Coordinates}"
+														  Point="{Binding}"/>
+						</Grid>
+					</DockPanel>
+					
+					<!-- Start and stop positions as text -->
+					<Grid Grid.Row="4">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" SharedSizeGroup="TextGrp"/>
+							<ColumnDefinition Width="Auto" SharedSizeGroup="TimePart"/>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="Auto" SharedSizeGroup="TextGrp"/>
+							<ColumnDefinition Width="Auto" SharedSizeGroup="TimePart"/>
+						</Grid.ColumnDefinitions>
+						
+						<TextBlock Style="{DynamicResource LabelForTextBoxStyle}"
+								   Visibility="{Binding StartPositionMilliseconds, Converter={StaticResource BooleanToVisibleCollapsedConverter}}"
+								   Text="Start at"/>
+						
+						<TextBox Grid.Column="1" Style="{DynamicResource TextBoxStyle}"
+								 Visibility="{Binding StartPositionMilliseconds, Converter={StaticResource BooleanToVisibleCollapsedConverter}}"
+								 Text="{Binding StartPosition, Converter={StaticResource TimeSpanFormatConverter},
+										ConverterParameter='{}{0:mm\\:ss\\.fff}'}"/>
+
+						<TextBlock Grid.Column="3" Style="{DynamicResource LabelForTextBoxStyle}"
+								   HorizontalAlignment="Right"
+								   Visibility="{Binding StopPositionMilliseconds, Converter={StaticResource BooleanToVisibleCollapsedConverter}}"
+								   Text="Stop by"/>
+
+						<TextBox Grid.Column="4" Style="{DynamicResource TextBoxStyle}"
+								 Visibility="{Binding StopPositionMilliseconds, Converter={StaticResource BooleanToVisibleCollapsedConverter}}"
+								 Text="{Binding StopPosition, Converter={StaticResource TimeSpanFormatConverter},
+										ConverterParameter='{}{0:mm\\:ss\\.fff}'}"/>
+					</Grid>
+
+					<!-- Play position control -->
+					<res:PlayPositionControl Grid.Row="5" Height="Auto"
+											 Style="{DynamicResource PlayPositionWaveformStyle}"
+											 Position="{Binding PlayPosition}"
+											 Maximum="{Binding Duration.TotalMilliseconds, Mode=OneWay}"
+											 TrackOverlay="{DynamicResource StartStopOverlayItemTemplate}"/>
+
+					<!-- Play position as text -->
+					<UniformGrid Grid.Row="6" Rows="1">
+						<TextBlock Style="{DynamicResource MainTextStyle}"
+								   Text="{Binding PlayPosition, Converter={StaticResource TimeSpanFormatConverter}}"
+                                   ToolTip="Playback position"/>
+
+						<TextBlock Style="{DynamicResource MainTextStyle}"
+								   HorizontalAlignment="Right"
+								   Text="{Binding PlayRemaining, Converter={StaticResource TimeSpanFormatConverter}}"
+                                   ToolTip="Duration"/>
+					</UniformGrid>
+				</Grid>
+			</Expander>
+		</Grid>
+	</DataTemplate>
+	
+	
+	<!-- Effect action -->
+	<DataTemplate x:Key="PlayerActionEffectTemplate" DataType="{x:Type act:PlayerActionEffect}">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+
+			<res:ActionHeaderControl Template="{DynamicResource ActionHeaderTemplate}" HeaderText="Effect"/>
+
+			<Expander Grid.Row="1" Style="{DynamicResource ExpanderStyle}" Header="Common">
+				<ContentControl Content="{Binding}" ContentTemplate="{DynamicResource CommonPropertiesTemplate}"/>
+			</Expander>
+
+			<Expander Grid.Row="2" Style="{DynamicResource ExpanderStyle}" Header="Effect settings">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+
+					<Grid>
+						<res:EffectTypeControl Style="{DynamicResource EffectTypeControlStyle}"/>
+						<res:EffectTargetControl HorizontalAlignment="Right" Style="{DynamicResource EffectTargetControlStyle}"/>
+					</Grid>
+
+					<res:PointListEditor Grid.Row="1" Style="{DynamicResource PointListEditorStyle}"
+										 Margin="0,10,0,0"
+										 NoDurationFactor="1.5"
+										 ItemsSource="{Binding AutomationPointList}"
+										 HasDuration="{Binding HasDuration}"
+										 Duration="{Binding Duration}"/>
+
+					<DockPanel Grid.Row="2">
+						<CheckBox x:Name="hasDuration" Style="{DynamicResource CheckBoxWithTextStyle}"
+								  IsChecked="{Binding HasDuration}"
+								  ToolTip="Whether the affected targets should be stopped"
+								  Content="Stop after"/>
+
+						<TextBox Style="{DynamicResource TextBoxStyle}"
+								 IsEnabled="{Binding IsChecked, ElementName=hasDuration}"
+								 Text="{Binding Duration}"/>
+					</DockPanel>
+				</Grid>
+			</Expander>
+		</Grid>
+	</DataTemplate>
+
+	
+	<!-- Slide command action -->
+	<DataTemplate x:Key="PlayerActionPptCommandTemplate" DataType="{x:Type act:PlayerActionPowerPoint}">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			
+			<res:ActionHeaderControl Template="{DynamicResource ActionHeaderTemplate}" HeaderText="Slide command"/>
+
+			<Expander Grid.Row="1" Style="{DynamicResource ExpanderStyle}" Header="Common">
+				<ContentControl Content="{Binding}" ContentTemplate="{DynamicResource CommonPropertiesTemplate}"/>
+			</Expander>
+
+			<Expander Grid.Row="2" Style="{DynamicResource ExpanderStyle}" Header="Slide settings">
+				<res:SetSlideControl Style="{DynamicResource SetSlideControlStyle}"/>
+			</Expander>
+		</Grid>
+	</DataTemplate>
+	
+
+	<!-- Comment action -->
+	<DataTemplate x:Key="PlayerActionCommentTemplate" DataType="{x:Type act:PlayerActionComment}">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+
+			<res:ActionHeaderControl Template="{DynamicResource ActionHeaderTemplate}" HeaderText="Comment"/>
+
+			<Expander Grid.Row="1" Style="{DynamicResource ExpanderStyle}" Header="Common">
+				<StackPanel>
+					<TextBox Style="{DynamicResource TextBoxStyle}" Text="{Binding Name}"/>
+				</StackPanel>
+			</Expander>
+
+			<Expander Grid.Row="2" Style="{DynamicResource ExpanderStyle}" Header="Comment">
+				<TextBox Style="{DynamicResource TextBoxStyle}"
+						 TextWrapping="Wrap" AcceptsReturn="True"
+						 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+						 VerticalAlignment="Stretch"
+						 Text="{Binding Description}"/>
+			</Expander>
+		</Grid>
+	</DataTemplate>
+
+	
+	<!-- Text action -->
+	<DataTemplate x:Key="PlayerActionTextTemplate" DataType="{x:Type act:PlayerActionText}">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+
+			<res:ActionHeaderControl Template="{DynamicResource ActionHeaderTemplate}" HeaderText="Text"/>
+
+			<Expander Grid.Row="1" Style="{DynamicResource ExpanderStyle}" Header="Common">
+				<ContentControl Content="{Binding}" ContentTemplate="{DynamicResource CommonPropertiesTemplate}"/>
+			</Expander>
+
+			<Expander Grid.Row="2" Style="{DynamicResource ExpanderStyle}" Header="Text">
+				<Grid Name="TextInnerGrid">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+					
+					<DockPanel Margin="0,0,0,7">
+						<TextBlock DockPanel.Dock="Left" Style="{DynamicResource LabelForTextBoxStyle}"
+								   Text="Channel"/>
+
+						<ToggleButton DockPanel.Dock="Right" Style="{DynamicResource ToggleImageButtonStyle}"
+									  Command="{StaticResource ShowTextWindowCommand}" CommandParameter="{Binding}"
+									  Content="{StaticResource PreviewImage}"
+									  IsChecked="{Binding SelectedItem.IsActive, ElementName=SelectedChannel, Mode=OneWay}"
+									  ToolTipService.ShowOnDisabled="True"
+									  ToolTip="Preview"/>
+
+						<ComboBox Name="SelectedChannel" Style="{DynamicResource ComboBoxStyle}"
+								  ItemTemplate="{DynamicResource ChannelSelectorTemplate}"
+								  SelectedValuePath="Channel"
+								  SelectedValue="{Binding Channel}"
+								  ItemsSource="{res:PlaylistBinding TextLogicalChannels, Mode=OneWay}"/>
+                    </DockPanel>
+					
+					<TextBox Grid.Row="1" Style="{DynamicResource TextBoxStyle}"
+							 TextWrapping="Wrap" AcceptsReturn="True"
+							 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+							 VerticalAlignment="Stretch"
+							 Text="{Binding Text}"/>
+				</Grid>
+			</Expander>
+		</Grid>
+	</DataTemplate>
+	
+	
+	<!-- Collect the resources above -->
+	<res:TypedTemplateSelector x:Key="ActionTemplateSelector" DefaultTemplate="{StaticResource PlayerActionUnsupportedTemplate}">
+		<res:TypedTemplateDefinition DataType="{x:Type act:PlayerActionFile}" Template="{StaticResource PlayerActionFileTemplate}" />
+		<res:TypedTemplateDefinition DataType="{x:Type act:PlayerActionEffect}" Template="{StaticResource PlayerActionEffectTemplate}" />
+		<res:TypedTemplateDefinition DataType="{x:Type act:PlayerActionPowerPoint}" Template="{StaticResource PlayerActionPptCommandTemplate}" />
+		<res:TypedTemplateDefinition DataType="{x:Type act:PlayerActionText}" Template="{StaticResource PlayerActionTextTemplate}" />
+		<res:TypedTemplateDefinition DataType="{x:Type act:PlayerActionComment}" Template="{StaticResource PlayerActionCommentTemplate}" />
+		<res:TypedTemplateDefinition DataType="{x:Type act:PlayerActionPlaceholder}" Template="{StaticResource PlayerActionPlaceholderTemplate}" />
+		<res:TypedTemplateDefinition DataType="{x:Null}" Template="{StaticResource PlayerActionPlaceholderTemplate}" />
+	</res:TypedTemplateSelector>
+	
+	
+	<!-- Actual control -->
+    <ControlTemplate x:Key="PlayerActionControlTemplate" TargetType="{x:Type res:PlayerActionControl}">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+
+    		<TextBlock 
+    			Style="{DynamicResource TextHeaderStyle}"
+    			Visibility="{Binding ActionHeaderText, Converter={StaticResource StringToVisibleCollapsedConverter}, RelativeSource={RelativeSource TemplatedParent}}"
+    			Text="{Binding ActionHeaderText, RelativeSource={RelativeSource TemplatedParent}}"/>
+
+    		<ContentPresenter Grid.Row="1"/>
+    	</Grid>
+	</ControlTemplate>
+	
+	
+	<Style x:Key="PlayerActionStyle" TargetType="{x:Type res:PlayerActionControl}">
+		<Setter Property="Template" Value="{DynamicResource PlayerActionControlTemplate}"/>
+		<Setter Property="Content" Value="{Binding Action, RelativeSource={RelativeSource Self}}"/>
+		<Setter Property="ContentTemplateSelector" Value="{DynamicResource ActionTemplateSelector}"/>
+	</Style>
+	
+</ResourceDictionary>

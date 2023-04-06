@@ -1,0 +1,74 @@
+﻿<Window x:Class="TextWindow"
+		x:Name="ThisWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:common="http://nextplayer.nikitins.dk/Common"
+		xmlns:res="http://nextplayer.nikitins.dk/Resources"
+		xmlns:txt="clr-namespace:TextWindowLibrary;assembly="
+		ResizeMode="NoResize"
+		WindowStyle="None"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}"
+		Left="{Binding Configuration.Left}"
+		Top="{Binding Configuration.Top}"
+		Width="{Binding Configuration.Width}"
+		Height="{Binding Configuration.Height}"
+		AllowsTransparency="True"
+		Background="Transparent"
+		ShowInTaskbar="False">
+	
+	<Window.Resources>
+		<common:ColorToWpfColorConverter x:Key="ColorConverter"/>
+		<common:StringFormatConverter x:Key="StringFormatConverter"/>
+        <res:BooleanToVisibilityConverter x:Key="BooleanToVisibleCollapsedConverter"/>
+
+		
+        <ControlTemplate x:Key="ShowAllText" TargetType="{x:Type txt:ScalableTextControl}">
+			<Border Background="{TemplateBinding Background}">
+				<Viewbox Stretch="Uniform">
+					<TextBlock Foreground="{TemplateBinding Foreground}"
+							   Text="{Binding Text}"/>
+				</Viewbox>
+			</Border>
+		</ControlTemplate>
+		
+		
+		<Style x:Key="ScalableTextStyle" TargetType="{x:Type txt:ScalableTextControl}">
+			<Setter Property="Foreground" Value="{Binding Configuration.Foreground, Converter={StaticResource ColorConverter}}"/>
+			<Setter Property="Background" Value="{Binding Configuration.Background, Converter={StaticResource ColorConverter}}"/>
+			<Setter Property="Template" Value="{DynamicResource ShowAllText}"/>
+		</Style>
+	</Window.Resources>
+	
+	
+	<Window.Title>
+		<Binding Path="Configuration.Channel" Converter="{StaticResource StringFormatConverter}" ConverterParameter="Text window {0}"/>
+	</Window.Title>
+
+
+	<Border Name="PART_ToolTipContainer"
+			ToolTipService.IsEnabled="False"
+			ToolTipService.InitialShowDelay="0">
+
+        <Border.ToolTip>
+			<ToolTip>
+				<ToolTip.Content>
+					<TextBlock>
+						<TextBlock.Text>
+							<MultiBinding Converter="{StaticResource StringFormatConverter}"
+										  ConverterParameter="Pos ({0}, {1}), size {2} x {3}">
+
+								<Binding Path="Configuration.Left"/>
+								<Binding Path="Configuration.Top"/>
+								<Binding Path="Configuration.Width"/>
+								<Binding Path="Configuration.Height"/>
+							</MultiBinding>
+						</TextBlock.Text>
+					</TextBlock>
+				</ToolTip.Content>
+			</ToolTip>
+		</Border.ToolTip>
+
+        <txt:ScalableTextControl Style="{DynamicResource ScalableTextStyle}"
+								 Text="{Binding Text}"/>
+	</Border>
+</Window>

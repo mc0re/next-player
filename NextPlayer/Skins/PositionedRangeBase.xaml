@@ -1,0 +1,110 @@
+﻿<ResourceDictionary
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:common="http://nextplayer.nikitins.dk/Common"
+		xmlns:res="http://nextplayer.nikitins.dk/Resources">
+
+	<res:ClipRectConverter x:Key="ClipRectConverter"/>
+	<common:StringFormatConverter x:Key="StringFormatConverter"/>
+	<res:BooleanToVisibilityConverter x:Key="BooleanToVisibleCollapsedConverter"/>
+
+
+	<ControlTemplate x:Key="PathSliderControlTemplate" TargetType="{x:Type res:PositionedRangeBase}">
+		<Grid x:Name="TemplateRoot" SnapsToDevicePixels="true">
+			<Grid Margin="{TemplateBinding Padding}">
+				
+				<!-- Track (with tooltip and mouse-click events, if enabled) -->
+				<Border Name="TrackContainer" Background="Transparent"
+						ToolTip="{Binding MouseOverToolTip, RelativeSource={RelativeSource TemplatedParent}}">
+					
+					<Path Name="PART_Track" Style="{DynamicResource SliderPathStyle}"
+						  ToolTipService.InitialShowDelay="0"
+						  Data="{Binding TrackGeometry, RelativeSource={RelativeSource TemplatedParent}}"
+						  Stroke="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}"
+						  Fill="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}"/>
+				</Border>
+
+				<!-- Indicator (equals to track, but clipped) -->
+				<Grid Name="IndicatorContainer" IsHitTestVisible="False"
+					  Visibility="{Binding ShowIndicator, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibleCollapsedConverter}}">
+					
+					<Path Style="{DynamicResource SliderPathStyle}"
+						  HorizontalAlignment="Left" IsHitTestVisible="False"
+						  ToolTipService.InitialShowDelay="0"
+						  Data="{Binding TrackGeometry, RelativeSource={RelativeSource TemplatedParent}}"
+						  Stroke="{Binding ForegroundBorderBrush, RelativeSource={RelativeSource TemplatedParent}}"
+						  Fill="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}"/>
+
+					<Grid.Clip>
+						<MultiBinding Converter="{StaticResource ClipRectConverter}">
+							<Binding Path="Value" RelativeSource="{RelativeSource TemplatedParent}"/>
+							<Binding Path="Minimum" RelativeSource="{RelativeSource TemplatedParent}"/>
+							<Binding Path="Maximum" RelativeSource="{RelativeSource TemplatedParent}"/>
+							<Binding Path="ActualWidth" ElementName="PART_Track"/>
+							<Binding Path="ActualHeight" ElementName="PART_Track"/>
+						</MultiBinding>
+					</Grid.Clip>
+				</Grid>
+
+				<!-- Track overlay -->
+				<ContentPresenter Content="{Binding}"
+								  ContentTemplate="{Binding TrackOverlay, RelativeSource={RelativeSource TemplatedParent}}"
+								  Visibility="{Binding TrackOverlay, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibleCollapsedConverter}}"/>
+				
+				<!-- Indicator overlay -->
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+				
+					<Grid Name="PART_Indicator" HorizontalAlignment="Left">
+						<ContentPresenter Content="{Binding}"
+										  ContentTemplate="{Binding IndicatorOverlay, RelativeSource={RelativeSource TemplatedParent}}"
+										  Visibility="{Binding IndicatorOverlay, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibleCollapsedConverter}}"/>
+					</Grid>
+
+					<ContentPresenter Grid.Column="1" Content="{Binding}" SnapsToDevicePixels="True"
+									  ContentTemplate="{Binding AfterIndicatorOverlay, RelativeSource={RelativeSource TemplatedParent}}"
+									  Visibility="{Binding AfterIndicatorOverlay, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibleCollapsedConverter}}"/>
+				</Grid>
+				
+			</Grid>
+		</Grid>
+
+		<ControlTemplate.Triggers>
+			<Trigger Property="Orientation" Value="Vertical">
+				<Setter Property="LayoutTransform" TargetName="TemplateRoot">
+					<Setter.Value>
+						<TransformGroup>
+							<RotateTransform Angle="-90"/>
+							<ScaleTransform ScaleX="-1"/>
+						</TransformGroup>
+					</Setter.Value>
+				</Setter>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
+
+	<Style x:Key="PositionedRangeBaseStyle" TargetType="{x:Type res:PositionedRangeBase}">
+		<Setter Property="Template" Value="{DynamicResource PathSliderControlTemplate}"/>
+		<Setter Property="Foreground" Value="{DynamicResource ActionButtonPlainBrush}"/>
+		<Setter Property="Background" Value="{DynamicResource GraphicsBrush}"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource GraphicsFrameBrush}"/>
+		<Setter Property="ForegroundBorderBrush" Value="{Binding BorderBrush, RelativeSource={RelativeSource Self}}"/>
+		<Setter Property="MouseOverToolTip"
+				Value="{Binding MouseOverValue, RelativeSource={RelativeSource Self},
+						Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:p0}'}"/>
+
+		<Style.Triggers>
+			<Trigger Property="Orientation" Value="Vertical">
+				<Setter Property="Height" Value="Auto"/>
+			</Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource GraphicsMarkBrush}"/>
+            </Trigger>
+		</Style.Triggers>
+	</Style>
+	
+</ResourceDictionary>

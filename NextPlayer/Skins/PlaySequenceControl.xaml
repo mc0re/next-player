@@ -1,0 +1,53 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:res="http://nextplayer.nikitins.dk/Resources"
+    xmlns:common="http://nextplayer.nikitins.dk/Common">
+
+	<res:EnumToBooleanConverter x:Key="EnumToFalseTrueConverter" MatchValue="False" NonMatchValue="True"/>
+	<res:BooleanNotConverter x:Key="BooleanNotConverter"/>
+	<res:BooleanAndConverter x:Key="BooleanAndConverter"/>
+    <common:StringFormatConverter x:Key="StringFormatConverter"/>
+	
+	
+	<ControlTemplate x:Key="PlaySequenceControlTemplate" TargetType="{x:Type res:PlaySequenceControl}">
+		<DockPanel LastChildFill="False">
+			<ToggleButton Style="{DynamicResource ToggleImageButtonStyle}"
+						  Content="{DynamicResource PlayingImage}"
+						  IsChecked="{Binding IsActive, Mode=OneWay}"
+						  IsEnabled="{Binding IsPlaying, Converter={StaticResource BooleanNotConverter}}"
+						  Command="{StaticResource SetActiveCommand}"
+						  ToolTipService.ShowOnDisabled="True"
+						  ToolTip="{Binding Name, Converter={StaticResource StringFormatConverter}, ConverterParameter='Start &quot;{0}&quot;'}"/>
+
+            <ToggleButton Style="{DynamicResource ToggleImageButtonStyle}"
+						  Content="{DynamicResource StopImage}"
+						  IsChecked="{Binding IsActive, Mode=OneWay}"
+						  IsEnabled="{Binding IsPlaying}"
+						  Command="{StaticResource StopActionCommand}"
+						  ToolTipService.ShowOnDisabled="True"
+						  ToolTip="{Binding Name, Converter={StaticResource StringFormatConverter}, ConverterParameter='Stop &quot;{0}&quot;'}"/>
+
+            <ToggleButton Style="{DynamicResource ToggleImageButtonStyle}"
+						  Content="{DynamicResource NextImage}"
+						  IsChecked="{Binding IsNext, Mode=OneWay}"
+						  Command="{StaticResource SetNextCommand}"
+						  ToolTipService.ShowOnDisabled="True"
+						  ToolTip="{Binding Name, Converter={StaticResource StringFormatConverter}, ConverterParameter='Set &quot;{0}&quot; as next'}">
+
+	            <ToggleButton.IsEnabled>
+					<MultiBinding Converter="{StaticResource BooleanAndConverter}" Mode="OneWay">
+						<Binding Path="ExecutionType" Converter="{StaticResource EnumToFalseTrueConverter}" ConverterParameter="Parallel"/>
+						<Binding Path="IsNext" Converter="{StaticResource BooleanNotConverter}"/>
+					</MultiBinding>
+				</ToggleButton.IsEnabled>
+			</ToggleButton>
+		</DockPanel>
+	</ControlTemplate>
+
+
+	<Style x:Key="PlaySequenceControlStyle" TargetType="{x:Type res:PlaySequenceControl}">
+		<Setter Property="Template" Value="{DynamicResource PlaySequenceControlTemplate}"/>
+	</Style>
+
+</ResourceDictionary>

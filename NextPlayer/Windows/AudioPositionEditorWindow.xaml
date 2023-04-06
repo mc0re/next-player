@@ -1,0 +1,192 @@
+﻿<Window x:Class="AudioPositionEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+		xmlns:common="http://nextplayer.nikitins.dk/Common"
+		xmlns:res="http://nextplayer.nikitins.dk/Resources"
+        xmlns:local="clr-namespace:NextPlayer;assembly="
+        xmlns:audio="clr-namespace:AudioChannelLibrary;assembly=AudioChannelLibrary"
+        mc:Ignorable="d"
+        Title="Audio Output Position Editor"
+		Left="{local:SettingBinding AudioPositionWindowLeft}"
+		Top="{local:SettingBinding AudioPositionWindowTop}"
+		Width="{local:SettingBinding AudioPositionWindowWidth}"
+		Height="{local:SettingBinding AudioPositionWindowHeight}"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}"
+		Background="{DynamicResource BackgroundBrush}"
+		Foreground="{DynamicResource MainTextBrush}"
+		Icon="../Resources/Logo.ico">
+
+	<Window.Resources>
+		<common:StringFormatConverter x:Key="StringFormatConverter"/>
+		<res:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+		
+		
+		<Style x:Key="CoordinateUpDownStyle" TargetType="{x:Type xctk:SingleUpDown}" BasedOn="{StaticResource SingleUpDownStyle}">
+			<Setter Property="Minimum" Value="{x:Null}"/>
+		</Style>
+		
+		
+		<DataTemplate x:Key="OutputCoordinateTemplate" DataType="{x:Type audio:AudioPhysicalChannel}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" SharedSizeGroup="Name"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*" MaxWidth="180" SharedSizeGroup="Coordinates"/>
+				</Grid.ColumnDefinitions>
+
+				<TextBlock Style="{DynamicResource MainTextStyle}" IsEnabled="{Binding IsEnabled}"
+						   VerticalAlignment="Center"
+						   Text="{Binding Description}"
+						   ToolTip="{Binding Channel, Converter={StaticResource StringFormatConverter}, ConverterParameter='Channel {0}'}"/>
+
+				<UniformGrid Grid.Column="2" Rows="1">
+					<xctk:SingleUpDown Style="{DynamicResource CoordinateUpDownStyle}"
+									   Value="{Binding X}"/>
+					<xctk:SingleUpDown Style="{DynamicResource CoordinateUpDownStyle}"
+									   Value="{Binding Y}"/>
+					<xctk:SingleUpDown Style="{DynamicResource CoordinateUpDownStyle}"
+									   Value="{Binding Z}"/>
+				</UniformGrid>
+			</Grid>
+		</DataTemplate>
+	</Window.Resources>
+
+
+	<DockPanel>
+		<TextBlock DockPanel.Dock="Top" Style="{StaticResource ActionHeaderStyle}">
+			<TextBlock.Text>
+				<MultiBinding Converter="{StaticResource StringFormatConverter}">
+					<Binding Source="Environment: {0}"/>
+					<Binding Source="{x:Static local:AppConfiguration.CurrentEnvironmentName}" Mode="OneWay"/>
+				</MultiBinding>
+			</TextBlock.Text>
+		</TextBlock>
+		
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1.05*"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="2*"/>
+				</Grid.RowDefinitions>
+
+				<DockPanel>
+					<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+						<RadioButton Style="{DynamicResource ToggleTextButtonStyle}" VerticalContentAlignment="Center" Padding="2,2"
+								 GroupName="Projection" Content="X-Y"
+								 IsChecked="{Binding Projection, ElementName=UpperEditor, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static res:Projections.XY}}"/>
+						<RadioButton Style="{DynamicResource ToggleTextButtonStyle}" VerticalContentAlignment="Center" Padding="2,2"
+								 GroupName="Projection" Content="Z-Y"
+								 IsChecked="{Binding Projection, ElementName=UpperEditor, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static res:Projections.ZY}}"/>
+						<RadioButton Style="{DynamicResource ToggleTextButtonStyle}" VerticalContentAlignment="Center" Padding="2,2"
+								 GroupName="Projection" Content="X-Z"
+								 IsChecked="{Binding Projection, ElementName=UpperEditor, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static res:Projections.XZ}}"/>
+					</StackPanel>
+					
+					<local:AudioPositionEditorControl x:Name="UpperEditor"
+						Room="{Binding Room}" Channels="{Binding Channels}" Projection="XY"/>
+				</DockPanel>
+				
+				<!-- Horizontal splitter between views -->
+				<GridSplitter Grid.Row="1" Style="{DynamicResource PanelSplitterStyle}"
+							  HorizontalAlignment="Stretch"/>
+
+				<DockPanel Grid.Row="2">
+					<UniformGrid DockPanel.Dock="Bottom" Rows="1">
+						<TextBlock Style="{DynamicResource MainTextStyle}"
+							   VerticalAlignment="Center" Margin="5,0" IsEnabled="False"
+							   Text="Rotate RC, move S+RC, zoom wheel"
+							   ToolTip="View control: Right Click - rotate, Shift + Right Click - move, mouse wheel - zoom"
+							   ToolTipService.ShowOnDisabled="True"/>
+
+						<ComboBox Style="{DynamicResource ComboBoxStyle}"
+							  ItemTemplate="{DynamicResource ChannelSelectorTemplate}"
+							  SelectedValuePath="Channel"
+							  SelectedValue="{Binding ShowDivision, ElementName=LowerEditor}"
+							  ToolTip="Channel to show the room division">
+
+							<ComboBox.ItemsSource>
+								<CompositeCollection>
+									<audio:AudioLogicalChannel Channel="0" Description="Speakers only"/>
+									<CollectionContainer Collection="{res:PlaylistBinding AudioLogicalChannels, Mode=OneWay}"/>
+								</CompositeCollection>
+							</ComboBox.ItemsSource>
+						</ComboBox>
+					</UniformGrid>
+					
+					<local:AudioPositionEditorControl x:Name="LowerEditor" 
+						Room="{Binding Room}" Channels="{Binding Channels}" Projection="ThreeD"/>
+				</DockPanel>
+			</Grid>
+
+			<!-- Vertical splitter -->
+			<GridSplitter HorizontalAlignment="Center" Grid.Column="1" Style="{DynamicResource PanelSplitterStyle}"/>
+
+			<Grid Grid.Column="2" Grid.IsSharedSizeScope="True">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<Expander Style="{DynamicResource ExpanderStyle}" Header="Room walls around audience">
+					<StackPanel>
+						<local:CoordinateEditorControl Label="Left (-X)" Value="{Binding Room.XLeft}"/>
+						<local:CoordinateEditorControl Label="Right (+X)" Value="{Binding Room.XRight}"/>
+						<local:CoordinateEditorControl Label="In front (+Y)" Value="{Binding Room.YFront}"/>
+						<local:CoordinateEditorControl Label="Behind (-Y)" Value="{Binding Room.YBack}"/>
+						<local:CoordinateEditorControl Label="Above (+Z)" Value="{Binding Room.ZAbove}"/>
+						<local:CoordinateEditorControl Label="Below (-Z)" Value="{Binding Room.ZBelow}"/>
+					</StackPanel>
+				</Expander>
+
+				<Expander Grid.Row="1" Style="{DynamicResource ExpanderStyle}" Header="Audience">
+					<StackPanel>
+						<local:CoordinateEditorControl Label="Left (-X)" Value="{Binding Room.AudienceLeft}"/>
+						<local:CoordinateEditorControl Label="Right (+X)" Value="{Binding Room.AudienceRight}"/>
+						<local:CoordinateEditorControl Label="In front (+Y)" Value="{Binding Room.AudienceFront}"/>
+						<local:CoordinateEditorControl Label="Behind (-Y)" Value="{Binding Room.AudienceBack}"/>
+					</StackPanel>
+				</Expander>
+
+				<Expander Grid.Row="2" Style="{DynamicResource ExpanderStyle}" Header="Outputs">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto"/>
+							<RowDefinition/>
+						</Grid.RowDefinitions>
+
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*" MaxWidth="60"/>
+								<ColumnDefinition Width="*" MaxWidth="60"/>
+								<ColumnDefinition Width="*" MaxWidth="60"/>
+							</Grid.ColumnDefinitions>
+
+							<TextBlock Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Left"
+								   Text="Channel"/>
+							<TextBlock Grid.Column="1" Style="{StaticResource ColumnHeaderStyle}" Text="X (m)"/>
+							<TextBlock Grid.Column="2" Style="{StaticResource ColumnHeaderStyle}" Text="Y (m)"/>
+							<TextBlock Grid.Column="3" Style="{StaticResource ColumnHeaderStyle}" Text="Z (m)"/>
+						</Grid>
+
+						<ScrollViewer Grid.Row="1" Style="{DynamicResource ScrollViewerStyle}" Margin="0">
+							<ItemsControl ItemsSource="{Binding Channels}"
+									  ItemTemplate="{StaticResource OutputCoordinateTemplate}"/>
+						</ScrollViewer>
+					</Grid>
+				</Expander>
+			</Grid>
+		</Grid>
+	</DockPanel>
+</Window>

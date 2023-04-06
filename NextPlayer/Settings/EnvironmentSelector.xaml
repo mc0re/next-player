@@ -1,0 +1,78 @@
+﻿<ResourceDictionary
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+		xmlns:res="http://nextplayer.nikitins.dk/Resources"
+		xmlns:local="clr-namespace:NextPlayer"
+		xmlns:common="http://nextplayer.nikitins.dk/Common">
+
+    <DataTemplate x:Key="SeparatorTemplate">
+        <Rectangle SnapsToDevicePixels="True" HorizontalAlignment="Stretch"
+				   Fill="{DynamicResource FrameBrush}"
+				   Height="1" Margin="0,5"/>
+    </DataTemplate>
+	
+	
+    <ControlTemplate x:Key="EnvironmentSelectorTemplate" TargetType="{x:Type res:EnvironmentSelector}">
+        <Grid>
+            <Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<!-- To overcome problems with referencing from CompositeCollection -->
+			<common:SingleItemStorage Name="ParentStorage" Source="{Binding RelativeSource={RelativeSource TemplatedParent}}"/>
+			
+            <ComboBox Grid.Row="0" Name="Dropdown" Style="{StaticResource ComboBoxStyle}"
+					  HorizontalAlignment="Right"
+					  SelectedValue="{res:ConfigBinding EnvironmentName, UpdateSourceTrigger=Explicit}"
+					  SelectedValuePath="Name"
+					  DisplayMemberPath="Name">
+
+				<ComboBox.Resources>
+					<!-- To overcome problems with referencing from CompositeCollection -->
+					<common:ElementSpy x:Key="CommandSource" Element="{Binding ElementName=ParentStorage}"/>
+				</ComboBox.Resources>
+					
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="SelectionChanged">
+						<i:InvokeCommandAction
+							Command="{Binding CommandSelectedCommand, RelativeSource={RelativeSource AncestorType={x:Type res:EnvironmentSelector}}}"
+							CommandParameter="{Binding ElementName=Dropdown}"/>
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+
+				<ComboBox.ItemsSource>
+                    <CompositeCollection>
+                        <CollectionContainer Collection="{res:ConfigBinding EnvironmentSettingsList, Mode=OneWay}"/>
+                        <ComboBoxItem IsEnabled="False" ContentTemplate="{StaticResource SeparatorTemplate}"/>
+						<res:NamedCommand Name="Make a copy" Command="{Binding Element.Source.CopyCommand, Source={StaticResource CommandSource}}"/>
+						<res:NamedCommand Name="Manage..." Command="{Binding Element.Source.EditCommand, Source={StaticResource CommandSource}}"/>
+					</CompositeCollection>
+                </ComboBox.ItemsSource>
+			</ComboBox>
+
+			<ContentPresenter Grid.Row="1" Margin="{TemplateBinding Padding}"/>
+
+            <Border Name="ShadingBorder" Grid.Row="1"
+					BorderBrush="{DynamicResource FrameBrush}"
+					BorderThickness="1" CornerRadius="2"/>
+        </Grid>
+
+        <ControlTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsDropDownOpen, ElementName=Dropdown}" Value="True">
+                <Setter Property="Background" TargetName="ShadingBorder" Value="{DynamicResource BackgroundBrush}"/>
+                <Setter Property="Opacity" TargetName="ShadingBorder" Value="{StaticResource SkippedAudioBgOpacity}"/>
+			</DataTrigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+	
+	
+    <Style x:Key="EnvironmentSelectorStyle" TargetType="{x:Type res:EnvironmentSelector}">
+		<Setter Property="Template" Value="{StaticResource EnvironmentSelectorTemplate}"/>
+		<Setter Property="CopyCommand" Value="{Binding CopyEnvironmentCommand, RelativeSource={RelativeSource AncestorType={x:Type local:SettingsWindow}}, Mode=OneWay}"/>
+		<Setter Property="EditCommand" Value="{Binding ManageEnvironmentCommand, RelativeSource={RelativeSource AncestorType={x:Type local:SettingsWindow}}, Mode=OneWay}"/>
+		<Setter Property="Margin" Value="0,8,0,0"/>
+		<Setter Property="Padding" Value="0,4"/>
+	</Style>
+</ResourceDictionary>

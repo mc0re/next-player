@@ -1,0 +1,231 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:audio="http://schemas.nikitins.dk/audio"
+	xmlns:res="http://nextplayer.nikitins.dk/Resources">
+
+	
+	<res:EnumToBooleanConverter x:Key="EnumToTrueFalseConverter"/>
+	
+	
+	<Style x:Key="MainTextStyle" TargetType="{x:Type TextBlock}">
+		<Setter Property="Foreground" Value="{DynamicResource MainTextBrush}"/>
+        <Setter Property="FontSize" Value="{res:SkinBinding MainFontSize}"/>
+        <Setter Property="FontWeight" Value="{res:SkinBinding MainFontWeight}"/>
+        <Setter Property="FontStyle" Value="{res:SkinBinding MainFontStyle}"/>
+
+		<Style.Triggers>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Foreground" Value="{DynamicResource DisabledTextBrush}"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+
+
+	<Style x:Key="CommentTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MainTextStyle}">
+		<Setter Property="Foreground" Value="{DynamicResource CommentTextBrush}"/>
+        <Setter Property="FontWeight" Value="{res:SkinBinding CommentFontWeight}"/>
+        <Setter Property="FontStyle" Value="{res:SkinBinding CommentFontStyle}"/>
+	</Style>
+
+
+	<Style x:Key="DisabledCommentTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource CommentTextStyle}">
+		<Setter Property="Foreground" Value="{DynamicResource MainTextBrush}"/>
+	</Style>
+
+
+	<Style x:Key="FailedTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MainTextStyle}">
+		<Setter Property="Foreground" Value="{DynamicResource AttentionBrush}"/>
+        <Setter Property="FontWeight" Value="{res:SkinBinding FailedFontWeight}"/>
+        <Setter Property="FontStyle" Value="{res:SkinBinding FailedFontStyle}"/>
+	</Style>
+
+
+	<Style x:Key="ActionHeaderStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MainTextStyle}">
+		<Setter Property="Foreground" Value="{DynamicResource ActionHeaderBrush}"/>
+        <Setter Property="FontWeight" Value="{res:SkinBinding ActionHeaderFontWeight}"/>
+        <Setter Property="FontStyle" Value="{res:SkinBinding ActionHeaderFontStyle}"/>
+	</Style>
+
+
+	<Style x:Key="SectionHeaderStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MainTextStyle}">
+		<Setter Property="Foreground" Value="{DynamicResource SectionHeaderBrush}"/>
+        <Setter Property="FontWeight" Value="{res:SkinBinding SectionHeaderFontWeight}"/>
+        <Setter Property="FontStyle" Value="{res:SkinBinding SectionHeaderFontStyle}"/>
+	</Style>
+
+
+	<Style x:Key="ColumnHeaderStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MainTextStyle}">
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="Foreground" Value="{DynamicResource ColumnHeaderBrush}"/>
+        <Setter Property="FontWeight" Value="{res:SkinBinding ColumnHeaderFontWeight}"/>
+        <Setter Property="FontStyle" Value="{res:SkinBinding ColumnHeaderFontStyle}"/>
+		<Setter Property="Margin" Value="2,0"/>
+	</Style>
+
+
+	<Style x:Key="ItemHeaderStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MainTextStyle}">
+		<Setter Property="Foreground" Value="{DynamicResource ItemHeaderBrush}"/>
+        <Setter Property="FontWeight" Value="{res:SkinBinding ItemHeaderFontWeight}"/>
+        <Setter Property="FontStyle" Value="{res:SkinBinding ItemHeaderFontStyle}"/>
+	</Style>
+
+
+	<Style x:Key="MainClockTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MainTextStyle}">
+		<Setter Property="Foreground" Value="{DynamicResource ClockFontBrush}"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="{res:SkinBinding ClockFontSize}"/>
+        <Setter Property="FontWeight" Value="{res:SkinBinding ClockFontWeight}"/>
+        <Setter Property="FontStyle" Value="{res:SkinBinding ClockFontStyle}"/>
+	</Style>
+
+
+	<Style x:Key="ButtonTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MainTextStyle}">
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="TextWrapping" Value="NoWrap"/>
+		<Setter Property="Foreground" Value="{DynamicResource ButtonTextBrush}"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+	</Style>
+
+	
+	<Style x:Key="PlaylistTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MainTextStyle}">
+		<Setter Property="VerticalAlignment" Value="Top"/>
+		
+		<Style.Triggers>
+			<!-- Colour set here can be overwriten by active/playing -->
+			<DataTrigger Binding="{Binding IsNext}" Value="True">
+				<Setter Property="Foreground" Value="{DynamicResource NextForegroundBrush}"/>
+			</DataTrigger>
+
+			<!-- Colour set here can be overwriten by active/playing. The style is set later. -->
+			<MultiDataTrigger>
+				<MultiDataTrigger.Conditions>
+                    <Condition Binding="{res:PlaylistBinding UseSettingsForManual}" Value="True"/>
+					<Condition Binding="{Binding DelayType}" Value="{x:Static audio:DelayTypes.Manual}"/>
+					<Condition Binding="{Binding ExecutionType, ConverterParameter={x:Static audio:ExecutionTypes.Parallel}, Converter={StaticResource EnumToTrueFalseConverter}}"
+							   Value="False"/>
+				</MultiDataTrigger.Conditions>
+
+				<Setter Property="Foreground" Value="{DynamicResource ManualStartBrush}"/>
+			</MultiDataTrigger>
+			
+			<DataTrigger Binding="{Binding IsActiveParallel}" Value="True">
+				<Setter Property="Foreground" Value="{DynamicResource ActiveTextBrush}"/>
+                <Setter Property="FontWeight" Value="{res:SkinBinding ActiveFontWeight}"/>
+                <Setter Property="FontStyle" Value="{res:SkinBinding ActiveFontStyle}"/>
+			</DataTrigger>
+			
+			<DataTrigger Binding="{Binding IsActive}" Value="True">
+				<Setter Property="Foreground" Value="{DynamicResource ActiveTextBrush}"/>
+                <Setter Property="FontWeight" Value="{res:SkinBinding ActiveFontWeight}"/>
+                <Setter Property="FontStyle" Value="{res:SkinBinding ActiveFontStyle}"/>
+			</DataTrigger>
+			
+			<DataTrigger Binding="{Binding IsPlaying}" Value="True">
+				<Setter Property="Foreground" Value="{DynamicResource ActiveTextBrush}"/>
+                <Setter Property="FontWeight" Value="{res:SkinBinding PlayingFontWeight}"/>
+                <Setter Property="FontStyle" Value="{res:SkinBinding PlayingFontStyle}"/>
+			</DataTrigger>
+
+			<!-- Access to "res:PlaylistItem.IsSelectedItem" produces a TypeNameParserException exception that "res" is unknown -->
+			<DataTrigger Binding="{Binding (res:PlaylistItem.IsSelectedItem), RelativeSource={RelativeSource Self}}" Value="True">
+				<Setter Property="Foreground" Value="{DynamicResource SelectedForegroundBrush}"/>
+			</DataTrigger>
+			
+			<!-- Font style set before here can be overwriten here. The colour is set before. -->
+			<MultiDataTrigger>
+				<MultiDataTrigger.Conditions>
+                    <Condition Binding="{res:PlaylistBinding UseSettingsForManual}" Value="True"/>
+					<Condition Binding="{Binding DelayType}" Value="{x:Static audio:DelayTypes.Manual}"/>
+					<Condition Binding="{Binding ExecutionType, ConverterParameter={x:Static audio:ExecutionTypes.Parallel}, Converter={StaticResource EnumToTrueFalseConverter}}"
+							   Value="False"/>
+				</MultiDataTrigger.Conditions>
+
+                <Setter Property="FontWeight" Value="{res:SkinBinding ActiveManualFontWeight}"/>
+                <Setter Property="FontStyle" Value="{res:SkinBinding ActiveManualFontStyle}"/>
+			</MultiDataTrigger>
+		</Style.Triggers>
+	</Style>
+
+
+	<Style x:Key="LabelForTextBoxStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MainTextStyle}">
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Margin" Value="0,0,4,0"/>
+	</Style>
+
+
+	<Style x:Key="ActionLabelForTextBoxStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ItemHeaderStyle}">
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Margin" Value="0,0,4,0"/>
+	</Style>
+
+
+	<ControlTemplate x:Key="TextBoxControlTemplate" TargetType="{x:Type TextBoxBase}">
+		<Border BorderBrush="{TemplateBinding BorderBrush}"
+				Background="{TemplateBinding Background}"
+				BorderThickness="{TemplateBinding BorderThickness}"
+				SnapsToDevicePixels="True">
+			
+			<ScrollViewer x:Name="PART_ContentHost" Style="{DynamicResource ScrollViewerStyle}"
+						  SnapsToDevicePixels="True"
+						  Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+		</Border>
+
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsEnabled" Value="False">
+				<Setter Property="Foreground" Value="{DynamicResource DisabledTextBrush}"/>
+			</Trigger>
+            <Trigger Property="IsFocused" Value="True">
+                <Setter Property="BorderBrush" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}"/>
+            </Trigger>
+		</ControlTemplate.Triggers>
+    </ControlTemplate>
+
+	
+	<Style x:Key="TextBoxBaseStyle" TargetType="{x:Type TextBoxBase}">
+		<Setter Property="Template" Value="{DynamicResource TextBoxControlTemplate}"/>
+		<Setter Property="Foreground" Value="{DynamicResource MainTextBrush}"/>
+		<Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource FrameBrush}"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="SelectionBrush" Value="{DynamicResource FrameBrush}"/>
+		<Setter Property="CaretBrush" Value="{DynamicResource ActiveTextBrush}"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        <Setter Property="FontSize" Value="{res:SkinBinding MainFontSize}"/>
+        <Setter Property="FontWeight" Value="{res:SkinBinding MainFontWeight}"/>
+        <Setter Property="FontStyle" Value="{res:SkinBinding MainFontStyle}"/>
+	</Style>
+
+
+	<Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxBaseStyle}">
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Background" Value="Transparent"/>
+	</Style>
+
+
+	<Style x:Key="RichTextLinkStyle" TargetType="{x:Type Hyperlink}" BasedOn="{StaticResource {x:Type Hyperlink}}">
+		<Setter Property="Foreground" Value="{DynamicResource CommentTextBrush}"/>
+		<Setter Property="TextDecorations" Value="Underline"/>
+	</Style>
+
+
+	<Style x:Key="RichTextBoxStyle" TargetType="{x:Type RichTextBox}" BasedOn="{StaticResource TextBoxBaseStyle}">
+		<Style.Resources>
+			<Style x:Key="{x:Type FlowDocument}" TargetType="{x:Type FlowDocument}">
+				<Setter Property="OverridesDefaultStyle" Value="True"/>
+			</Style>
+
+			<Style x:Key="{x:Type Hyperlink}" TargetType="{x:Type Hyperlink}" BasedOn="{StaticResource RichTextLinkStyle}">
+				<Setter Property="OverridesDefaultStyle" Value="True"/>
+			</Style>
+		</Style.Resources>
+		
+		<Setter Property="MinWidth" Value="10"/>
+		<Setter Property="Padding" Value="1"/>
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+	</Style>
+
+</ResourceDictionary>

@@ -1,0 +1,38 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit">
+
+	<!-- Not used -->
+	<ControlTemplate x:Key="ColorPickerToolkitTemplate" TargetType="{x:Type xctk:ColorPicker}">
+		<ToggleButton Name="PART_ColorPickerToggleButton">
+			<ToggleButton.Content>
+				<Border SnapsToDevicePixels="True"
+						Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+						Margin="{TemplateBinding Margin}"
+						Padding="{TemplateBinding Padding}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}">
+					<Border Background="{TemplateBinding Foreground}"/>
+				</Border>
+			</ToggleButton.Content>
+		</ToggleButton>
+	</ControlTemplate>
+	
+	
+	<Style x:Key="ColorPickerStyle" TargetType="{x:Type xctk:ColorPicker}">
+		<Setter Property="SnapsToDevicePixels" Value="True"/>
+		<Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Margin" Value="1"/>
+		<Setter Property="Padding" Value="1"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource FrameBrush}"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="ShowStandardColors" Value="False"/>
+		<Setter Property="ShowAvailableColors" Value="False"/>
+        <Setter Property="ShowRecentColors" Value="True"/>
+		<Setter Property="ShowDropDownButton" Value="False"/>
+		<Setter Property="ColorMode" Value="ColorCanvas"/>
+	</Style>
+	
+</ResourceDictionary>

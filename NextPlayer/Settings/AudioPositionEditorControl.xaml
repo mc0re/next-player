@@ -1,0 +1,27 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:res="http://nextplayer.nikitins.dk/Resources"
+	xmlns:h="http://helix-toolkit.org/wpf"
+    xmlns:local="clr-namespace:NextPlayer">
+
+	
+	<ControlTemplate x:Key="AudioPositionEditorTemplate" TargetType="{x:Type local:AudioPositionEditorControl}">
+		<Border BorderBrush="{DynamicResource FrameBrush}" BorderThickness="1">
+            <h:HelixViewport3D x:Name="PartView3D"
+							   CameraMode="Inspect" CameraRotationMode="Turntable"
+							   ShowViewCube="False" ShowCoordinateSystem="False"
+							   IsChangeFieldOfViewEnabled="False"
+							   IsMoveEnabled="False" IsZoomEnabled="True" IsHeadLightEnabled="True"
+							   RotateAroundMouseDownPoint="True" ZoomAroundMouseDownPoint="True"
+							   CoordinateSystemHeight="40"
+							   CoordinateSystemLabelForeground="{DynamicResource MainTextBrush}"/>
+        </Border>
+	</ControlTemplate>
+
+
+	<Style TargetType="{x:Type local:AudioPositionEditorControl}">
+		<Setter Property="Template" Value="{StaticResource AudioPositionEditorTemplate}"/>
+	</Style>
+
+</ResourceDictionary>

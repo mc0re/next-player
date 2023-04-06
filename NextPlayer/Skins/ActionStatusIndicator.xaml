@@ -1,0 +1,145 @@
+﻿<ResourceDictionary
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:common="http://nextplayer.nikitins.dk/Common"
+		xmlns:audio="http://schemas.nikitins.dk/audio"
+		xmlns:act="http://schemas.nikitins.dk/actions"
+		xmlns:res="http://nextplayer.nikitins.dk/Resources">
+
+	<res:BooleanToVisibilityConverter x:Key="BooleanToVisibleCollapsedConverter"/>
+	<res:BooleanToVisibilityConverter x:Key="BooleanToCollapsedVisibleConverter" TrueValue="Collapsed" FalseValue="Visible"/>
+	<res:EnumToVisibilityConverter x:Key="EnumToVisibleCollapsedConverter"/>
+	<res:EnumToVisibilityConverter x:Key="EnumToCollapsedVisibleConverter" MatchValue="Collapsed" NonMatchValue="Visible"/>
+	<res:TimeSpanFormatConverter x:Key="TimeSpanFormatConverter"/>
+	<common:StringFormatConverter x:Key="StringFormatConverter"/>
+
+
+	<DataTemplate x:Key="VolumeBarFileTemplate" DataType="{x:Type act:PlayerActionFile}">
+		<res:VolumeControl Style="{DynamicResource VolumeControlStyle}" Orientation="Vertical"
+						   Value="{Binding EffectiveVolume, Mode=OneWay}"
+						   MouseOverToolTip="{Binding EffectiveVolume, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:p0}'}"
+						   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ContentControl}}"
+						   Visibility="{Binding IsMuted, Converter={StaticResource BooleanToCollapsedVisibleConverter}}" />
+	</DataTemplate>
+
+
+	<DataTemplate x:Key="VolumeBarEffectTemplate" DataType="{x:Type act:PlayerActionEffect}">
+		<res:VolumeControl Style="{DynamicResource VolumeControlStyle}" Orientation="Vertical"
+						   Value="{Binding EffectiveVolume, Mode=OneWay}"
+						   MouseOverToolTip="{Binding EffectiveVolume, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:p0}'}"
+						   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ContentControl}}"
+						   Visibility="{Binding OperationType, Converter={StaticResource EnumToCollapsedVisibleConverter}, ConverterParameter=Bypass}" />
+
+	</DataTemplate>
+
+	
+	<DataTemplate x:Key="NoVolumeBarTemplate"></DataTemplate>
+
+	
+	<res:TypedTemplateSelector x:Key="VolumeBarSelector" DefaultTemplate="{StaticResource NoVolumeBarTemplate}">
+		<res:TypedTemplateDefinition DataType="{x:Type act:PlayerActionFile}" Template="{StaticResource VolumeBarFileTemplate}"/>
+		<res:TypedTemplateDefinition DataType="{x:Type act:PlayerActionEffect}" Template="{StaticResource VolumeBarEffectTemplate}"/>
+	</res:TypedTemplateSelector>
+
+	
+	<ControlTemplate x:Key="ActionStatusIndicatorTemplate" TargetType="{x:Type res:ActionStatusIndicator}">
+		<Grid Margin="2">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+
+			<!-- Play status -->
+            <Image Grid.Row="0"
+                   Source="{DynamicResource ParallelLineImage}"
+                   Visibility="{Binding ExecutionType, Converter={StaticResource EnumToVisibleCollapsedConverter}, ConverterParameter=Parallel}"
+                   ToolTip="{Binding ParallelIndex, Converter={StaticResource StringFormatConverter}, ConverterParameter='Parallel {0}'}"/>
+
+			<Image Grid.Row="0"
+				   Source="{DynamicResource MainLineContinueImage}"
+				   Visibility="{Binding ExecutionType, Converter={StaticResource EnumToVisibleCollapsedConverter}, ConverterParameter=MainContinuePrev}"
+				   ToolTip="Main, continue all previous"/>
+
+			<Image Grid.Row="0"
+				   Source="{DynamicResource MainLineStopImage}"
+				   Visibility="{Binding ExecutionType, Converter={StaticResource EnumToVisibleCollapsedConverter}, ConverterParameter=MainStopPrev}"
+				   ToolTip="Main, stop main previous"/>
+
+			<Image Grid.Row="0"
+				   Source="{DynamicResource MainLineStopAllImage}"
+				   Visibility="{Binding ExecutionType, Converter={StaticResource EnumToVisibleCollapsedConverter}, ConverterParameter=MainStopAll}"
+				   ToolTip="Main, stop all previous"/>
+
+			<Image Grid.Row="0"
+				   Source="{DynamicResource MainCrossFadeImage}"
+				   Visibility="{Binding ExecutionType, Converter={StaticResource EnumToVisibleCollapsedConverter}, ConverterParameter=MainCrossFade}"
+				   ToolTip="Main, crossfade with previous main"/>
+
+			<Grid Grid.Row="0" Grid.Column="0"
+                  Visibility="{Binding ExecutionType, Converter={StaticResource EnumToCollapsedVisibleConverter}, ConverterParameter=Parallel}">
+					
+				<Image Source="{DynamicResource PlayingImage}"
+					   Visibility="{Binding IsPlaying, Converter={StaticResource BooleanToVisibleCollapsedConverter}}"
+					   ToolTip="{Binding PlayPosition,
+									Converter={StaticResource TimeSpanFormatConverter}, ConverterParameter='Playing at {0:mm\\:ss}'}"/>
+
+				<Image Source="{DynamicResource NextImage}"
+					   Visibility="{Binding IsNext, Converter={StaticResource BooleanToVisibleCollapsedConverter}}"
+					   ToolTip="Next to play"/>
+			</Grid>
+			
+			<!-- Delay type -->
+            <Grid Grid.Row="1" Grid.Column="0">
+				<Image Source="{DynamicResource ManualDelayImage}"
+						Visibility="{Binding DelayType,
+									Converter={StaticResource EnumToVisibleCollapsedConverter},
+									ConverterParameter={x:Static audio:DelayTypes.Manual}}"
+						ToolTip="Start manually"/>
+
+				<Grid Margin="3">
+					<!-- These images are smaller -->
+					<Image Source="{DynamicResource DelayAfterStartImage}"
+							Visibility="{Binding DelayType,
+										Converter={StaticResource EnumToVisibleCollapsedConverter},
+										ConverterParameter={x:Static audio:DelayTypes.TimedFromStart}}"
+							ToolTip="{Binding DelayBefore,
+									Converter={StaticResource TimeSpanFormatConverter}, ConverterParameter='Start + {0:mm\\:ss}'}"/>
+
+					<Image Source="{DynamicResource DelayBeforeEndImage}"
+							Visibility="{Binding DelayType,
+										Converter={StaticResource EnumToVisibleCollapsedConverter},
+										ConverterParameter={x:Static audio:DelayTypes.TimedBeforeEnd}}"
+							ToolTip="{Binding DelayBefore,
+										Converter={StaticResource TimeSpanFormatConverter}, ConverterParameter='End - {0:mm\\:ss}'}"/>
+
+					<Image Source="{DynamicResource DelayAfterEndImage}"
+							Visibility="{Binding DelayType,
+										Converter={StaticResource EnumToVisibleCollapsedConverter},
+										ConverterParameter={x:Static audio:DelayTypes.TimedAfterEnd}}"
+							ToolTip="{Binding DelayBefore,
+										Converter={StaticResource TimeSpanFormatConverter}, ConverterParameter='End + {0:mm\\:ss}'}"/>
+				</Grid>
+			</Grid>
+			
+			<ContentControl Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+							Content="{Binding}" ContentTemplateSelector="{DynamicResource VolumeBarSelector}"
+							Foreground="{TemplateBinding Foreground}"/>
+		</Grid>
+	</ControlTemplate>
+	
+	
+	<Style x:Key="ActionStatusIndicatorStyle" TargetType="{x:Type res:ActionStatusIndicator}">
+		<Setter Property="Template" Value="{DynamicResource ActionStatusIndicatorTemplate}"/>
+		<Setter Property="Width" Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+		<Setter Property="Height" Value="36"/>
+		<Setter Property="HorizontalAlignment" Value="Left"/>
+		<Setter Property="VerticalAlignment" Value="Top"/>
+		<Setter Property="Foreground" Value="{DynamicResource ProducerPlainBrush}"/>
+	</Style>
+	
+</ResourceDictionary>
+	

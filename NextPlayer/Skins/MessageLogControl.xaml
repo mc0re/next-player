@@ -1,0 +1,172 @@
+﻿<ResourceDictionary
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:common="http://nextplayer.nikitins.dk/Common"
+		xmlns:res="http://nextplayer.nikitins.dk/Resources">
+
+	<res:SumConverter x:Key="SumConverter"/>
+	<res:BooleanOrConverter x:Key="BooleanOrConverter"/>
+	<res:BooleanToVisibilityConverter x:Key="BooleanToVisibleCollapsedConverter"/>
+	<common:StringFormatConverter x:Key="StringFormatConverter"/>
+
+
+	<ControlTemplate x:Key="BooleanStatusIndicatorTemplate" TargetType="{x:Type res:BooleanStatusIndicator}">
+		<ControlTemplate.Resources>
+			<Storyboard x:Key="OpacityAnimation">
+				<DoubleAnimation From="0.3" To="1" Duration="0:0:1.5"
+								 AutoReverse="True" RepeatBehavior="Forever" FillBehavior="Stop"
+								 Storyboard.TargetName="InnerRect" Storyboard.TargetProperty="Opacity"/>
+			</Storyboard>
+		</ControlTemplate.Resources>
+		
+		<Border BorderBrush="{TemplateBinding BorderBrush}"
+				BorderThickness="1,0,0,0"
+				ToolTip="{TemplateBinding ToolTip}" ToolTipService.BetweenShowDelay="0">
+
+			<Border x:Name="InnerRect"
+					Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+					Margin="{TemplateBinding Padding}"
+					Background="{TemplateBinding Background}">
+			</Border>
+		</Border>
+		
+		<ControlTemplate.Triggers>
+			<Trigger Property="Status" Value="True">
+				<Trigger.EnterActions>
+					<BeginStoryboard Name="BeginOpacityAnimation" Storyboard="{StaticResource OpacityAnimation}"/>
+				</Trigger.EnterActions>
+				<Trigger.ExitActions>
+					<StopStoryboard BeginStoryboardName="BeginOpacityAnimation"/>
+				</Trigger.ExitActions>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+	
+	
+	<Style x:Key="BooleanStatusIndicatorStyle" TargetType="{x:Type res:BooleanStatusIndicator}">
+		<Setter Property="Template" Value="{DynamicResource BooleanStatusIndicatorTemplate}"/>
+		<Setter Property="Padding" Value="4"/>
+		<Setter Property="Background" Value="{DynamicResource ActionButtonPlainBrush}"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource FrameBrush}"/>
+		<Setter Property="ToolTip" Value="Background calculations ongoing"/>
+		
+		<Style.Triggers>
+			<Trigger Property="Status" Value="False">
+				<Setter Property="Background" Value="Transparent"/>
+				<Setter Property="ToolTip" Value="{x:Null}"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+	
+	
+	<DataTemplate x:Key="TriggerListToolTipTemplate">
+		<ItemsControl ItemsSource="{Binding}">
+			<ItemsControl.Template>
+				<ControlTemplate TargetType="{x:Type ItemsControl}">
+					<StackPanel>
+						<TextBlock Text="{Binding Count, StringFormat='{}{0} trigger(s)'}"/>
+						<ItemsPresenter/>
+					</StackPanel>
+				</ControlTemplate>
+			</ItemsControl.Template>
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel/>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate DataType="{x:Type common:TriggerSummary}">
+					<TextBlock>
+						<TextBlock.Text>
+							<MultiBinding Converter="{StaticResource StringFormatConverter}"
+															  ConverterParameter="At {0:H\:mm\:ss\.fff}: {1}">
+								<Binding Path="NextTime"/>
+								<Binding Path="NextAction"/>
+							</MultiBinding>
+						</TextBlock.Text>
+					</TextBlock>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</DataTemplate>
+	
+	
+	<ControlTemplate x:Key="MessageLogTemplate" TargetType="{x:Type res:MessageLogControl}">
+		<DockPanel DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+			<Grid DockPanel.Dock="Bottom">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				
+				<!-- Trigger info -->
+				<StackPanel Grid.Column="0" Orientation="Horizontal" Background="Transparent">
+					<TextBlock Style="{DynamicResource MainTextStyle}"
+							   Text="{Binding TriggerCount, StringFormat='Triggers: {0}'}"/>
+					
+					<TextBlock Style="{DynamicResource MainTextStyle}" Margin="5,0,0,0"
+							   Visibility="{Binding TriggerCount, Converter={StaticResource BooleanToVisibleCollapsedConverter}}"
+							   Text="{Binding NextTriggerName, StringFormat='Next: {0}'}"/>
+					
+					<StackPanel.ToolTip>
+						<ToolTip Content="{Binding NextTriggerList}" ContentTemplate="{DynamicResource TriggerListToolTipTemplate}"/>
+					</StackPanel.ToolTip>
+				</StackPanel>
+				
+				<!-- Cache size -->
+				<TextBlock Grid.Column="1" Style="{DynamicResource MainTextStyle}" HorizontalAlignment="Right">
+					<TextBlock.Text>
+						<MultiBinding StringFormat="Cache size: {0:N0}" Converter="{StaticResource SumConverter}">
+							<Binding Path="FileCacheSize"/>
+							<Binding Path="SampleCacheSize"/>
+							<Binding Path="FigureCacheSize"/>
+						</MultiBinding>
+					</TextBlock.Text>
+					
+					<TextBlock.ToolTip>
+						<ToolTip>
+							<MultiBinding Converter="{StaticResource StringFormatConverter}"
+										  ConverterParameter="File: {0:N0} bytes\nSamples: {1:N0} bytes\nFigures: {2:N0} bytes">
+								<Binding Path="FileCacheSize"/>
+								<Binding Path="SampleCacheSize"/>
+								<Binding Path="FigureCacheSize"/>
+							</MultiBinding>
+						</ToolTip>
+					</TextBlock.ToolTip>
+				</TextBlock>
+				
+				<!-- Workers status -->
+				<res:BooleanStatusIndicator Grid.Column="2" Style="{DynamicResource BooleanStatusIndicatorStyle}">
+					<res:BooleanStatusIndicator.Status>
+						<MultiBinding Converter="{StaticResource BooleanOrConverter}">
+							<Binding Path="IsDurationBusy"/>
+							<Binding Path="IsWaveformBusy"/>
+						</MultiBinding>
+					</res:BooleanStatusIndicator.Status>
+				</res:BooleanStatusIndicator>
+			</Grid>
+
+			<Grid>
+				<TextBox Name="PART_Scroller"
+						 Style="{DynamicResource TextBoxStyle}" VerticalAlignment="Stretch"
+						 Text="{Binding Text, Mode=OneWay}" IsReadOnly="True"
+						 ScrollViewer.HorizontalScrollBarVisibility="Visible"
+						 ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+
+				<Button Style="{DynamicResource SquareImageButtonStyle}"
+						HorizontalAlignment="Right" VerticalAlignment="Bottom"
+						Width="17" Height="17"
+						Content="{DynamicResource ClearImage}"
+						Command="{Binding ClearLogCommand}"
+						ToolTip="Clear message log"/>
+			</Grid>
+		</DockPanel>
+	</ControlTemplate>
+
+
+	<Style x:Key="MessageLogStyle" TargetType="{x:Type res:MessageLogControl}">
+		<Setter Property="Template" Value="{DynamicResource MessageLogTemplate}"/>
+	</Style>
+	
+</ResourceDictionary>

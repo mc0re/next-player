@@ -1,0 +1,67 @@
+﻿<Application x:Class="Application"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    StartupUri="Windows\PlayerWindow.xaml"
+ShutdownMode="OnMainWindowClose">
+	
+    <Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<!-- General -->
+                <ResourceDictionary Source="Skins/Commands.xaml"/>
+                <ResourceDictionary Source="/WpfTemplates;component/Skins/Colors.xaml"/>
+                <ResourceDictionary Source="Skins/Texts.xaml"/>
+				<ResourceDictionary Source="Skins/NumberEditor.xaml"/>
+                <ResourceDictionary Source="Skins/Graphics.xaml"/>
+                <ResourceDictionary Source="Skins/Buttons.xaml"/>
+                <ResourceDictionary Source="Skins/ScrollViewer.xaml"/>
+                <ResourceDictionary Source="Skins/Expander.xaml"/>
+                <ResourceDictionary Source="Skins/GridSplitter.xaml"/>
+                <ResourceDictionary Source="Skins/CheckBox.xaml"/>
+                <ResourceDictionary Source="Skins/ComboBox.xaml"/>
+				<ResourceDictionary Source="Skins/NumericUpDown.xaml"/>
+                <ResourceDictionary Source="Skins/TabControl.xaml"/>
+				<ResourceDictionary Source="/WpfTemplates;component/Skins/GroupBox.xaml"/>
+				
+				<!-- Sub-controls with control buttons etc. -->
+                <ResourceDictionary Source="Skins/ActionStatusIndicator.xaml"/>
+                <ResourceDictionary Source="Skins/PlaySequenceControl.xaml"/>
+				<ResourceDictionary Source="Skins/DelayReferenceControl.xaml"/>
+                <ResourceDictionary Source="Skins/StartDelayControl.xaml"/>
+                <ResourceDictionary Source="Skins/SetParallelControl.xaml"/>
+				<ResourceDictionary Source="Skins/EffectTypeControl.xaml"/>
+				<ResourceDictionary Source="Skins/EffectTargetControl.xaml"/>
+				<ResourceDictionary Source="Skins/SetSlideControl.xaml"/>
+				<ResourceDictionary Source="Skins/SoundPositionModeControl.xaml"/>
+				<ResourceDictionary Source="Skins/CoordinatesEditorControl.xaml"/>
+				
+				<!-- Larger controls with sliders and editors -->
+				<ResourceDictionary Source="Skins/PositionedRangeBase.xaml"/>
+				<ResourceDictionary Source="Skins/PointListEditor.xaml"/>
+				<ResourceDictionary Source="Skins/PlayPositionControl.xaml"/>
+                <ResourceDictionary Source="Skins/VolumeControl.xaml"/>
+				<ResourceDictionary Source="Skins/BalanceControl.xaml"/>
+				<ResourceDictionary Source="Skins/EffectListControl.xaml"/>
+				
+				<!-- Main controls - playlist etc. -->
+                <ResourceDictionary Source="Skins/PlayerActionControl.xaml"/>
+                <ResourceDictionary Source="Skins/PlaylistControl.xaml"/>
+				<ResourceDictionary Source="Skins/MessageLogControl.xaml"/>
+				<ResourceDictionary Source="Skins/ColorPickerControl.xaml"/>
+				
+				<!-- Settings controls -->
+                <ResourceDictionary Source="Settings/EnvironmentSelector.xaml"/>
+                <ResourceDictionary Source="Settings/ChannelEditorControlBase.xaml"/>
+				<ResourceDictionary Source="Settings/TextOutputEditorControl.xaml"/>
+                <ResourceDictionary Source="Settings/AudioOutputEditorControl.xaml"/>
+                <ResourceDictionary Source="Settings/AudioPositionEditorControl.xaml"/>
+				<ResourceDictionary Source="Settings/CoordinateEditorControl.xaml"/>
+				<ResourceDictionary Source="/WpfTemplates;component/Skins/SkinEditorControl.xaml"/>
+                <ResourceDictionary Source="/VoiceControlLibrary;component/Skins/VoiceConfiguration.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+            
+            <!-- Dummy default style to make skinning working, anything you won't use goes -->
+            <Style TargetType="{x:Type Rectangle}" />
+        </ResourceDictionary>
+	</Application.Resources>
+</Application>

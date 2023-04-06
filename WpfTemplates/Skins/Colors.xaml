@@ -1,0 +1,187 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:res="http://nextplayer.nikitins.dk/Resources"
+	xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+	<res:ColorChangerConverter x:Key="ColorChangerConverter"/>
+	
+	
+	<!-- General opacity settings -->
+	<system:Double x:Key="DisabledElementOpacity">0.6</system:Double>
+	<system:Double x:Key="MouseOverOpacity">0.6</system:Double>
+	<system:Double x:Key="DisabledTextOpacity">0.4</system:Double>
+	<system:Double x:Key="SkippedAudioBgOpacity">0.5</system:Double>
+    <system:Double x:Key="ScrollThumbOpacity">0.25</system:Double>
+
+
+    <!-- General colors and brushes -->
+
+	<SolidColorBrush x:Key="BackgroundBrush" Color="{res:SkinColorBinding MainBackgroundColor}"/>
+	<SolidColorBrush x:Key="FrameBrush" Color="{res:SkinColorBinding FrameColor}"/>
+	<SolidColorBrush x:Key="GraphicsBrush" Color="{res:SkinColorBinding GraphicsColor}"/>
+	<SolidColorBrush x:Key="GraphicsFrameBrush" Color="{res:SkinColorBinding GraphicsFrameColor}"/>
+	<SolidColorBrush x:Key="GraphicsMarkBrush" Color="{res:SkinColorBinding GraphicsMarkColor}"/>
+	<SolidColorBrush x:Key="MainTextBrush" Color="{res:SkinColorBinding MainTextColor}"/>
+	<SolidColorBrush x:Key="AttentionBrush" Color="{res:SkinColorBinding AttentionColor}"/>
+	<SolidColorBrush x:Key="ClockFontBrush" Color="{res:SkinColorBinding ClockFontColor}"/>
+	
+	<SolidColorBrush x:Key="SelectedBackgroundBrush" Color="{res:SkinColorBinding SelectedBackgroundColor}"/>
+	<SolidColorBrush x:Key="SelectedForegroundBrush" Color="{res:SkinColorBinding SelectedForegroundColor}"/>
+	<SolidColorBrush x:Key="SelectedFrameBrush" Color="{res:SkinColorBinding SelectedFrameColor}"/>
+	<SolidColorBrush x:Key="NextBackgroundBrush" Color="{res:SkinColorBinding NextBackgroundColor}"/>
+	<SolidColorBrush x:Key="NextForegroundBrush" Color="{res:SkinColorBinding NextForegroundColor}"/>
+	<SolidColorBrush x:Key="NextFrameBrush" Color="{res:SkinColorBinding NextFrameColor}"/>
+
+	<SolidColorBrush x:Key="ActionHeaderBrush" Color="{res:SkinColorBinding ActionHeaderColor}"/>
+	<SolidColorBrush x:Key="SectionHeaderBrush" Color="{res:SkinColorBinding SectionHeaderColor}"/>
+	<SolidColorBrush x:Key="ColumnHeaderBrush" Color="{res:SkinColorBinding ColumnHeaderColor}"/>
+	<SolidColorBrush x:Key="ItemHeaderBrush" Color="{res:SkinColorBinding ItemHeaderColor}"/>
+	
+	<SolidColorBrush x:Key="ActiveTextBrush" Color="{res:SkinColorBinding ActiveTextColor}"/>
+	<SolidColorBrush x:Key="ManualStartBrush" Color="{res:SkinColorBinding ManualStartColor}"/>
+	<SolidColorBrush x:Key="CommentTextBrush" Color="{res:SkinColorBinding CommentTextColor}"/>
+	<SolidColorBrush x:Key="ButtonTextBrush" Color="{res:SkinColorBinding ActionButtonTextColor}"/>
+	<SolidColorBrush x:Key="PlayIndicatorBrush" Color="{res:SkinColorBinding PlayIndicatorColor}"/>
+	
+	<SolidColorBrush x:Key="DisabledTextBrush" Color="{res:SkinColorBinding DisabledTextColor}"/>
+	
+	
+	<!-- Buttons -->
+	
+	<LinearGradientBrush x:Key="ButtonFrameBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+		<LinearGradientBrush.RelativeTransform>
+			<TransformGroup>
+				<ScaleTransform CenterY="0.5" CenterX="0.5"/>
+				<SkewTransform CenterY="0.5" CenterX="0.5"/>
+				<RotateTransform Angle="-18" CenterY="0.5" CenterX="0.5"/>
+				<TranslateTransform/>
+			</TransformGroup>
+		</LinearGradientBrush.RelativeTransform>
+		
+		<GradientStop Color="{res:SkinColorBinding ActionButtonFrameColor, ConverterParameter=-0.2}" Offset="0"/>
+		<GradientStop Color="{res:SkinColorBinding ActionButtonFrameColor, ConverterParameter=0.2}" Offset="1"/>
+	</LinearGradientBrush>
+
+
+	<!-- Main action button -->
+	
+	<SolidColorBrush x:Key="ActionButtonPlainBrush" Color="{res:SkinColorBinding ActionButtonBackgroundColor}"/>
+	
+	
+	<RadialGradientBrush x:Key="ActionButtonBackgroundBrush" RadiusY="1" RadiusX="1" Center="0.5,1" >
+		<RadialGradientBrush.RelativeTransform>
+			<RotateTransform Angle="-18" CenterY="0.5" CenterX="0.5"/>
+		</RadialGradientBrush.RelativeTransform>
+
+		<GradientStop Color="{res:SkinColorBinding ActionButtonBackgroundColor, ConverterParameter=0}" Offset="0"/>
+		<GradientStop Color="{res:SkinColorBinding ActionButtonBackgroundColor, ConverterParameter=0.24}" Offset="0.7"/>
+		<GradientStop Color="{res:SkinColorBinding ActionButtonBackgroundColor, ConverterParameter=0.7}" Offset="0.85"/>
+		<GradientStop Color="{res:SkinColorBinding ActionButtonBackgroundColor, ConverterParameter=0}" Offset="1"/>
+    </RadialGradientBrush>
+
+
+	<RadialGradientBrush x:Key="ActionButtonPressedBackgroundBrush" RadiusY="1" RadiusX="1" Center="0.5,1" >
+		<RadialGradientBrush.RelativeTransform>
+			<RotateTransform Angle="-18" CenterY="0.5" CenterX="0.5"/>
+		</RadialGradientBrush.RelativeTransform>
+
+		<GradientStop Color="{res:SkinColorBinding ActionButtonBackgroundColor, ConverterParameter=-0.2}" Offset="0"/>
+		<GradientStop Color="{res:SkinColorBinding ActionButtonBackgroundColor, ConverterParameter=0}" Offset="0.7"/>
+		<GradientStop Color="{res:SkinColorBinding ActionButtonBackgroundColor, ConverterParameter=0.5}" Offset="0.85"/>
+		<GradientStop Color="{res:SkinColorBinding ActionButtonBackgroundColor, ConverterParameter=-0.2}" Offset="1"/>
+	</RadialGradientBrush>
+
+	
+	<RadialGradientBrush x:Key="ButtonPlayingBackgroundBrush" RadiusY="1" RadiusX="1" Center="0.5,1" >
+		<RadialGradientBrush.RelativeTransform>
+			<RotateTransform Angle="-18" CenterY="0.5" CenterX="0.5"/>
+		</RadialGradientBrush.RelativeTransform>
+
+		<GradientStop Color="{res:SkinColorBinding AttentionColor, ConverterParameter=0}" Offset="0"/>
+		<GradientStop Color="{res:SkinColorBinding AttentionColor, ConverterParameter=0.24}" Offset="0.7"/>
+		<GradientStop Color="{res:SkinColorBinding AttentionColor, ConverterParameter=0.7}" Offset="0.85"/>
+		<GradientStop Color="{res:SkinColorBinding AttentionColor, ConverterParameter=0}" Offset="1"/>
+	</RadialGradientBrush>
+
+
+	<!-- Producer brushes -->
+
+	<SolidColorBrush x:Key="ProducerPlainBrush" Color="{res:SkinColorBinding ProducerColor}"/>
+	
+	
+	<RadialGradientBrush x:Key="ProducerButtonBackgroundBrush" RadiusY="1" RadiusX="1" Center="0.5,1" >
+		<RadialGradientBrush.RelativeTransform>
+			<RotateTransform Angle="-18" CenterY="0.5" CenterX="0.5"/>
+		</RadialGradientBrush.RelativeTransform>
+
+		<GradientStop Color="{res:SkinColorBinding ProducerColor, ConverterParameter=0}" Offset="0"/>
+		<GradientStop Color="{res:SkinColorBinding ProducerColor, ConverterParameter=0.24}" Offset="0.7"/>
+		<GradientStop Color="{res:SkinColorBinding ProducerColor, ConverterParameter=0.7}" Offset="0.85"/>
+		<GradientStop Color="{res:SkinColorBinding ProducerColor, ConverterParameter=0}" Offset="1"/>
+    </RadialGradientBrush>
+
+
+	<RadialGradientBrush x:Key="ProducerButtonPressedBackgroundBrush" RadiusY="1" RadiusX="1" Center="0.5,1" >
+		<RadialGradientBrush.RelativeTransform>
+			<RotateTransform Angle="-18" CenterY="0.5" CenterX="0.5"/>
+		</RadialGradientBrush.RelativeTransform>
+
+		<GradientStop Color="{res:SkinColorBinding ProducerColor, ConverterParameter=-0.2}" Offset="0"/>
+		<GradientStop Color="{res:SkinColorBinding ProducerColor, ConverterParameter=0}" Offset="0.7"/>
+		<GradientStop Color="{res:SkinColorBinding ProducerColor, ConverterParameter=0.5}" Offset="0.85"/>
+		<GradientStop Color="{res:SkinColorBinding ProducerColor, ConverterParameter=-0.2}" Offset="1"/>
+	</RadialGradientBrush>
+
+	
+	<!-- Effect brushes -->
+	
+	<SolidColorBrush x:Key="EffectPlainBrush" Color="{res:SkinColorBinding EffectButtonBackgroundColor}"/>
+
+	
+	<RadialGradientBrush x:Key="EffectButtonBackgroundBrush" RadiusY="1" RadiusX="1" Center="0.5,1" >
+		<RadialGradientBrush.RelativeTransform>
+			<RotateTransform Angle="-18" CenterY="0.5" CenterX="0.5"/>
+		</RadialGradientBrush.RelativeTransform>
+
+		<GradientStop Color="{res:SkinColorBinding EffectButtonBackgroundColor, ConverterParameter=0}" Offset="0"/>
+		<GradientStop Color="{res:SkinColorBinding EffectButtonBackgroundColor, ConverterParameter=0.24}" Offset="0.7"/>
+		<GradientStop Color="{res:SkinColorBinding EffectButtonBackgroundColor, ConverterParameter=0.7}" Offset="0.85"/>
+		<GradientStop Color="{res:SkinColorBinding EffectButtonBackgroundColor, ConverterParameter=0}" Offset="1"/>
+	</RadialGradientBrush>
+
+
+	<RadialGradientBrush x:Key="EffectButtonPressedBackgroundBrush" RadiusY="1" RadiusX="1" Center="0.5,1" >
+		<RadialGradientBrush.RelativeTransform>
+			<RotateTransform Angle="-18" CenterY="0.5" CenterX="0.5"/>
+		</RadialGradientBrush.RelativeTransform>
+
+		<GradientStop Color="{res:SkinColorBinding EffectButtonBackgroundColor, ConverterParameter=-0.2}" Offset="0"/>
+		<GradientStop Color="{res:SkinColorBinding EffectButtonBackgroundColor, ConverterParameter=0}" Offset="0.7"/>
+		<GradientStop Color="{res:SkinColorBinding EffectButtonBackgroundColor, ConverterParameter=0.5}" Offset="0.85"/>
+		<GradientStop Color="{res:SkinColorBinding EffectButtonBackgroundColor, ConverterParameter=-0.2}" Offset="1"/>
+	</RadialGradientBrush>
+
+	
+	<!-- Secondary button brushes -->
+	
+	
+	<SolidColorBrush x:Key="RectButtonTextBrush" Color="{res:SkinColorBinding SecondaryButtonTextColor}"/>
+
+	
+	<LinearGradientBrush x:Key="RectButtonBackgroundBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+		<GradientStop Color="{res:SkinColorBinding SecondaryActionButtonColor, ConverterParameter=0}" Offset="0"/>
+		<GradientStop Color="{res:SkinColorBinding SecondaryActionButtonColor, ConverterParameter=0.4}" Offset="0.1"/>
+		<GradientStop Color="{res:SkinColorBinding SecondaryActionButtonColor, ConverterParameter=0.1}" Offset="0.22"/>
+		<GradientStop Color="{res:SkinColorBinding SecondaryActionButtonColor, ConverterParameter=-0.2}" Offset="1"/>
+	</LinearGradientBrush>
+
+	
+	<LinearGradientBrush x:Key="RectButtonPressedBackgroundBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+		<GradientStop Color="{res:SkinColorBinding SecondaryActionButtonColor, ConverterParameter=-0.2}" Offset="0"/>
+		<GradientStop Color="{res:SkinColorBinding SecondaryActionButtonColor, ConverterParameter=0.2}" Offset="0.1"/>
+		<GradientStop Color="{res:SkinColorBinding SecondaryActionButtonColor, ConverterParameter=-0.1}" Offset="0.22"/>
+		<GradientStop Color="{res:SkinColorBinding SecondaryActionButtonColor, ConverterParameter=-0.4}" Offset="1"/>
+	</LinearGradientBrush>
+	
+</ResourceDictionary>

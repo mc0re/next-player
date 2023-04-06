@@ -1,0 +1,219 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:common="http://nextplayer.nikitins.dk/Common"
+	xmlns:act="http://schemas.nikitins.dk/actions"
+	xmlns:res="http://nextplayer.nikitins.dk/Resources">
+
+    
+	<res:MaxPositionConverter x:Key="MaxPositionConverter"/>
+	<res:PointsToPathConverter x:Key="PointsToPathConverter"/>
+	<res:ClipRectConverter x:Key="ClipRectConverter"/>
+	<res:BooleanToVisibilityConverter x:Key="BooleanToVisibleCollapsedConverter"/>
+	<common:StringFormatConverter x:Key="StringFormatConverter"/>
+	<res:ScaleCoordinateConverter x:Key="ScaleCoordinateConverter"/>
+	<res:MillisecondsToTimeSpanConverter x:Key="MillisecondsToTimeSpanConverter"/>
+
+
+	<ControlTemplate x:Key="PointListProgressVisualizerTemplate" TargetType="{x:Type res:PlayPositionControl}">
+		<Grid>
+			<Grid.LayoutTransform>
+				<ScaleTransform ScaleY="-1"/>
+			</Grid.LayoutTransform>
+				
+			<Border Name="PART_Track" HorizontalAlignment="Left" Background="Transparent">
+				<Image Stretch="Fill">
+					<Image.Source>
+						<DrawingImage>
+							<DrawingImage.Drawing>
+								<DrawingGroup>
+									<DrawingGroup.Children>
+										<!-- Make sure the Ymax is 1 -->
+										<GeometryDrawing Brush="Transparent" Geometry="M0,0 V1 H1 V0 Z"/>
+										<!-- The diagram itself -->
+										<GeometryDrawing Brush="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}"
+														 Geometry="{Binding TrackGeometry, RelativeSource={RelativeSource TemplatedParent}}">
+											<GeometryDrawing.Pen>
+												<Pen Brush="{Binding Background, RelativeSource={RelativeSource TemplatedParent}}" Thickness="0"/>
+											</GeometryDrawing.Pen>
+										</GeometryDrawing>
+									</DrawingGroup.Children>
+								</DrawingGroup>
+							</DrawingImage.Drawing>
+						</DrawingImage>
+					</Image.Source>
+				</Image>
+			</Border>
+			
+			<Border Name="PART_Indicator" HorizontalAlignment="Left">
+				<Image Stretch="Fill">
+					<Image.Source>
+						<DrawingImage>
+							<DrawingImage.Drawing>
+								<DrawingGroup ClipGeometry="{Binding Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ClipRectConverter}}">
+									<DrawingGroup.Children>
+										<!-- Make sure the Ymax is 1 -->
+										<GeometryDrawing Brush="Transparent" Geometry="M0,0 V1 H1 V0 Z"/>
+										<!-- The diagram itself -->
+										<GeometryDrawing Brush="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}"
+														 Geometry="{Binding TrackGeometry, RelativeSource={RelativeSource TemplatedParent}}">
+											<GeometryDrawing.Pen>
+												<Pen Brush="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}" Thickness="0"/>
+											</GeometryDrawing.Pen>
+										</GeometryDrawing>
+									</DrawingGroup.Children>
+								</DrawingGroup>
+							</DrawingImage.Drawing>
+						</DrawingImage>
+					</Image.Source>
+				</Image>
+			</Border>
+
+			<ContentPresenter Content="{Binding}"
+							  ContentTemplate="{Binding TrackOverlay, RelativeSource={RelativeSource TemplatedParent}}"/>
+		</Grid>
+	</ControlTemplate>
+
+	
+	<DataTemplate x:Key="StopBarTemplate" DataType="{x:Type act:AutomationPointCollection}">
+		<Border Name="StopLine"
+				HorizontalAlignment="Right" Width="2"
+				Background="{DynamicResource AttentionBrush}"
+				Visibility="{Binding ShowEndBar, RelativeSource={RelativeSource AncestorType={x:Type res:PointListProgressVisualizer}}, Converter={StaticResource BooleanToVisibleCollapsedConverter}}"/>
+	</DataTemplate>
+
+	
+	<Style x:Key="PointListVisualizerStyle" TargetType="{x:Type res:PointListProgressVisualizer}">
+		<Setter Property="Template" Value="{DynamicResource PointListProgressVisualizerTemplate}"/>
+		<Setter Property="Background" Value="{DynamicResource GraphicsBrush}"/>
+		<Setter Property="Foreground" Value="{DynamicResource EffectPlainBrush}"/>
+		<Setter Property="TrackOverlay" Value="{DynamicResource StopBarTemplate}"/>
+		<Setter Property="Margin" Value="2"/>
+		<Setter Property="Maximum">
+			<Setter.Value>
+				<MultiBinding Converter="{StaticResource MaxPositionConverter}">
+					<Binding Path="Points" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="HasDuration" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="Duration" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="NoDurationFactor" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="PointsVersion" RelativeSource="{RelativeSource Self}"/>
+				</MultiBinding>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="TrackGeometry">
+			<Setter.Value>
+				<MultiBinding Converter="{StaticResource PointsToPathConverter}">
+					<Binding Path="Points" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="HasDuration" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="Duration" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="NoDurationFactor" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="PointsVersion" RelativeSource="{RelativeSource Self}"/>
+				</MultiBinding>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+
+	<ControlTemplate x:Key="PointControlTemplate" TargetType="{x:Type res:PointListEditorPoint}">
+		<Grid>
+			<Ellipse Width="16" Height="16"
+					 HorizontalAlignment="Center" VerticalAlignment="Center"
+					 Fill="Transparent"
+					 ToolTipService.InitialShowDelay="0" ToolTipService.BetweenShowDelay="0" ToolTipService.ShowDuration="120000">
+
+				<Ellipse.ToolTip>
+					<ToolTip>
+						<MultiBinding Converter="{StaticResource StringFormatConverter}" ConverterParameter="Time {0:f0} ms, value {1:f2}">
+							<Binding Path="X"/>
+							<Binding Path="Y"/>
+						</MultiBinding>
+					</ToolTip>
+				</Ellipse.ToolTip>
+			</Ellipse>
+
+			<Ellipse Width="8" Height="8"
+					 IsHitTestVisible="False"
+					 HorizontalAlignment="Center" VerticalAlignment="Center"
+					 Stroke="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+					 StrokeThickness="2"/>
+		</Grid>
+	</ControlTemplate>
+	
+	
+	<Style x:Key="PointControlStyle" TargetType="{x:Type res:PointListEditorPoint}">
+		<Setter Property="Template" Value="{DynamicResource PointControlTemplate}"/>
+	</Style>
+
+
+	<DataTemplate x:Key="PointListItemTemplate" DataType="{x:Type act:AutomationPoint}">
+		<res:PointListEditorPoint Cursor="Hand" Style="{DynamicResource PointControlStyle}"/>
+	</DataTemplate>
+
+
+	<Style x:Key="PointContainerStyle" TargetType="{x:Type res:RelativePositionContainer}">
+		<Setter Property="Canvas.Left">
+			<Setter.Value>
+				<MultiBinding Converter="{StaticResource ScaleCoordinateConverter}">
+					<Binding Path="X"/>
+					<Binding Path="MaxInputX" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="MaxOutputX" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}"/>
+				</MultiBinding>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Canvas.Top">
+			<Setter.Value>
+				<MultiBinding Converter="{StaticResource ScaleCoordinateConverter}">
+					<Binding Path="Y"/>
+					<Binding Path="MaxInputY" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="MaxOutputY" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}"/>
+				</MultiBinding>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+	
+	<ItemsPanelTemplate x:Key="PointListEditorPanel">
+		<Canvas/>
+	</ItemsPanelTemplate>
+
+	
+	<ControlTemplate x:Key="PointListEditorTemplate" TargetType="{x:Type res:PointListEditor}">
+		<Grid Cursor="/Resources/AddCursor.cur">
+			<res:PointListProgressVisualizer x:Name="bg"
+											   Style="{DynamicResource PointListVisualizerStyle}"
+											   Points="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}"
+											   HasDuration="True"
+											   Duration="{Binding DrawingDuration, RelativeSource={RelativeSource TemplatedParent},
+														  Converter={StaticResource MillisecondsToTimeSpanConverter}}"
+											   ShowEndBar="{Binding HasDuration, RelativeSource={RelativeSource TemplatedParent}}"
+											   NoDurationFactor="1"
+											   IsIndicatorMoveable="False"/>
+			
+			<Grid Background="{x:Null}" Visibility="{TemplateBinding IsEnabled, Converter={StaticResource BooleanToVisibleCollapsedConverter}}">
+				<Grid.LayoutTransform>
+					<ScaleTransform ScaleY="-1"/>
+				</Grid.LayoutTransform>
+				
+				<ItemsPresenter Margin="{Binding Margin, ElementName=bg}"
+								res:RelativePositionContainer.MaxInputX="{Binding DrawingDuration, RelativeSource={RelativeSource TemplatedParent}}"
+								res:RelativePositionContainer.MaxOutputX="{Binding ActualWidth, RelativeSource={RelativeSource Self}}"
+								res:RelativePositionContainer.MaxOutputY="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"/>
+
+			</Grid>
+		</Grid>
+	</ControlTemplate>
+	
+	
+	<Style x:Key="PointListEditorStyle" TargetType="{x:Type res:PointListEditor}">
+		<Setter Property="Template" Value="{DynamicResource PointListEditorTemplate}"/>
+		<Setter Property="MinHeight" Value="10"/>
+		<Setter Property="ItemsPanel" Value="{DynamicResource PointListEditorPanel}"/>
+		<Setter Property="ItemContainerStyle" Value="{DynamicResource PointContainerStyle}"/>
+		<Setter Property="ItemTemplate" Value="{DynamicResource PointListItemTemplate}"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource EffectPlainBrush}"/>
+		<Setter Property="Foreground" Value="{DynamicResource MainTextBrush}"/>
+	</Style>
+	
+</ResourceDictionary>

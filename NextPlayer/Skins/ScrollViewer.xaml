@@ -1,0 +1,228 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:res="http://nextplayer.nikitins.dk/Resources">
+
+	<ControlTemplate x:Key="ScrollBarPageTemplate" TargetType="{x:Type RepeatButton}">
+		<Rectangle Fill="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"/>
+	</ControlTemplate>
+
+	
+	<Style x:Key="ScrollBarPageButton" TargetType="{x:Type RepeatButton}">
+		<Setter Property="OverridesDefaultStyle" Value="true"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="Focusable" Value="false"/>
+		<Setter Property="IsTabStop" Value="false"/>
+		<Setter Property="Template" Value="{DynamicResource ScrollBarPageTemplate}"/>
+	</Style>
+
+
+	<ControlTemplate x:Key="ScrollBarThumbTemplate" TargetType="{x:Type Thumb}">
+		<ControlTemplate.Resources>
+			<Storyboard x:Key="StoryboardMouseIn">
+				<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="rectMouse">
+					<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+				</DoubleAnimationUsingKeyFrames>
+			</Storyboard>
+			<Storyboard x:Key="StoryboardMouseOut">
+				<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="rectMouse">
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="{StaticResource ScrollThumbOpacity}"/>
+				</DoubleAnimationUsingKeyFrames>
+			</Storyboard>
+		</ControlTemplate.Resources>
+
+		<Grid>
+			<Border Name="rectNoMouse" Margin="1"
+					Background="{TemplateBinding Background}"
+					BorderBrush="{TemplateBinding BorderBrush}"
+					BorderThickness="{TemplateBinding BorderThickness}"
+					CornerRadius="2"/>
+
+			<Border Name="rectMouse" Margin="1"
+					Background="{TemplateBinding BorderBrush}"
+					BorderBrush="{TemplateBinding BorderBrush}"
+					BorderThickness="{TemplateBinding BorderThickness}"
+					CornerRadius="2"
+					Opacity="{StaticResource ScrollThumbOpacity}"/>
+		</Grid>
+
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Trigger.ExitActions>
+					<BeginStoryboard x:Name="StoryboardMouseOut_BeginStoryboard" Storyboard="{StaticResource StoryboardMouseOut}"/>
+				</Trigger.ExitActions>
+				<Trigger.EnterActions>
+					<BeginStoryboard x:Name="StoryboardMouseIn_BeginStoryboard" Storyboard="{StaticResource StoryboardMouseIn}"/>
+				</Trigger.EnterActions>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
+
+	<Style x:Key="ScrollBarThumbStyle" TargetType="{x:Type Thumb}">
+		<Setter Property="OverridesDefaultStyle" Value="true"/>
+		<Setter Property="IsTabStop" Value="false"/>
+		<Setter Property="Template" Value="{DynamicResource ScrollBarThumbTemplate}"/>
+	</Style>
+
+
+	<ControlTemplate x:Key="VerticalScrollBarTemplate" TargetType="{x:Type ScrollBar}">
+		<Border HorizontalAlignment="Stretch" Height="Auto"
+				VerticalAlignment="Stretch" Width="Auto"
+				BorderBrush="{TemplateBinding BorderBrush}"
+				BorderThickness="{TemplateBinding BorderThickness}"
+				Background="{TemplateBinding Background}">
+
+			<Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}">
+				<Track.DecreaseRepeatButton>
+					<RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource ScrollBarPageButton}"/>
+				</Track.DecreaseRepeatButton>
+				
+				<Track.IncreaseRepeatButton>
+					<RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource ScrollBarPageButton}"/>
+				</Track.IncreaseRepeatButton>
+				
+				<Track.Thumb>
+					<Thumb Style="{StaticResource ScrollBarThumbStyle}"
+						   Background="{TemplateBinding Background}"
+						   BorderBrush="{TemplateBinding BorderBrush}"
+						   Foreground="{TemplateBinding Foreground}"
+						   BorderThickness="{TemplateBinding BorderThickness}"/>
+				</Track.Thumb>
+			</Track>
+		</Border>
+
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsEnabled" Value="false">
+				<Setter Property="Visibility" TargetName="PART_Track" Value="Hidden"/>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
+
+	<ControlTemplate x:Key="HorizontalScrollBarTemplate" TargetType="{x:Type ScrollBar}">
+		<Border HorizontalAlignment="Stretch" Height="Auto"
+				VerticalAlignment="Stretch" Width="Auto"
+				BorderBrush="{TemplateBinding BorderBrush}"
+				BorderThickness="{TemplateBinding BorderThickness}"
+				Background="{TemplateBinding Background}">
+
+			<Track x:Name="PART_Track" IsEnabled="{TemplateBinding IsMouseOver}">
+				<Track.DecreaseRepeatButton>
+					<RepeatButton Command="{x:Static ScrollBar.PageLeftCommand}" Style="{StaticResource ScrollBarPageButton}"/>
+				</Track.DecreaseRepeatButton>
+				
+				<Track.IncreaseRepeatButton>
+					<RepeatButton Command="{x:Static ScrollBar.PageRightCommand}" Style="{StaticResource ScrollBarPageButton}"/>
+				</Track.IncreaseRepeatButton>
+				
+				<Track.Thumb>
+					<Thumb Style="{StaticResource ScrollBarThumbStyle}"
+						   Background="{TemplateBinding Background}"
+						   BorderBrush="{TemplateBinding BorderBrush}"
+						   Foreground="{TemplateBinding Foreground}"
+						   BorderThickness="{TemplateBinding BorderThickness}"/>
+				</Track.Thumb>
+			</Track>
+		</Border>
+
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsEnabled" Value="false">
+				<Setter Property="Visibility" TargetName="PART_Track" Value="Hidden"/>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
+
+	<Style x:Key="ScrollBarStyle" TargetType="{x:Type ScrollBar}">
+		<Setter Property="Template" Value="{DynamicResource VerticalScrollBarTemplate}"/>
+		<Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+		<Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
+		<Setter Property="Width" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"/>
+		<Setter Property="MinWidth" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"/>
+
+		<Style.Triggers>
+			<Trigger Property="Orientation" Value="Horizontal">
+				<Setter Property="Template" Value="{DynamicResource HorizontalScrollBarTemplate}"/>
+				<Setter Property="Width" Value="Auto"/>
+				<Setter Property="MinWidth" Value="0"/>
+				<Setter Property="Height" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}"/>
+				<Setter Property="MinHeight" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}"/>
+			</Trigger>
+		</Style.Triggers>
+	</Style>
+
+
+	<!-- Note: Padding is misused to give the thickness of the border around the content-->
+	<ControlTemplate x:Key="ScrollViewerControlTemplate" TargetType="{x:Type ScrollViewer}">
+		<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding Padding}">
+			<Grid x:Name="Grid" Background="{TemplateBinding Background}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+
+				<ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
+										CanContentScroll="{TemplateBinding CanContentScroll}"
+										CanHorizontallyScroll="False" CanVerticallyScroll="False"
+										ContentTemplate="{TemplateBinding ContentTemplate}"
+										Content="{TemplateBinding Content}"
+										Margin="{TemplateBinding Padding}"/>
+
+				<ScrollBar x:Name="PART_VerticalScrollBar" Grid.Row="0" Grid.Column="1"
+						   AutomationProperties.AutomationId="VerticalScrollBar"
+						   Style="{DynamicResource ScrollBarStyle}"
+						   Margin="{TemplateBinding Margin}"
+						   BorderBrush="{TemplateBinding BorderBrush}"
+						   Background="{TemplateBinding Background}"
+						   Foreground="{TemplateBinding Foreground}"
+						   BorderThickness="{TemplateBinding BorderThickness}"
+						   Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+						   Cursor="Arrow"
+						   ViewportSize="{TemplateBinding ViewportHeight}"
+						   Maximum="{TemplateBinding ScrollableHeight}"
+						   Minimum="0"
+						   Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+			
+				<ScrollBar x:Name="PART_HorizontalScrollBar" Grid.Row="1" Grid.Column="0"
+						   AutomationProperties.AutomationId="HorizontalScrollBar"
+						   Style="{DynamicResource ScrollBarStyle}"
+						   Background="{TemplateBinding Background}"
+						   BorderBrush="{TemplateBinding BorderBrush}"
+						   Foreground="{TemplateBinding Foreground}"
+						   BorderThickness="{TemplateBinding BorderThickness}"
+						   Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+						   Cursor="Arrow"
+						   ViewportSize="{TemplateBinding ViewportWidth}"
+						   Orientation="Horizontal"
+						   Maximum="{TemplateBinding ScrollableWidth}"
+						   Minimum="0"
+						   Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+			
+				<Rectangle x:Name="Corner" Grid.Row="1" Grid.Column="1"
+						   Fill="{TemplateBinding Background}"
+						   Stroke="{TemplateBinding BorderBrush}"/>
+			</Grid>
+		</Border>
+	</ControlTemplate>
+
+
+	<Style x:Key="ScrollViewerStyle" TargetType="{x:Type ScrollViewer}">
+		<Setter Property="Template" Value="{DynamicResource ScrollViewerControlTemplate}"/>
+		<Setter Property="Background" Value="#00000000"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource FrameBrush}"/>
+		<Setter Property="Foreground" Value="{DynamicResource MainTextBrush}"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Margin" Value="1,0,0,0"/>
+	</Style>
+
+
+    <Style x:Key="ScrollViewerAutoStyle" TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource ScrollViewerStyle}">
+		<Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+    </Style>
+
+</ResourceDictionary>

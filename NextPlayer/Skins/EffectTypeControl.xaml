@@ -1,0 +1,43 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:res="http://nextplayer.nikitins.dk/Resources">
+
+	<res:EnumToBooleanConverter x:Key="EnumToTrueFalseConverter"/>
+	<res:EnumToBooleanConverter x:Key="EnumToFalseTrueConverter" MatchValue="False" NonMatchValue="True"/>
+	
+	
+	<ControlTemplate x:Key="EffectTypeControlTemplate" TargetType="{x:Type res:EffectTypeControl}">
+		<DockPanel LastChildFill="False">
+			<RadioButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						 GroupName="OperationType"
+						 Content="{DynamicResource EffectAssignImage}"
+						 IsChecked="{Binding OperationType, Converter={StaticResource EnumToTrueFalseConverter}, ConverterParameter=Assign}"
+						 ToolTip="Effect's volume is assigned to targets"/>
+
+			<RadioButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						 GroupName="OperationType"
+						 Content="{DynamicResource EffectMultiplyImage}"
+						 IsChecked="{Binding OperationType, Converter={StaticResource EnumToTrueFalseConverter}, ConverterParameter=Multiply}"
+						 ToolTip="Effect's volume is multiplied with the original target's volume"/>
+
+			<RadioButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						 GroupName="OperationType"
+						 Content="{DynamicResource EffectChainMultiplyImage}"
+						 IsChecked="{Binding OperationType, Converter={StaticResource EnumToTrueFalseConverter}, ConverterParameter=ChainMultiply}"
+						 ToolTip="Effect's volume is multiplied with the target's effective volume"/>
+
+			<RadioButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						 GroupName="OperationType"
+						 Content="{DynamicResource EffectBypassImage}"
+						 IsChecked="{Binding OperationType, Converter={StaticResource EnumToTrueFalseConverter}, ConverterParameter=Bypass}"
+						 ToolTip="Effect's volume modification is bypassed"/>
+		</DockPanel>
+	</ControlTemplate>
+
+
+	<Style x:Key="EffectTypeControlStyle" TargetType="{x:Type res:EffectTypeControl}">
+		<Setter Property="Template" Value="{StaticResource EffectTypeControlTemplate}"/>
+	</Style>
+
+</ResourceDictionary>

@@ -1,0 +1,290 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+	xmlns:common="http://nextplayer.nikitins.dk/Common"
+	xmlns:res="http://nextplayer.nikitins.dk/Resources" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+
+
+	<common:ColorToWpfColorConverter x:Key="ColorToWpfColorConverter"/>
+	<res:FontWeightToBooleanConverter x:Key="FontWeightToBooleanConverter"/>
+	<res:FontStyleToBooleanConverter x:Key="FontStyleToBooleanConverter"/>
+	<res:EnumToVisibilityConverter x:Key="EnumToVisibleCollapsedConverter"/>
+	<res:EnumToVisibilityConverter x:Key="EnumToCollapsedVisibleConverter" MatchValue="Collapsed" NonMatchValue="Visible"/>
+	<res:EnumToBooleanConverter x:Key="EnumToTrueFalseConverter"/>
+	<res:BooleanToVisibilityConverter x:Key="BooleanToVisibleCollapsedConverter"/>
+	<common:StringFormatConverter x:Key="StringFormatConverter"/>
+
+
+	<!-- Change EditedColor -->
+	<ControlTemplate x:Key="ColorEditorTemplate" TargetType="{x:Type res:ColorEditorControl}">
+		<Grid Background="Transparent"
+			  Visibility="{TemplateBinding EditMode,
+						   Converter={StaticResource EnumToCollapsedVisibleConverter}, ConverterParameter=Hide}">
+
+			<Grid.ToolTip>
+				<MultiBinding Converter="{StaticResource StringFormatConverter}" ConverterParameter="{}{0}: {1}">
+					<Binding Path="Description" RelativeSource="{RelativeSource TemplatedParent}"/>
+					<Binding Path="EditedColor" RelativeSource="{RelativeSource TemplatedParent}"/>
+				</MultiBinding>
+			</Grid.ToolTip>
+			
+			<Border Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}"
+					Visibility="{TemplateBinding EditMode,
+								 Converter={StaticResource EnumToVisibleCollapsedConverter}, ConverterParameter=ReadOnly}"
+					Margin="1" Padding="4">
+
+				<Border Background="{Binding EditedColor, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ColorToWpfColorConverter}}"/>
+			</Border>
+
+			<xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}"
+							  Visibility="{TemplateBinding EditMode, Converter={StaticResource EnumToVisibleCollapsedConverter}, ConverterParameter=Edit}"
+							  SelectedColor="{Binding EditedColor, RelativeSource={RelativeSource TemplatedParent}}"/>
+		</Grid>
+	</ControlTemplate>
+
+	
+	<Style x:Key="ColorEditorStyle" TargetType="{x:Type res:ColorEditorControl}">
+		<Setter Property="Template" Value="{DynamicResource ColorEditorTemplate}"/>
+	</Style>
+
+	
+	<!-- Change EditedColor, Bold, and Italic -->
+	<ControlTemplate x:Key="FontEditorTemplate" TargetType="{x:Type res:FontEditorControl}">
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto" SharedSizeGroup="BgColor"/>
+				<ColumnDefinition Width="Auto" SharedSizeGroup="FrameColor"/>
+				<ColumnDefinition Width="Auto" SharedSizeGroup="FgColor"/>
+				<ColumnDefinition Width="Auto" SharedSizeGroup="Weight"/>
+				<ColumnDefinition Width="Auto" SharedSizeGroup="Style"/>
+			</Grid.ColumnDefinitions>
+
+			<TextBlock Style="{DynamicResource MainTextStyle}"
+					   VerticalAlignment="Center" TextWrapping="Wrap"
+					   Text="{TemplateBinding Description}"/>
+
+			<!-- Color pickers -->
+			<res:ColorEditorControl Grid.Column="1" Style="{DynamicResource ColorEditorStyle}"
+									Description="Back"
+									EditedColor="{Binding BackColor, RelativeSource={RelativeSource TemplatedParent}}"
+									EditMode="{TemplateBinding BackColorEditMode}"/>
+			
+			<res:ColorEditorControl Grid.Column="2" Style="{DynamicResource ColorEditorStyle}"
+									Description="Frame"
+									EditedColor="{Binding FrameColor, RelativeSource={RelativeSource TemplatedParent}}"
+									EditMode="{TemplateBinding FrameColorEditMode}"/>
+			
+			<res:ColorEditorControl Grid.Column="3" Style="{DynamicResource ColorEditorStyle}"
+									Description="Text"
+									EditedColor="{Binding ForeColor, RelativeSource={RelativeSource TemplatedParent}}"
+									EditMode="{TemplateBinding ForeColorEditMode}"/>
+
+			<!-- Bold button (ToggleImageSettingButtonStyle?) -->
+			<ToggleButton Grid.Column="4" Style="{DynamicResource ToggleTextButtonStyle}"
+						  ToolTip="Bold"
+						  Visibility="{TemplateBinding EditFontMode, Converter={StaticResource EnumToCollapsedVisibleConverter}, ConverterParameter=Hide}"
+						  IsEnabled="{TemplateBinding EditFontMode, Converter={StaticResource EnumToTrueFalseConverter}, ConverterParameter=Edit}"
+						  IsChecked="{Binding EditedWeight, RelativeSource={RelativeSource TemplatedParent},
+									  Converter={StaticResource FontWeightToBooleanConverter}}">
+
+				<ToggleButton.ContentTemplate>
+					<DataTemplate>
+						<TextBlock Style="{DynamicResource ButtonTextStyle}"
+								   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ButtonBase}}}"
+								   FontWeight="Bold" FontStyle="Normal"
+								   Text="B"/>
+					</DataTemplate>
+				</ToggleButton.ContentTemplate>
+			</ToggleButton>
+
+			<!-- Italic button (ToggleImageSettingButtonStyle?) -->
+			<ToggleButton Grid.Column="5" Style="{DynamicResource ToggleTextButtonStyle}"
+						  Content="I" ToolTip="Italic"
+						  Visibility="{TemplateBinding EditFontMode, Converter={StaticResource EnumToCollapsedVisibleConverter}, ConverterParameter=Hide}"
+						  IsEnabled="{TemplateBinding EditFontMode, Converter={StaticResource EnumToTrueFalseConverter}, ConverterParameter=Edit}"
+						  IsChecked="{Binding EditedStyle, RelativeSource={RelativeSource TemplatedParent},
+									  Converter={StaticResource FontStyleToBooleanConverter}}">
+
+				<ToggleButton.ContentTemplate>
+					<DataTemplate>
+						<TextBlock Style="{DynamicResource ButtonTextStyle}"
+								   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ButtonBase}}}"
+								   FontWeight="Normal" FontStyle="Italic"
+								   Text="I"/>
+					</DataTemplate>
+				</ToggleButton.ContentTemplate>
+			</ToggleButton>
+		</Grid>
+	</ControlTemplate>
+
+
+	<!-- Change only back and fore colours -->
+	<Style x:Key="{x:Type res:FontEditorControl}" TargetType="{x:Type res:FontEditorControl}">
+		<Setter Property="Template" Value="{DynamicResource FontEditorTemplate}"/>
+		<Setter Property="BackColorEditMode" Value="Edit"/>
+		<Setter Property="FrameColorEditMode" Value="Hide"/>
+		<Setter Property="ForeColorEditMode" Value="Edit"/>
+	</Style>
+
+
+	<ControlTemplate x:Key="SkinEditorTemplate" TargetType="{x:Type res:SkinEditorControl}">
+		<StackPanel Grid.IsSharedSizeScope="True"
+					DataContext="{TemplateBinding Skin}" d:DataContext="{d:DesignInstance res:SkinConfiguration}">
+
+			<GroupBox Header="General settings" Style="{DynamicResource GroupBoxStyle}">
+				<StackPanel>
+					<res:FontEditorControl Description="Window and main text"
+										   BackColor="{Binding MainBackgroundColor}"
+										   FrameColor="{Binding FrameColor}" FrameColorEditMode="Edit"
+										   ForeColor="{Binding MainTextColor}"
+										   EditFontMode="Edit"
+										   EditedWeight="{Binding MainFontWeight}"
+										   EditedStyle="{Binding MainFontStyle}"/>
+					
+					<res:FontEditorControl Description="Main action buttons"
+										   BackColor="{Binding ActionButtonBackgroundColor}"
+										   FrameColor="{Binding ActionButtonFrameColor}" FrameColorEditMode="Edit"
+										   ForeColor="{Binding ActionButtonTextColor}"
+										   EditFontMode="ReadOnly"
+										   EditedWeight="Bold"
+										   EditedStyle="Normal"/>
+					
+					<res:FontEditorControl Description="Secondary action buttons"
+										   BackColor="{Binding SecondaryActionButtonColor}"
+										   FrameColor="{Binding ActionButtonFrameColor}" FrameColorEditMode="ReadOnly"
+										   ForeColor="{Binding SecondaryButtonTextColor}"
+										   EditFontMode="ReadOnly"
+										   EditedWeight="Bold"
+										   EditedStyle="Normal"/>
+					
+					<res:FontEditorControl Description="Graphical elements"
+										   BackColor="{Binding GraphicsColor}"
+										   FrameColor="{Binding GraphicsFrameColor}" FrameColorEditMode="Edit"
+										   ForeColor="{Binding GraphicsMarkColor}"/>
+					
+					<res:FontEditorControl Description="Playing indicator"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding PlayIndicatorColor}"/>
+				</StackPanel>
+			</GroupBox>
+
+			<GroupBox Header="Headers" Style="{DynamicResource GroupBoxStyle}">
+				<StackPanel>
+					<res:FontEditorControl Description="Section header"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding SectionHeaderColor}"
+										   EditFontMode="Edit"
+										   EditedWeight="{Binding SectionHeaderFontWeight}"
+										   EditedStyle="{Binding SectionHeaderFontStyle}"/>
+					
+					<res:FontEditorControl Description="Group and item header"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding ActionHeaderColor}"
+										   EditFontMode="Edit"
+										   EditedWeight="{Binding ActionHeaderFontWeight}"
+										   EditedStyle="{Binding ActionHeaderFontStyle}"/>
+					
+					<res:FontEditorControl Description="Column header"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding ColumnHeaderColor}"
+										   EditFontMode="Edit"
+										   EditedWeight="{Binding ColumnHeaderFontWeight}"
+										   EditedStyle="{Binding ColumnHeaderFontStyle}"/>
+					
+					<res:FontEditorControl Description="Item header"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding ItemHeaderColor}"
+										   EditFontMode="Edit"
+										   EditedWeight="{Binding ItemHeaderFontWeight}"
+										   EditedStyle="{Binding ItemHeaderFontStyle}"/>
+				</StackPanel>
+			</GroupBox>
+
+			<GroupBox Header="Action types" Style="{DynamicResource GroupBoxStyle}">
+				<StackPanel>
+					<res:FontEditorControl Description="Producer"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding ProducerColor}"/>
+					
+					<res:FontEditorControl Description="Effect"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding EffectButtonBackgroundColor}"/>
+					
+					<res:FontEditorControl Description="Comment"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding CommentTextColor}"
+										   EditFontMode="Edit"
+										   EditedWeight="{Binding CommentFontWeight}"
+										   EditedStyle="{Binding CommentFontStyle}"/>
+					
+					<res:FontEditorControl Description="Attention elements"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding AttentionColor}"
+										   EditFontMode="Edit"
+										   EditedWeight="{Binding FailedFontWeight}"
+										   EditedStyle="{Binding FailedFontStyle}"/>
+				</StackPanel>
+			</GroupBox>
+			
+			<GroupBox Header="Playlist settings" Style="{DynamicResource GroupBoxStyle}">
+				<StackPanel>
+					<res:FontEditorControl Description="Selected item"
+										   BackColor="{Binding SelectedBackgroundColor}"
+										   FrameColor="{Binding SelectedFrameColor}" FrameColorEditMode="Edit"
+										   ForeColor="{Binding SelectedForegroundColor}"/>
+			
+					<res:FontEditorControl Description="Next item"
+										   BackColor="{Binding NextBackgroundColor}"
+										   FrameColor="{Binding NextFrameColor}" FrameColorEditMode="Edit"
+										   ForeColor="{Binding NextForegroundColor}"/>
+			
+					<res:FontEditorControl Description="Manually started item"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding ManualStartColor}"
+										   EditFontMode="Edit"
+										   EditedWeight="{Binding ActiveManualFontWeight}"
+										   EditedStyle="{Binding ActiveManualFontStyle}"/>
+			
+					<res:FontEditorControl Description="Active item"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding ActiveTextColor}"
+										   EditFontMode="Edit"
+										   EditedWeight="{Binding ActiveFontWeight}"
+										   EditedStyle="{Binding ActiveFontStyle}"/>
+			
+					<res:FontEditorControl Description="Playing item"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding ActiveTextColor}" ForeColorEditMode="ReadOnly"
+										   EditFontMode="Edit"
+										   EditedWeight="{Binding PlayingFontWeight}"
+										   EditedStyle="{Binding PlayingFontStyle}"/>
+				</StackPanel>
+			</GroupBox>
+			
+			<GroupBox Header="Action pane settings" Style="{DynamicResource GroupBoxStyle}">
+				<StackPanel>
+					<res:FontEditorControl Description="Large clock"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding ClockFontColor}"
+										   EditFontMode="Edit"
+										   EditedWeight="{Binding ClockFontWeight}"
+										   EditedStyle="{Binding ClockFontStyle}"/>
+					
+					<res:FontEditorControl Description="Disabled text"
+										   BackColorEditMode="Hide"
+										   ForeColor="{Binding DisabledTextColor}"/>
+				</StackPanel>
+			</GroupBox>
+		</StackPanel>
+	</ControlTemplate>
+	
+	
+	<Style x:Key="SkinEditorStyle" TargetType="{x:Type res:SkinEditorControl}">
+		<Setter Property="Template" Value="{DynamicResource SkinEditorTemplate}"/>
+		<Setter Property="DataContext" Value="{res:SkinBinding}"/>
+	</Style>
+	
+</ResourceDictionary>

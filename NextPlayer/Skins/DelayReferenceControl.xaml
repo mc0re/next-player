@@ -1,0 +1,46 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:audio="http://schemas.nikitins.dk/audio"
+	xmlns:res="http://nextplayer.nikitins.dk/Resources">
+
+
+	<res:EnumToBooleanConverter x:Key="EnumToTrueFalseConverter"/>
+	<res:EnumToBooleanConverter x:Key="EnumToFalseTrueConverter" MatchValue="False" NonMatchValue="True"/>
+	<res:BooleanNotConverter x:Key="BooleanNotConverter"/>
+
+
+	<ControlTemplate x:Key="DelayReferenceControlTemplate" TargetType="{x:Type res:DelayReferenceControl}">
+		<DockPanel LastChildFill="False">
+            <RadioButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						 GroupName="DelayReference"
+						 IsChecked="{Binding DelayReference, ConverterParameter={x:Static audio:DelayReferences.LastAction}, Converter={StaticResource EnumToTrueFalseConverter}}"
+						 Content="{DynamicResource DelayReferenceActionImage}"
+						 ToolTip="Delay refers to the last started action: &#x0a;- above this item &#x0a;- on the same line, if parallel &#x0a;- or on the main line"/>
+
+			<RadioButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						 GroupName="DelayReference"
+						 IsChecked="{Binding DelayReference, ConverterParameter={x:Static audio:DelayReferences.LastProducer}, Converter={StaticResource EnumToTrueFalseConverter}}"
+						 Content="{DynamicResource DelayReferenceProducerImage}"
+						 ToolTip="Delay refers to the last started producer: &#x0a;- above this item &#x0a;- on the same line, if parallel &#x0a;- or on the main line"/>
+
+            <RadioButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						 GroupName="DelayReference"
+						 IsChecked="{Binding DelayReference, ConverterParameter={x:Static audio:DelayReferences.MainClock}, Converter={StaticResource EnumToTrueFalseConverter}}"
+						 Content="{DynamicResource DelayReferencePlayClockImage}"
+						 ToolTip="Delay refers to the player clock"/>
+
+			<RadioButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						 GroupName="DelayReference"
+						 IsChecked="{Binding DelayReference, ConverterParameter={x:Static audio:DelayReferences.WallClock}, Converter={StaticResource EnumToTrueFalseConverter}}"
+						 Content="{DynamicResource DelayReferenceWallClockImage}"
+						 ToolTip="Delay refers to the wall clock, and thus gives the time of day"/>
+		</DockPanel>
+	</ControlTemplate>
+
+
+	<Style x:Key="DelayReferenceControlStyle" TargetType="{x:Type res:DelayReferenceControl}">
+		<Setter Property="Template" Value="{DynamicResource DelayReferenceControlTemplate}"/>
+	</Style>
+
+</ResourceDictionary>

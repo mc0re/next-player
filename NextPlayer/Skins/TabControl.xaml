@@ -1,0 +1,60 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<ControlTemplate x:Key="TabItemTemplate" TargetType="{x:Type TabItem}">
+		<Grid SnapsToDevicePixels="True">
+			<Border x:Name="Bd"
+					BorderBrush="{TemplateBinding BorderBrush}"
+					BorderThickness="1,1,1,0"
+					Background="{TemplateBinding Background}"
+					Padding="{TemplateBinding Padding}"
+					CornerRadius="3,3,0,0">
+				
+				<ContentPresenter x:Name="Content"
+								  RecognizesAccessKey="True"
+								  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+								  HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}}"
+								  VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}}"
+								  ContentSource="Header"
+								  ContentTemplate="{TemplateBinding HeaderTemplate}"
+								  Content="{TemplateBinding Header}"
+								  ContentStringFormat="{TemplateBinding HeaderStringFormat}"/>
+			</Border>
+
+			<Border x:Name="Underline"
+					BorderBrush="{DynamicResource MainTextBrush}"
+					BorderThickness="0"/>
+		</Grid>
+		
+		<ControlTemplate.Triggers>
+			<DataTrigger Binding="{Binding IsMouseOver, ElementName=Bd}" Value="True">
+				<Setter Property="Opacity" TargetName="Bd" Value="{StaticResource MouseOverOpacity}"/>
+			</DataTrigger>
+			<Trigger Property="IsSelected" Value="True">
+				<Setter Property="Panel.ZIndex" Value="1"/>
+				<Setter Property="BorderThickness" TargetName="Underline" Value="0,0,0,2"/>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
+	
+	<DataTemplate x:Key="TabItemHeaderTemplate">
+		<TextBlock Style="{DynamicResource MainTextStyle}" Text="{Binding}"/>
+	</DataTemplate>
+	
+
+	<Style x:Key="TabItemStyle" TargetType="{x:Type TabItem}">
+		<Setter Property="Template" Value="{DynamicResource TabItemTemplate}"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="Foreground" Value="{DynamicResource MainTextBrush}"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource FrameBrush}"/>
+		<Setter Property="HeaderTemplate" Value="{DynamicResource TabItemHeaderTemplate}"/>
+	</Style>
+	
+	
+	<Style x:Key="TabControlStyle" TargetType="{x:Type TabControl}">
+		<!--<Setter Property="Template" Value="{DynamicResource TabControlTemplate}"/>-->
+		<Setter Property="Background" Value="Transparent"/>
+	</Style>
+
+</ResourceDictionary>

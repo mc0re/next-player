@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F6D89BB3-718F-4805-9032-C94D293BF986}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>WpfResources</RootNamespace>
+    <AssemblyName>WpfResources</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>WpfResources.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>WpfResources.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>On</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsBase.4.6.1055.0\lib\WindowsBase.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Windows" />
+    <Import Include="System.Windows.Controls" />
+    <Import Include="System.Windows.Data" />
+    <Import Include="System.Windows.Input" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.vb">
+      <Link>CommonAssemblyInfo.vb</Link>
+    </Compile>
+    <Compile Include="Controls\ActionHeaderControl.vb" />
+    <Compile Include="Controls\ActionStatusIndicator.vb" />
+    <Compile Include="Controls\BalanceControl.vb" />
+    <Compile Include="Controls\BooleanStatusIndicator.vb" />
+    <Compile Include="Controls\ChannelEditorControlBase.vb" />
+    <Compile Include="Controls\ChannelLinkCell.vb" />
+    <Compile Include="Controls\CoordinatesEditorControl.vb" />
+    <Compile Include="Controls\CustomizableGrid.vb" />
+    <Compile Include="Controls\ColorEditorControl.vb" />
+    <Compile Include="Controls\DelayReferenceControl.vb" />
+    <Compile Include="Controls\EffectListControl.vb" />
+    <Compile Include="Controls\EffectTargetControl.vb" />
+    <Compile Include="Controls\EffectTypeControl.vb" />
+    <Compile Include="Controls\EnvironmentSelector.vb" />
+    <Compile Include="Controls\FontEditorControl.vb" />
+    <Compile Include="Controls\MessageLogControl.vb" />
+    <Compile Include="Controls\ParallelPlayButton.vb" />
+    <Compile Include="Controls\PlayerActionControl.vb" />
+    <Compile Include="Controls\PlaylistControl.vb" />
+    <Compile Include="Controls\PlaylistItem.vb" />
+    <Compile Include="Controls\PlayPositionControl.vb" />
+    <Compile Include="Controls\PlaySequenceControl.vb" />
+    <Compile Include="Controls\PointListEditor.vb" />
+    <Compile Include="Controls\PointListEditorPoint.vb" />
+    <Compile Include="Controls\PointListProgressVisualizer.vb" />
+    <Compile Include="Controls\PositionedRangeBase.vb" />
+    <Compile Include="Controls\RelativePositionContainer.vb" />
+    <Compile Include="Controls\SetParallelControl.vb" />
+    <Compile Include="Controls\SetSlideControl.vb" />
+    <Compile Include="Controls\SkinEditorControl.vb" />
+    <Compile Include="Controls\SoundPositionModeControl.vb" />
+    <Compile Include="Controls\StartDelayControl.vb" />
+    <Compile Include="Controls\StartStopOverlayControl.vb" />
+    <Compile Include="Controls\NumberEditor.vb" />
+    <Compile Include="Controls\VolumeControl.vb" />
+    <Compile Include="GlobalSuppressions.vb" />
+    <Compile Include="Markup extensions\DelayBinding\BindingBaseExtensionBase.vb" />
+    <Compile Include="Markup extensions\DelayBinding\BindingExtensionBase.vb" />
+    <Compile Include="Markup extensions\PlaylistBindingExtension.vb" />
+    <Compile Include="Markup extensions\SkinBindingExtension.vb" />
+    <Compile Include="Markup extensions\ConfigBindingExtension.vb" />
+    <Compile Include="Markup extensions\DelayBinding\DelayBindingController.vb" />
+    <Compile Include="Markup extensions\DelayBinding\DelayBindingExtension.vb" />
+    <Compile Include="Markup extensions\DelayBinding\DelayBindingManager.vb" />
+    <Compile Include="Markup extensions\DelayBinding\DelayBindingOperations.vb" />
+    <Compile Include="Markup extensions\DelayBinding\DelayMultiBindingExtension.vb" />
+    <Compile Include="Markup extensions\DelayBinding\MultiBindingExtensionBase.vb" />
+    <Compile Include="Markup extensions\SkinColorBindingExtension.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Projections.vb" />
+    <Compile Include="Skins\SkinConfiguration.vb" />
+    <Compile Include="Value converters\AudioChannelLinkCellConverter.vb" />
+    <Compile Include="Value converters\BooleanAndConverter.vb" />
+    <Compile Include="Value converters\BooleanNotConverter.vb" />
+    <Compile Include="Value converters\BooleanOrConverter.vb" />
+    <Compile Include="Value converters\DelayTypeToStringConverter.vb" />
+    <Compile Include="Value converters\GridLengthConverter.vb" />
+    <Compile Include="Value converters\IconPathConverter.vb" />
+    <Compile Include="Value converters\MappingHasMoreThanOneSetConverter.vb" />
+    <Compile Include="Value converters\StringComparerConverter.vb" />
+    <Compile Include="Value converters\StringToFontWeightConverter.vb" />
+    <Compile Include="Value converters\BooleanToVisibilityConverter.vb" />
+    <Compile Include="Value converters\BooleanToWrapConverter.vb" />
+    <Compile Include="Value converters\BrushToStringConverter.vb" />
+    <Compile Include="Value converters\ClipRectConverter.vb" />
+    <Compile Include="Value converters\ColorChangerConverter.vb" />
+    <Compile Include="Value converters\EnumToBooleanConverter.vb" />
+    <Compile Include="Value converters\EnumToVisibilityConverter.vb" />
+    <Compile Include="Value converters\FontStyleToBooleanConverter.vb" />
+    <Compile Include="Value converters\FontWeightToBooleanConverter.vb" />
+    <Compile Include="Value converters\MaxPositionConverter.vb" />
+    <Compile Include="Value converters\MillisecondsToTimeSpanConverter.vb" />
+    <Compile Include="Value converters\MultiplyConverter.vb" />
+    <Compile Include="Value converters\NoActionConverter.vb" />
+    <Compile Include="Value converters\ObjectToVisibility.vb" />
+    <Compile Include="Value converters\PassThroughConverter.vb" />
+    <Compile Include="Value converters\PlayerActionPlaceholderConverter.vb" />
+    <Compile Include="Value converters\PointsToPathConverter.vb" />
+    <Compile Include="Value converters\RadioButtonCheckedConverter.vb" />
+    <Compile Include="Value converters\ScaleCoordinateConverter.vb" />
+    <Compile Include="Value converters\StringToOneLineConverter.vb" />
+    <Compile Include="Value converters\StringToVisibilityConverter.vb" />
+    <Compile Include="Value converters\SumConverter.vb" />
+    <Compile Include="Value converters\ThicknessValueConverter.vb" />
+    <Compile Include="Value converters\TimeSpanFormatConverter.vb" />
+    <Compile Include="Value converters\ZeroToTextConverter.vb" />
+    <Compile Include="WPF Utility\BindingDecoratorBase.vb" />
+    <Compile Include="WPF Utility\ComboBoxItemTemplateSelector.vb" />
+    <Compile Include="WPF Utility\NamedCommand.vb" />
+    <Compile Include="WPF Utility\ParseException.vb" />
+    <Compile Include="WPF Utility\TypedTemplateSelector.vb" />
+    <Compile Include="WPF Utility\WaitCursor.vb" />
+    <Compile Include="WPF Utility\WpfUtility.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Docs\Storage.dgml">
+      <Link>Storage.dgml</Link>
+    </None>
+    <None Include="app.config" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AudioPlayerLibrary\AudioPlayerLibrary.vbproj">
+      <Project>{a0f80b58-c3ed-44f2-998c-0f0563be8127}</Project>
+      <Name>AudioPlayerLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AudioChannelLibrary\AudioChannelLibrary.vbproj">
+      <Project>{63b765ba-0cd8-47b7-b04e-71f1d7a7846c}</Project>
+      <Name>AudioChannelLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.vbproj">
+      <Project>{6cc6bb6d-6251-4e5c-a607-5cd8df63ae7c}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LicenseLibrary\LicenseLibrary.vbproj">
+      <Project>{f6cdc516-ec09-48f6-85b1-c5716979d6ab}</Project>
+      <Name>LicenseLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlayerActions\PlayerActions.vbproj">
+      <Project>{7f41adba-2194-4f34-99ed-d2bbb599b8f3}</Project>
+      <Name>PlayerActions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

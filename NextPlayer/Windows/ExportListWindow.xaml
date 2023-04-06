@@ -1,0 +1,57 @@
+﻿<Window x:Class="ExportListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NextPlayer"
+        mc:Ignorable="d"
+        Title="Export playlist"
+		Height="300" Width="300"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}"
+		Background="{DynamicResource BackgroundBrush}"
+		Foreground="{DynamicResource MainTextBrush}"
+		Icon="../Resources/Logo.ico">
+
+	<Border Padding="2">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+
+			<DockPanel>
+				<TextBlock Style="{DynamicResource MainTextStyle}" Margin="0,0,3,0"
+						   Text="Playlist name"/>
+				<TextBox Style="{DynamicResource TextBoxStyle}"
+						 Text="{Binding Playlist.Name, Mode=TwoWay}"/>
+			</DockPanel>
+			
+			<CheckBox Grid.Row="1" Style="{DynamicResource CheckBoxWithTextStyle}"
+				  Content="Match file names" IsChecked="{Binding MatchFileNames}"
+				  ToolTip="Rename files to match their descriptions, create duplicates if necessary"/>
+
+			<CheckBox Grid.Row="2" Style="{DynamicResource CheckBoxWithTextStyle}"
+				  Content="Add action number" IsChecked="{Binding AddActionNumber}"
+				  ToolTip="Add action number to file names, create duplicates if necessary"/>
+
+			<TextBlock Grid.Row="3" Style="{DynamicResource MainTextStyle}">
+				<Run Text="Number of audio file actions:"/>
+				<Run Text="{Binding NumberOfFileActions, Mode=OneWay}"/>
+				<LineBreak/>
+				<Run Text="Number of audio files to write:"/>
+				<Run Text="{Binding NumberOfFiles, Mode=OneWay}"/>
+				<LineBreak/>
+				<Run Text="Number of presentations to write:"/>
+				<Run Text="{Binding Playlist.PresenterCount, Mode=OneWay}"/>
+			</TextBlock>
+			
+			<Button Grid.Row="4" Grid.ColumnSpan="2" Height="26"
+				Style="{DynamicResource RectButtonStyle}"
+				HorizontalAlignment="Center"
+				Content="Export..." Click="ExportButton_Click"/>
+		</Grid>
+	</Border>
+</Window>

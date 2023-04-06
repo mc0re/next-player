@@ -1,0 +1,83 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:act="http://schemas.nikitins.dk/actions"
+	xmlns:local="clr-namespace:NextPlayer;assembly="
+	xmlns:res="http://nextplayer.nikitins.dk/Resources">
+
+	<res:EnumToBooleanConverter x:Key="EnumToTrueFalseConverter"/>
+	<res:EnumToBooleanConverter x:Key="EnumToFalseTrueConverter" MatchValue="False" NonMatchValue="True"/>
+	<res:BooleanNotConverter x:Key="BooleanNotConverter"/>
+	<local:SlideIndexToImageConverter x:Key="SlideIndexToImageConverter"/>
+	<local:SlideIndexToTextConverter x:Key="SlideIndexToTextConverter"/>
+	<res:BooleanToVisibilityConverter x:Key="BooleanToVisibleCollapsedConverter"/>
+
+
+	<ControlTemplate x:Key="SetSlideControlTemplate" TargetType="{x:Type res:SetSlideControl}">
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<DockPanel>
+				<RadioButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						 GroupName="SetSlideAction"
+						 IsChecked="{Binding SetSlideAction, ConverterParameter={x:Static act:SetSlideActions.SetPrevious}, Converter={StaticResource EnumToTrueFalseConverter}}"
+						 Content="{DynamicResource SetPreviousSlideImage}"
+						 ToolTip="Show previous slide"/>
+
+				<RadioButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						 GroupName="SetSlideAction"
+						 IsChecked="{Binding SetSlideAction, ConverterParameter={x:Static act:SetSlideActions.SetNext}, Converter={StaticResource EnumToTrueFalseConverter}}"
+						 Content="{StaticResource SetNextSlideImage}"
+						 ToolTip="Show next slide"/>
+
+				<RadioButton x:Name="radioIndex" Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						 GroupName="SetSlideAction"
+						 IsChecked="{Binding SetSlideAction, ConverterParameter={x:Static act:SetSlideActions.SetByIndex}, Converter={StaticResource EnumToTrueFalseConverter}}"
+						 Content="{DynamicResource SetIndexedSlideImage}"
+						 ToolTip="Show slide by index (1-N)"/>
+
+				<xctk:IntegerUpDown Style="{DynamicResource IntegerUpDownStyle}"
+									IsEnabled="{Binding IsChecked, ElementName=radioIndex}"
+									ParsingNumberStyle="Integer"
+									Value="{Binding SlideIndex}"/>
+			</DockPanel>
+
+			<TextBlock Grid.Row="1" Style="{DynamicResource ItemHeaderStyle}" HorizontalAlignment="Center">
+				<TextBlock.Text>
+					<MultiBinding Converter="{StaticResource SlideIndexToTextConverter}">
+						<Binding Path="SlideIndex"/>
+						<Binding Path="PresenterIndex"/>
+						<res:ConfigBinding Path="PresenterVersion"/>
+					</MultiBinding>
+				</TextBlock.Text>
+			</TextBlock>
+			
+			<Image Grid.Row="2" Stretch="Uniform"
+				   Visibility="{Binding IsChecked, ElementName=radioIndex, Converter={StaticResource BooleanToVisibleCollapsedConverter}}">
+				
+				<Image.Source>
+					<MultiBinding Converter="{StaticResource SlideIndexToImageConverter}">
+						<Binding Path="SlideIndex"/>
+						<Binding Path="PresenterIndex"/>
+						<res:ConfigBinding Path="PresenterVersion"/>
+					</MultiBinding>
+				</Image.Source>
+			</Image>
+		</Grid>
+	</ControlTemplate>
+
+
+	<Style x:Key="SetSlideControlStyle" TargetType="{x:Type res:SetSlideControl}">
+		<Setter Property="Template" Value="{DynamicResource SetSlideControlTemplate}"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource ActionButtonPlainBrush}"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Foreground" Value="{DynamicResource ButtonTextBrush}"/>
+	</Style>
+
+</ResourceDictionary>

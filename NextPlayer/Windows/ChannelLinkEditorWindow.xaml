@@ -1,0 +1,64 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        xmlns:common="http://nextplayer.nikitins.dk/Common"
+		xmlns:res="http://nextplayer.nikitins.dk/Resources"
+		xmlns:local="clr-namespace:NextPlayer"
+		x:Class="ChannelLinkEditorWindow"
+		ResizeMode="CanResize"
+		SizeToContent="Height"
+		Width="250"
+		ShowInTaskbar="False"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}"
+		Background="{DynamicResource BackgroundBrush}"
+		Foreground="{DynamicResource MainTextBrush}"
+		Icon="../Resources/Logo.ico">
+
+    <Window.Resources>
+        <common:StringFormatConverter x:Key="StringFormatConverter"/>
+    </Window.Resources>
+
+
+    <Window.Title>
+        <MultiBinding Converter="{StaticResource StringFormatConverter}">
+            <Binding Source="Link {0}-{1}"/>
+            <Binding Path="Link.Logical"/>
+            <Binding Path="Link.Physical"/>
+        </MultiBinding>
+    </Window.Title>
+
+
+    <StackPanel>
+        <TextBlock Style="{DynamicResource ActionHeaderStyle}">
+            <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource StringFormatConverter}">
+                    <Binding Source="Logical channel: {0}"/>
+                    <Binding Path="Link.Logical"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+
+        <TextBlock Style="{DynamicResource ActionHeaderStyle}">
+            <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource StringFormatConverter}">
+                    <Binding Source="Physical channel: {0}"/>
+                    <Binding Path="Link.Physical"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+
+        <CheckBox Style="{DynamicResource CheckBoxWithTextStyle}"
+				  IsChecked="{Binding Link.IsEnabled}"
+				  Content="Enabled"/>
+
+        <ContentPresenter Content="{Binding Link}"
+						  ContentTemplate="{Binding LinkEditorTemplate, RelativeSource={RelativeSource AncestorType=Window}}"/>
+
+        <Button Style="{DynamicResource RectButtonStyle}"
+				Height="30" HorizontalAlignment="Center"
+				Content="Delete" Click="DeleteLinkClick"/>
+    </StackPanel>
+
+</Window>

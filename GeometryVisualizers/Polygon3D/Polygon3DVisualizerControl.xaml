@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="Polygon3DVisualizerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:h="http://helix-toolkit.org/wpf"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="400">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock>
+            <Run Text="Polygon: "/>
+            <Run Text="{Binding Polygon.Sides.Count, Mode=OneWay}"/>
+            <Run Text="sides"/>
+        </TextBlock>
+
+        <!-- Same settings as in AudioPositionEditorControl -->
+        <h:HelixViewport3D x:Name="PartView3D" Grid.Row="1"
+							CameraMode="Inspect" CameraRotationMode="Turntable"
+							ShowViewCube="False" ShowCoordinateSystem="False"
+							IsChangeFieldOfViewEnabled="False"
+							IsMoveEnabled="False" IsZoomEnabled="True" IsHeadLightEnabled="True"
+							RotateAroundMouseDownPoint="True" ZoomAroundMouseDownPoint="True"
+							CoordinateSystemHeight="40"/>
+    </Grid>
+</UserControl>

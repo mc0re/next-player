@@ -1,0 +1,42 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:res="http://nextplayer.nikitins.dk/Resources"
+	xmlns:audio="http://schemas.nikitins.dk/audio">
+
+	<res:EnumToBooleanConverter x:Key="EnumToTrueFalseConverter" NonMatchEnumValue="{x:Static audio:EffectTargets.None}"/>
+	<res:MultiplyConverter x:Key="MarginBetweenGroupsConverter" Multiplier="0.25"/>
+
+
+	<ControlTemplate x:Key="EffectTargetControlTemplate" TargetType="{x:Type res:EffectTargetControl}">
+		<StackPanel Orientation="Horizontal">
+			<ToggleButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						  Content="{DynamicResource EffectToLastMainImage}"
+						  IsChecked="{Binding EffectTargetMain, Converter={StaticResource EnumToTrueFalseConverter}, ConverterParameter=Last}"
+						  ToolTip="Target last main-line producer"/>
+
+			<ToggleButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						  Content="{DynamicResource EffectToAllMainImage}"
+						  IsChecked="{Binding EffectTargetMain, Converter={StaticResource EnumToTrueFalseConverter}, ConverterParameter=All}"
+						  ToolTip="Target all playing main-line producers"/>
+
+			<Grid Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource MarginBetweenGroupsConverter}}"/>
+			
+			<ToggleButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						  Content="{DynamicResource EffectToLastParallelImage}"
+						  IsChecked="{Binding EffectTargetParallel, Converter={StaticResource EnumToTrueFalseConverter}, ConverterParameter=Last}"
+						  ToolTip="Target last parallel-line producer"/>
+
+			<ToggleButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						  Content="{DynamicResource EffectToAllParallelImage}"
+						  IsChecked="{Binding EffectTargetParallel, Converter={StaticResource EnumToTrueFalseConverter}, ConverterParameter=All}"
+						  ToolTip="Target all playing parallel-line producers"/>
+		</StackPanel>
+	</ControlTemplate>
+
+
+	<Style x:Key="EffectTargetControlStyle" TargetType="{x:Type res:EffectTargetControl}">
+		<Setter Property="Template" Value="{DynamicResource EffectTargetControlTemplate}"/>
+	</Style>
+
+</ResourceDictionary>

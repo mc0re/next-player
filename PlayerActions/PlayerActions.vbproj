@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7F41ADBA-2194-4F34-99ED-D2BBB599B8F3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>PlayerActions</RootNamespace>
+    <AssemblyName>PlayerActions</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>PlayerActions.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>PlayerActions.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>On</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NetOffice, Version=1.7.3.0, Culture=neutral, PublicKeyToken=acf636d62c39f8f5, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetOffice.Core.1.7.4.4\lib\net45\NetOffice.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="OfficeApi, Version=1.7.3.0, Culture=neutral, PublicKeyToken=7c1c3e9d16cace88, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetOffice.Core.1.7.4.4\lib\net45\OfficeApi.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="PowerPointApi, Version=1.7.3.0, Culture=neutral, PublicKeyToken=2aedeb5ce89d4005, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetOffice.PowerPoint.1.7.4.4\lib\net45\PowerPointApi.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="VBIDEApi, Version=1.7.3.0, Culture=neutral, PublicKeyToken=a3637beacf571e8a, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetOffice.Core.1.7.4.4\lib\net45\VBIDEApi.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsBase.4.6.1055.0\lib\WindowsBase.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.vb">
+      <Link>CommonAssemblyInfo.vb</Link>
+    </Compile>
+    <Compile Include="Audio manager\AudioManager.vb" />
+    <Compile Include="Audio manager\IAudioManager.vb" />
+    <Compile Include="Audio manager\PlaylistState.vb" />
+    <Compile Include="Collections\ArrangeStructureData.vb" />
+    <Compile Include="Collections\PlayerNotifyCollectionChangedEventArgs.vb" />
+    <Compile Include="Collections\PlayerNotifyPropertyChangedEventArgs.vb" />
+    <Compile Include="Configuration\PlaylistEnvironmentConfiguration.vb" />
+    <Compile Include="Configuration\PlaylistEnvironmentConfigurationCollection.vb" />
+    <Compile Include="Collections\PlaylistMetadata.vb" />
+    <Compile Include="Collections\PlaylistPresentationFile.vb" />
+    <Compile Include="Data models\PlayerActionAutomation.vb" />
+    <Compile Include="Data models\PlayerActionPanningAutomation.vb" />
+    <Compile Include="Data models\SoundPositionModes.vb" />
+    <Compile Include="Helper classes\AffectsStructureAttribute.vb" />
+    <Compile Include="Data models\AutomationPoint.vb" />
+    <Compile Include="Data models\EffectOperationTypes.vb" />
+    <Compile Include="Data models\PlayerAction.vb" />
+    <Compile Include="Collections\PlayerActionCollection.vb" />
+    <Compile Include="Data models\PlayerActionComment.vb" />
+    <Compile Include="Data models\PlayerActionVolumeAutomation.vb" />
+    <Compile Include="Data models\PlayerActionFile.vb" />
+    <Compile Include="Data models\PlayerActionPlaceholder.vb" />
+    <Compile Include="Data models\PlayerActionPowerPoint.vb" />
+    <Compile Include="Data models\AutomationPointCollection.vb" />
+    <Compile Include="Data models\PlayerActionText.vb" />
+    <Compile Include="Data models\SetSlideActions.vb" />
+    <Compile Include="Helper classes\AffectsTriggersAttribute.vb" />
+    <Compile Include="Helper classes\EffectGenerator.vb" />
+    <Compile Include="Helper classes\IPresenterReference.vb" />
+    <Compile Include="Helper classes\PowerPointReference.vb" />
+    <Compile Include="Helper classes\PresenterFactory.vb" />
+    <Compile Include="Helper classes\SerializedAsAttribute.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Docs\Storage.dgml">
+      <Link>Storage.dgml</Link>
+    </None>
+    <None Include="app.config" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AudioPlayerLibrary\AudioPlayerLibrary.vbproj">
+      <Project>{a0f80b58-c3ed-44f2-998c-0f0563be8127}</Project>
+      <Name>AudioPlayerLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AudioChannelLibrary\AudioChannelLibrary.vbproj">
+      <Project>{63b765ba-0cd8-47b7-b04e-71f1d7a7846c}</Project>
+      <Name>AudioChannelLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.vbproj">
+      <Project>{6cc6bb6d-6251-4e5c-a607-5cd8df63ae7c}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LicenseLibrary\LicenseLibrary.vbproj">
+      <Project>{f6cdc516-ec09-48f6-85b1-c5716979d6ab}</Project>
+      <Name>LicenseLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TextChannelLibrary\TextChannelLibrary.vbproj">
+      <Project>{d015254d-cdaa-4c4e-acc2-76f59c787080}</Project>
+      <Name>TextChannelLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

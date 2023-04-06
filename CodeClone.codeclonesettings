@@ -1,0 +1,8 @@
+<CodeCloneSettings>  
+  <Exclusions>  
+    <!-- Filepaths may contain wildcards: -->
+    <File>MyWpfExtension.vb</File>
+    <File>*\My Project\MyExtensions\*.*</File>
+    <File>*Tests\*.*</File>
+  </Exclusions>  
+</CodeCloneSettings>

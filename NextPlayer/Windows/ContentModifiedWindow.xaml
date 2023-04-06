@@ -1,0 +1,19 @@
+﻿<Window x:Class="ContentModifiedWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Attention"
+		Height="85" Width="300"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}">
+
+    <DockPanel>
+        <UniformGrid Rows="1" DockPanel.Dock="Bottom">
+            <Button Click="SaveButton_Click" IsDefault="True" Content="Save..."/>
+
+            <Button Click="DiscardButton_Click" Content="Don't save"/>
+
+            <Button IsCancel="True" Content="Cancel"/>
+        </UniformGrid>
+
+        <TextBlock HorizontalAlignment="Center" Text="Playlist was modified."/>
+    </DockPanel>
+</Window>

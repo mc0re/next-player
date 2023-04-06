@@ -1,0 +1,48 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:act="http://schemas.nikitins.dk/actions"
+	xmlns:res="http://nextplayer.nikitins.dk/Resources">
+
+	<res:ZeroToTextConverter x:Key="ZeroToTextConverter"/>
+
+	
+	<ItemsPanelTemplate x:Key="EffectListPanelTemplate">
+		<StackPanel Orientation="Horizontal"/>
+	</ItemsPanelTemplate>
+
+
+	<DataTemplate x:Key="EffectListFileItemTemplate" DataType="{x:Type act:PlayerActionFile}">
+		<res:ParallelPlayButton Style="{DynamicResource ParallelPlayFileButtonStyle}"
+								Margin="1,0" Height="12"
+								IsEnabled="True" Visibility="Visible"
+								Content="{Binding ParallelIndex, Converter={StaticResource ZeroToTextConverter}, ConverterParameter=M}"
+								ToolTipService.ShowOnDisabled="True"
+								ToolTip="{Binding Name}"/>
+	</DataTemplate>
+
+
+	<DataTemplate x:Key="EffectListEffectItemTemplate" DataType="{x:Type act:PlayerActionEffect}">
+		<res:ParallelPlayButton Style="{DynamicResource ParallelPlayEffectButtonStyle}"
+								Margin="1,0" Height="12"
+								IsEnabled="True" Visibility="Visible"
+								Content="{Binding ParallelIndex, Converter={StaticResource ZeroToTextConverter}, ConverterParameter=M}"
+								ToolTipService.ShowOnDisabled="True"
+								ToolTip="{Binding Name}"/>
+	</DataTemplate>
+
+
+	<!-- Collect the resources above -->
+	<res:TypedTemplateSelector x:Key="EffectListTemplateSelector">
+		<res:TypedTemplateDefinition DataType="{x:Type act:PlayerActionFile}" Template="{StaticResource EffectListFileItemTemplate}" />
+		<res:TypedTemplateDefinition DataType="{x:Type act:PlayerActionEffect}" Template="{StaticResource EffectListEffectItemTemplate}" />
+	</res:TypedTemplateSelector>
+
+
+	<Style x:Key="EffectListControlStyle" TargetType="{x:Type res:EffectListControl}">
+		<Setter Property="ItemTemplateSelector" Value="{DynamicResource EffectListTemplateSelector}"/>
+		<Setter Property="ItemsPanel" Value="{DynamicResource EffectListPanelTemplate}"/>
+		<Setter Property="ItemsSource" Value="{Binding Effects}"/>
+	</Style>
+	
+</ResourceDictionary>

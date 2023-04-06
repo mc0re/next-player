@@ -1,0 +1,18 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:res="http://nextplayer.nikitins.dk/Resources">
+
+
+	<Style x:Key="VolumeControlStyle" TargetType="{x:Type res:VolumeControl}" BasedOn="{StaticResource PositionedRangeBaseStyle}">
+		<Setter Property="Height" Value="14"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="Minimum" Value="0"/>
+		<Setter Property="Maximum" Value="1"/>
+		<Setter Property="DefaultValue" Value="1"/>
+		<Setter Property="Margin" Value="2,0"/>
+		<Setter Property="TrackGeometry" Value="{DynamicResource VolumeBackgroundGeometry}"/>
+		<Setter Property="IsIndicatorMoveable" Value="False"/>
+	</Style>
+
+</ResourceDictionary>

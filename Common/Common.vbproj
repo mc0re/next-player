@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6CC6BB6D-6251-4E5C-A607-5CD8DF63AE7C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Common</RootNamespace>
+    <AssemblyName>Common</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>Common.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>Common.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>On</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsBase.4.6.1055.0\lib\WindowsBase.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.vb">
+      <Link>CommonAssemblyInfo.vb</Link>
+    </Compile>
+    <Compile Include="Interfaces\ITimeService.vb" />
+    <Compile Include="NET Utility\BucketList.vb" />
+    <Compile Include="Positioning\2D\Line2D\Border2D.vb" />
+    <Compile Include="Positioning\2D\Line2D\LineCutResult.vb" />
+    <Compile Include="Positioning\2D\Line2D\ILine2D.vb" />
+    <Compile Include="Positioning\2D\Line2D\ILineSegment2D.vb" />
+    <Compile Include="Positioning\2D\Line2D\Line2DDirections.vb" />
+    <Compile Include="Positioning\2D\Line2D\Line2D.vb" />
+    <Compile Include="Positioning\2D\IObject2D.vb" />
+    <Compile Include="Positioning\2D\Line2D\IBorder2D.vb" />
+    <Compile Include="Positioning\2D\Polygon2D\IPolygon2D.vb" />
+    <Compile Include="Positioning\2D\Polygon2D\IPolygon2DSide.vb" />
+    <Compile Include="Positioning\2D\Polygon2D\Polygon2DSide.vb" />
+    <Compile Include="Positioning\2D\Point2D\IPoint2D.vb" />
+    <Compile Include="Positioning\2D\Line2D\Line2DHelper.vb" />
+    <Compile Include="Positioning\2D\Line2D\LineSegment2DHelper.vb" />
+    <Compile Include="Positioning\2D\Polygon2D\Polygon2DHelper.vb" />
+    <Compile Include="Positioning\2D\Polygon2D\Polygon2DSideHelper.vb" />
+    <Compile Include="Positioning\2D\Rectangle2D\Rectangle2D.vb" />
+    <Compile Include="Positioning\2D\Point2D\Point2D.vb" />
+    <Compile Include="Positioning\2D\Room2D\Room2D.vb" />
+    <Compile Include="Positioning\2D\Vector2D\Vector2D.vb" />
+    <Compile Include="Positioning\2D\Vector2D\Vector2DHelper.vb" />
+    <Compile Include="Positioning\3D\Line3D\ILine3D.vb" />
+    <Compile Include="Positioning\3D\Line3D\ILineSegment3D.vb" />
+    <Compile Include="Positioning\3D\Line3D\LineSegment3D.vb" />
+    <Compile Include="Positioning\3D\Plane3D\Border3D.vb" />
+    <Compile Include="Positioning\3D\Plane3D\IBorder3D.vb" />
+    <Compile Include="Positioning\3D\Plane3D\IPlane3D.vb" />
+    <Compile Include="Positioning\3D\IObject3D.vb" />
+    <Compile Include="Positioning\3D\Plane3D\PlaneIntersectionResult.vb" />
+    <Compile Include="Positioning\3D\Plane3D\PlaneIntersectionResults.vb" />
+    <Compile Include="Positioning\3D\Polygon3D\IPolygon3D.vb" />
+    <Compile Include="Positioning\3D\Polygon3D\Polygon3DHelper.vb" />
+    <Compile Include="Positioning\3D\Polyhedron\IPolyhedron.vb" />
+    <Compile Include="Positioning\3D\Polyhedron\IPolyhedronSide.vb" />
+    <Compile Include="Positioning\3D\Line3D\Line3D.vb" />
+    <Compile Include="Positioning\3D\Line3D\LineSegment3DHelper.vb" />
+    <Compile Include="Positioning\3D\Plane3D\Plane3D.vb" />
+    <Compile Include="Positioning\3D\Point3D\Point3DHelper.vb" />
+    <Compile Include="Positioning\3D\Polyhedron\PolyhedronHelper.vb" />
+    <Compile Include="Positioning\3D\Polyhedron\Polyhedron.vb" />
+    <Compile Include="Positioning\3D\Polyhedron\PolyhedronSideHelper.vb" />
+    <Compile Include="Positioning\3D\Polyhedron\PolyhedronSide.vb" />
+    <Compile Include="Positioning\Cutting\SegmentCutInfo.vb" />
+    <Compile Include="Positioning\Cutting\SegmentIntersectInfo.vb" />
+    <Compile Include="Positioning\3D\Point3D\IPoint3D.vb" />
+    <Compile Include="Positioning\3D\IPositionRelative.vb" />
+    <Compile Include="Positioning\3D\Math3D.vb" />
+    <Compile Include="Positioning\Cutting\SegmentIntersectResults.vb" />
+    <Compile Include="Positioning\ISimplePanning.vb" />
+    <Compile Include="Positioning\ISimpleVolume.vb" />
+    <Compile Include="Positioning\3D\Line3D\Line3DHelper.vb" />
+    <Compile Include="Positioning\2D\Line2D\LineSegment2D.vb" />
+    <Compile Include="Positioning\NoRef.vb" />
+    <Compile Include="Positioning\PanningModels.vb" />
+    <Compile Include="Positioning\3D\Plane3D\Plane3DHelper.vb" />
+    <Compile Include="Positioning\2D\Point2D\Point2DHelper.vb" />
+    <Compile Include="Positioning\2D\Polygon2D\Polygon2D.vb" />
+    <Compile Include="Positioning\3D\Polygon3D\Polygon3D.vb" />
+    <Compile Include="Positioning\3D\Point3D\Point3D.vb" />
+    <Compile Include="Positioning\PositioningUtility.vb" />
+    <Compile Include="Positioning\3D\PositionRelative.vb" />
+    <Compile Include="Positioning\Cutting\SegmentCutResults.vb" />
+    <Compile Include="Positioning\3D\Sphere3D.vb" />
+    <Compile Include="Positioning\3D\Vector3D\Vector3D.vb" />
+    <Compile Include="Channel-based config\Base implementations\ChannelBase.vb" />
+    <Compile Include="Channel-based config\Base implementations\ChannelCollection.vb" />
+    <Compile Include="Channel-based config\Base implementations\ChannelEnvironmentStorage.vb" />
+    <Compile Include="Channel-based config\Base implementations\ChannelLinkCollection.vb" />
+    <Compile Include="Channel-based config\Base implementations\LogicalChannelBase.vb" />
+    <Compile Include="Channel-based config\Collection interfaces\IChannelLinkCollection.vb" />
+    <Compile Include="Channel-based config\Collection interfaces\IChannelLinkCollectionBase.vb" />
+    <Compile Include="Channel-based config\Collection interfaces\ILinkStorageBase.vb" />
+    <Compile Include="Channel-based config\Collection interfaces\LinkResult.vb" />
+    <Compile Include="Channel-based config\Data item interfaces\IChannel.vb" />
+    <Compile Include="Channel-based config\Collection interfaces\IChannelCollection.vb" />
+    <Compile Include="Channel-based config\Data item interfaces\IChannelLink.vb" />
+    <Compile Include="Channel-based config\Collection interfaces\IChannelEnvironmentStorage.vb" />
+    <Compile Include="Channel-based config\Data item interfaces\ILogicalChannel.vb" />
+    <Compile Include="Channel-based config\Data item interfaces\IPhysicalChannel.vb" />
+    <Compile Include="Channel-based config\Base implementations\ChannelLink.vb" />
+    <Compile Include="Channel-based config\Data item interfaces\LinkInfo.vb" />
+    <Compile Include="Channel-based config\DuplicateChannelNumberException.vb" />
+    <Compile Include="Interfaces\IConfiguration.vb" />
+    <Compile Include="Interfaces\IPlaylist.vb" />
+    <Compile Include="Interfaces\IPresenterConfiguration.vb" />
+    <Compile Include="Interfaces\IPresenterStaticConfiguration.vb" />
+    <Compile Include="Interfaces\IMessageLog.vb" />
+    <None Include="..\Docs\Storage.dgml">
+      <Link>Storage.dgml</Link>
+    </None>
+    <None Include="NET Utility\ColorModelCmyk.vb" />
+    <Compile Include="Interfaces\IVoiceConfiguration.vb" />
+    <Compile Include="Channel-based config\PowerPointConfiguration.vb" />
+    <Compile Include="Interfaces\TriggerSummary.vb" />
+    <Compile Include="NET Utility\ElementSpy.vb" />
+    <Compile Include="NET Utility\OwnedPropertyChangedEventArgs.vb" />
+    <Compile Include="NET Utility\SingleItemStorage.vb" />
+    <Compile Include="NET Utility\TypeImplementationInfo.vb" />
+    <Compile Include="NET Utility\BackgroundWorkerPool.vb" />
+    <Compile Include="NET Utility\ColorModelHsl.vb" />
+    <Compile Include="NET Utility\ColorUtility.vb" />
+    <Compile Include="NET Utility\CommonUtility.vb" />
+    <Compile Include="NET Utility\DelegateCommand.vb" />
+    <Compile Include="NET Utility\EnumUtility.vb" />
+    <Compile Include="NET Utility\FileUtility.vb" />
+    <Compile Include="Interfaces\IBackgroundWorkerPool.vb" />
+    <Compile Include="NET Utility\IInputFile.vb" />
+    <Compile Include="NET Utility\ParseUtility.vb" />
+    <Compile Include="NET Utility\TypeUtility.vb" />
+    <Compile Include="Positioning\3D\Room3D\ProjectionModes.vb" />
+    <Compile Include="Positioning\3D\Room3D\Room3D.vb" />
+    <Compile Include="Positioning\References\IRefKeeper.vb" />
+    <Compile Include="Positioning\References\ReferencesHelper.vb" />
+    <Compile Include="Report utility\IgnoreForReportAttribute.vb" />
+    <Compile Include="Value converters\ColorToWpfColorConverter.vb" />
+    <Compile Include="Value converters\StringFormatConverter.vb" />
+    <Compile Include="Voice commands\CommandList.vb" />
+    <Compile Include="Voice commands\CommandParameterTypes.vb" />
+    <Compile Include="Interfaces\IEffectDurationConfiguration.vb" />
+    <Compile Include="NET Utility\InterfaceMapper.vb" />
+    <Compile Include="Interfaces\IVolumeConfiguration.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="NET Utility\PropertyChangedHelper.vb" />
+    <Compile Include="Voice commands\VoiceCommandConfigItem.vb" />
+    <Compile Include="Voice commands\VoiceCommandConfigItemCollection.vb" />
+    <Compile Include="Voice commands\VoiceCommandDescription.vb" />
+    <Compile Include="WindowPosition.vb" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

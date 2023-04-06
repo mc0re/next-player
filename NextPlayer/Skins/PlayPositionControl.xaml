@@ -1,0 +1,101 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:act="http://schemas.nikitins.dk/actions"
+    xmlns:local="clr-namespace:NextPlayer;assembly="
+    xmlns:res="http://nextplayer.nikitins.dk/Resources"
+    xmlns:common="http://nextplayer.nikitins.dk/Common">
+
+	
+	<res:MillisecondsToTimeSpanConverter x:Key="MillisecondsToTimeSpanConverter"/>
+	<local:WaveformConverter x:Key="WaveformConverter"/>
+	<res:BooleanToVisibilityConverter x:Key="BooleanToVisibleCollapsedConverter"/>
+	<common:StringFormatConverter x:Key="StringFormatConverter"/>
+
+
+	<DataTemplate x:Key="PlaybackProgressBarTemplate">
+		<Border Width="1" HorizontalAlignment="Right"
+				BorderThickness="1,0,0,0"
+				BorderBrush="{Binding ForegroundBorderBrush, RelativeSource={RelativeSource AncestorType={x:Type res:PlayPositionControl}}}"/>
+	</DataTemplate>
+
+
+	<ControlTemplate x:Key="StartStopOverlayTemplate" TargetType="{x:Type res:StartStopOverlayControl}">
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="{Binding StartGridLength, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="{Binding StopGridLength, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"/>
+			</Grid.ColumnDefinitions>
+
+			<Border Name="LeftDimmer"
+					Background="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type res:PlaylistItem}}}"
+					Opacity="{StaticResource SkippedAudioBgOpacity}"/>
+			
+			<GridSplitter Grid.Column="1" Style="{DynamicResource WaveSplitterStyle}"
+						  Visibility="{Binding IsEnabled, RelativeSource={RelativeSource TemplatedParent},
+									   Converter={StaticResource BooleanToVisibleCollapsedConverter}}"/>
+			
+			<GridSplitter Grid.Column="3" Style="{DynamicResource WaveSplitterStyle}"
+						  Visibility="{Binding IsEnabled, RelativeSource={RelativeSource TemplatedParent},
+									   Converter={StaticResource BooleanToVisibleCollapsedConverter}}"/>
+			
+			<Border Name="RightDimmer" Grid.Column="4"
+					Background="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type res:PlaylistItem}}}"
+					Opacity="{StaticResource SkippedAudioBgOpacity}"/>
+		</Grid>
+		
+		<ControlTemplate.Triggers>
+			<!-- Not in list - use default background -->
+			<DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type res:PlaylistItem}}}"
+						 Value="{x:Null}">
+				<Setter Property="Background" TargetName="LeftDimmer" Value="{DynamicResource BackgroundBrush}"/>
+				<Setter Property="Background" TargetName="RightDimmer" Value="{DynamicResource BackgroundBrush}"/>
+			</DataTrigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
+	
+	<DataTemplate x:Key="StartStopOverlayItemTemplate" DataType="{x:Type act:PlayerActionFile}">
+		<res:StartStopOverlayControl StartPosition="{Binding StartPosition}"
+									 StopPosition="{Binding StopPosition}"
+									 Duration="{Binding Duration}"
+									 Template="{DynamicResource StartStopOverlayTemplate}"/>
+	</DataTemplate>
+
+	
+	<Style x:Key="PlayPositionWaveformStyle" TargetType="{x:Type res:PlayPositionControl}" BasedOn="{StaticResource PositionedRangeBaseStyle}">
+		<Setter Property="UseLayoutRounding" Value="True"/>
+		<Setter Property="Height" Value="24"/>
+		<Setter Property="BorderBrush" Value="{Binding Background, RelativeSource={RelativeSource Self}}"/>
+		<Setter Property="Foreground" Value="{DynamicResource ProducerPlainBrush}"/>
+		<Setter Property="ForegroundBorderBrush" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}"/>
+		<Setter Property="IndicatorOverlay" Value="{DynamicResource PlaybackProgressBarTemplate}"/>
+		<Setter Property="IsIndicatorMoveable" Value="{Binding IsPlaying}"/>
+		
+		<Setter Property="MouseOverToolTip">
+			<Setter.Value>
+				<MultiBinding Converter="{StaticResource StringFormatConverter}">
+					<Binding Source="{}{0:mm\\:ss}"/>
+					<Binding Path="MouseOverValue" RelativeSource="{RelativeSource Self}"
+							 Converter="{StaticResource MillisecondsToTimeSpanConverter}"/>
+				</MultiBinding>
+				
+			</Setter.Value>
+		</Setter>
+
+		<Setter Property="TrackGeometry">
+			<Setter.Value>
+				<MultiBinding Converter="{StaticResource WaveformConverter}">
+					<Binding Path="AbsFileToPlay"/>
+					<Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}"/>
+					<Binding RelativeSource="{RelativeSource Self}"/>
+					<res:ConfigBinding Path="UpdatedCount"/>
+				</MultiBinding>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+</ResourceDictionary>

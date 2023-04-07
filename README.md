@@ -19,3 +19,4 @@ User manual is in `NextPlayer\Resources\LocalHelp.rtf` file.
 ## History
 
 The project started about 2013.
+The binaries for 2.1.2 are here: http://nextplayer.nikitins.dk/

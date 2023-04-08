@@ -87,7 +87,7 @@ The circle next to the clock indicates available and active effects.</Descriptio
       <DelayReference>LastProducer</DelayReference>
       <DelayBefore>0</DelayBefore>
       <HasDuration>true</HasDuration>
-      <Duration>126459</Duration>
+      <Duration>126433</Duration>
       <FileToPlay>../Source files/350495__frankum__dulcet-flute-music-track stereo.mp3</FileToPlay>
       <FileTimestamp>2021-01-24T14:52:24.6167678+01:00</FileTimestamp>
       <IsMuted>false</IsMuted>
@@ -257,7 +257,7 @@ To start any parallel action, one could:
       <DelayReference>LastProducer</DelayReference>
       <DelayBefore>7000</DelayBefore>
       <HasDuration>true</HasDuration>
-      <Duration>182152</Duration>
+      <Duration>182126</Duration>
       <FileToPlay>../Source files/danosongs.com-undiscovered-creature-instr.mp3</FileToPlay>
       <FileTimestamp>2021-01-24T14:52:24.817231+01:00</FileTimestamp>
       <IsMuted>false</IsMuted>

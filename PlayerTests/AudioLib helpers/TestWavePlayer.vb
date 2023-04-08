@@ -1,6 +1,7 @@
 ﻿Imports System.Threading.Tasks
 Imports NAudio.Wave
 
+
 Friend Class TestWavePlayer
     Implements IWavePlayer
 
@@ -39,6 +40,13 @@ Friend Class TestWavePlayer
     Public ReadOnly Property PlaybackState As PlaybackState Implements IWavePlayer.PlaybackState
         Get
             Return mPlaybackState
+        End Get
+    End Property
+
+
+    Public ReadOnly Property OutputWaveFormat As WaveFormat Implements IWavePlayer.OutputWaveFormat
+        Get
+            Return New WaveFormat()
         End Get
     End Property
 

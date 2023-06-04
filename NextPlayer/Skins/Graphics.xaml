@@ -657,7 +657,7 @@
 			<DrawingGroup>
 				<GeometryDrawing Pen="{DynamicResource ActionButtonImagePen}">
 					<GeometryDrawing.Geometry>
-						<PathGeometry Figures="M 0,0 H 100  M 0,33 H 100  M 0,66 H 100  M 0,100 H 100"/>
+						<PathGeometry Figures="M 0,79 L 50,50 M 73,9 L 50,23 L 50,50 L 73,64 L 100,50"/>
 					</GeometryDrawing.Geometry>
 				</GeometryDrawing>
 			</DrawingGroup>

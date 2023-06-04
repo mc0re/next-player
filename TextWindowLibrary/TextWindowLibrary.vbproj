@@ -92,17 +92,24 @@
     <Compile Include="..\CommonAssemblyInfo.vb">
       <Link>CommonAssemblyInfo.vb</Link>
     </Compile>
-    <Compile Include="Storage\TextWindowPhysicalChannel.vb" />
+    <Compile Include="Storage\ShowMessageTextInterface.vb" />
     <Compile Include="WPF Controls\ScalableTextControl.vb" />
     <None Include="..\Docs\Storage.dgml">
       <Link>Storage.dgml</Link>
     </None>
     <None Include="packages.config" />
     <None Include="WPF Controls\TextWindowManager.vb" />
+    <Page Include="WPF Controls\TextChannelEditorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="WPF Controls\TextWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="WPF Controls\TextChannelEditorWindow.xaml.vb">
+      <DependentUpon>TextChannelEditorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WPF Controls\TextWindow.xaml.vb">
       <DependentUpon>TextWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

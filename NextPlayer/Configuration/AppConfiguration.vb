@@ -5,6 +5,8 @@ Imports AudioChannelLibrary
 Imports AudioPlayerLibrary
 Imports Common
 Imports PlayerActions
+Imports TextChannelLibrary
+Imports TextWindowLibrary
 Imports WpfResources
 
 
@@ -541,6 +543,7 @@ Public Class AppConfiguration
         this.mCurrentEnvironment = appSett
 
         SetUpAudioLib()
+        SetUpTextLib()
         this.IsVoiceControlEnabled = appSett.IsVoiceControlEnabled
         InterfaceMapper.SetInstance(Of IVoiceConfiguration)(this)
     End Sub
@@ -735,7 +738,7 @@ Public Class AppConfiguration
 #End Region
 
 
-#Region " Audio utility "
+#Region " Channel utility "
 
     Public Shared Sub SetUpAudioLib()
         If Instance Is Nothing Then Return
@@ -749,6 +752,13 @@ Public Class AppConfiguration
             ' Standard MediaPlayer
             InterfaceMapper.SetType(Of IAudioPlayer, MediaPlayerWrapper)()
         End If
+    End Sub
+
+
+    Public Shared Sub SetUpTextLib()
+        If Instance Is Nothing Then Return
+
+        InterfaceMapper.SetType(Of ITextOutputInterface, ShowMessageTextInterface)()
     End Sub
 
 #End Region

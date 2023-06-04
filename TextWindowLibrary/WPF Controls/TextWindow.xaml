@@ -20,15 +20,25 @@
 		<common:ColorToWpfColorConverter x:Key="ColorConverter"/>
 		<common:StringFormatConverter x:Key="StringFormatConverter"/>
         <res:BooleanToVisibilityConverter x:Key="BooleanToVisibleCollapsedConverter"/>
+        <res:DoubleToMarginConverter x:Key="DoubleToMarginConverter"/>
 
 		
         <ControlTemplate x:Key="ShowAllText" TargetType="{x:Type txt:ScalableTextControl}">
-			<Border Background="{TemplateBinding Background}">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Foreground="{TemplateBinding Foreground}"
+            <Border Background="{TemplateBinding Background}">
+                <Grid Margin="{Binding Configuration.Margin, Converter={StaticResource DoubleToMarginConverter}}">
+                    <Viewbox Visibility="{Binding Configuration.IsDynamic, Converter={StaticResource BooleanToVisibleCollapsedConverter}}"
+                             Stretch="Uniform">
+                        
+                        <TextBlock Foreground="{TemplateBinding Foreground}"
+								   Text="{Binding Text}"/>
+                    </Viewbox>
+
+                    <TextBlock Visibility="{Binding Configuration.IsDynamic, Converter={StaticResource BooleanToCollapsedVisibleConverter}}"
+		                       Foreground="{TemplateBinding Foreground}"
+                               FontSize="{Binding Configuration.FontSize}"
 							   Text="{Binding Text}"/>
-				</Viewbox>
-			</Border>
+                </Grid>
+            </Border>
 		</ControlTemplate>
 		
 		

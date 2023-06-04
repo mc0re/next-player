@@ -7,6 +7,22 @@ Imports TextWindowLibrary
 Public Class TextOutputEditorControl
     Inherits ChannelEditorControlBase
 
+#Region " SetupPhysical command "
+
+    Public Property SetupPhysicalCommand As New DelegateCommand(AddressOf SetupPhysicalCommandExecuted)
+
+
+    Private Sub SetupPhysicalCommandExecuted(param As Object)
+        Dim physicalChannel = CType(param, TextPhysicalChannel)
+        Dim wnd As New TextChannelEditorWindow() With {
+            .Channel = physicalChannel
+        }
+        wnd.Show()
+    End Sub
+
+#End Region
+
+
 #Region " ChannelEditorControlGenericBase overrides: logical "
 
     ''' <summary>
@@ -53,7 +69,7 @@ Public Class TextOutputEditorControl
     ''' </summary>
     Protected Overrides Sub AddPhysicalCommandOverride()
         Dim txtConfig = InterfaceMapper.GetImplementation(Of ITextEnvironmentStorage)()
-        txtConfig.Physical.CreateNewChannel(Of TextWindowPhysicalChannel)()
+        txtConfig.Physical.CreateNewChannel(Of TextPhysicalChannel)()
     End Sub
 
 
@@ -70,9 +86,9 @@ Public Class TextOutputEditorControl
         If phys Is Nothing Then
             Return
         ElseIf phys.IsActive Then
-            phys.HideText()
+            phys.SendText(Nothing)
         Else
-            phys.ShowText(String.Format(
+            phys.SendText(String.Format(
                 "Physical {0}: '{1}'", phys.Channel, phys.Description))
         End If
     End Sub

@@ -7,14 +7,19 @@
 		xmlns:common="http://nextplayer.nikitins.dk/Common"
 		xmlns:res="http://nextplayer.nikitins.dk/Resources"
 		xmlns:txtch="clr-namespace:TextChannelLibrary;assembly=TextChannelLibrary"
-		xmlns:txtwnd="http://nextplayer.nikitins.dk/TextWindowLibrary"
 		xmlns:local="clr-namespace:NextPlayer">
 	
 	
     <common:ColorToWpfColorConverter x:Key="ColorToWpfColorConverter"/>
 
-	
-	<!-- Logical channel, table header -->
+
+    <!-- Interface type selector -->
+    <DataTemplate x:Key="TextInterfaceInfoTemplate" DataType="{x:Type common:TypeImplementationInfo}">
+        <TextBlock Style="{DynamicResource MainTextStyle}" Text="{Binding Name}"/>
+    </DataTemplate>
+
+
+    <!-- Logical channel, table header -->
 	<DataTemplate x:Key="TextLogicalHeaderTemplate">
 		<Grid>
 			<Grid.ColumnDefinitions>
@@ -33,84 +38,71 @@
 
 
     <!-- Physical channel, table header -->
-    <DataTemplate x:Key="TextPhysicalHeaderTemplate">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="EnabledFlag"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="ChannelNumber"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="WindowColor"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="WindowColor"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonShow"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonDelete"/>
-            </Grid.ColumnDefinitions>
+    <Style x:Key="TextPhysicalChannelRowStyle" TargetType="{x:Type res:CustomizableGrid}">
+        <Setter Property="Padding" Value="2,0"/>
+        <Setter Property="ColumnDefList">
+            <Setter.Value>
+                <res:ColumnDefinitionList>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="EnabledFlag"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="ChannelNumber"/>
+                    <ColumnDefinition Width="*" MinWidth="80"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="InterfaceType"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonSettings"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonShow"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonDelete"/>
+                </res:ColumnDefinitionList>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
+
+    <!-- Physical channel, table header -->
+    <DataTemplate x:Key="TextPhysicalHeaderTemplate">
+        <res:CustomizableGrid Style="{DynamicResource TextPhysicalChannelRowStyle}">
             <TextBlock Grid.Column="0" Style="{DynamicResource ColumnHeaderStyle}" Text="Use"/>
             <TextBlock Grid.Column="1" Style="{DynamicResource ColumnHeaderStyle}" Text="Ch #"/>
-            <TextBlock Grid.Column="2" Style="{DynamicResource ColumnHeaderStyle}" Text="Descr"/>
-            <TextBlock Grid.Column="3" Style="{DynamicResource ColumnHeaderStyle}" Text="Left"/>
-            <TextBlock Grid.Column="4" Style="{DynamicResource ColumnHeaderStyle}" Text="Top"/>
-            <TextBlock Grid.Column="5" Style="{DynamicResource ColumnHeaderStyle}" Text="Wid"/>
-            <TextBlock Grid.Column="6" Style="{DynamicResource ColumnHeaderStyle}" Text="Hei"/>
-            <TextBlock Grid.Column="7" Style="{DynamicResource ColumnHeaderStyle}" Text="Bg"/>
-            <TextBlock Grid.Column="8" Style="{DynamicResource ColumnHeaderStyle}" Text="Fg"/>
-        </Grid>
+            <TextBlock Grid.Column="2" Style="{DynamicResource ColumnHeaderStyle}" Text="Description"/>
+            <TextBlock Grid.Column="3" Style="{DynamicResource ColumnHeaderStyle}" Text="Type"/>
+        </res:CustomizableGrid>
     </DataTemplate>
 
 
     <!-- Physical channel, table row -->
-    <DataTemplate DataType="{x:Type txtwnd:TextWindowPhysicalChannel}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="EnabledFlag"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="ChannelNumber"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="WindowColor"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="WindowColor"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonShow"/>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonDelete"/>
-            </Grid.ColumnDefinitions>
-
+    <DataTemplate DataType="{x:Type txtch:TextPhysicalChannel}">
+        <res:CustomizableGrid Style="{DynamicResource TextPhysicalChannelRowStyle}">
 			<CheckBox Style="{DynamicResource CheckBoxNoTextStyle}" IsChecked="{Binding IsEnabled}"/>
             <TextBlock Grid.Column="1" Style="{DynamicResource MainTextStyle}"
 					   VerticalAlignment="Center" HorizontalAlignment="Center"
 					   Text="{Binding Channel}"/>
             <TextBox Grid.Column="2" Style="{DynamicResource TextBoxStyle}" Text="{Binding Description}"/>
-            <TextBox Grid.Column="3" Style="{DynamicResource TextBoxStyle}" Text="{Binding Left}"/>
-            <TextBox Grid.Column="4" Style="{DynamicResource TextBoxStyle}" Text="{Binding Top}"/>
-            <TextBox Grid.Column="5" Style="{DynamicResource TextBoxStyle}" Text="{Binding Width}"/>
-            <TextBox Grid.Column="6" Style="{DynamicResource TextBoxStyle}" Text="{Binding Height}"/>
 
-            <xctk:ColorPicker Grid.Column="7"
-							  Style="{DynamicResource ColorPickerStyle}"
-							  SelectedColor="{Binding Background, Converter={StaticResource ColorToWpfColorConverter}}"
-							  ToolTip="Window background color"/>
-            <xctk:ColorPicker Grid.Column="8"
-							  Style="{DynamicResource ColorPickerStyle}"
-							  SelectedColor="{Binding Foreground, Converter={StaticResource ColorToWpfColorConverter}}"
-							  ToolTip="Window foreground color"/>
+            <!-- Interface type selector -->
+            <ComboBox Grid.Column="3" Style="{DynamicResource ComboBoxStyle}"
+					  SelectedItem="{Binding TextInterfaceType}"
+					  ItemTemplate="{StaticResource TextInterfaceInfoTemplate}"
+					  ItemsSource="{Binding TextInterfaceTypeList, Mode=OneWay}"/>
 
-            <ToggleButton Grid.Column="9" Style="{DynamicResource ToggleImageButtonStyle}"
+            <!-- Common actions -->
+            <Button Grid.Column="4" Style="{DynamicResource SquareImageButtonStyle}"
+					Command="{Binding SetupPhysicalCommand, RelativeSource={RelativeSource AncestorType={x:Type local:TextOutputEditorControl}}}"
+					CommandParameter="{Binding}"
+					Content="{StaticResource SettingsImage}"
+					ToolTipService.ShowOnDisabled="True"
+					ToolTip="Setup channel"/>
+
+            <ToggleButton Grid.Column="5" Style="{DynamicResource ToggleImageButtonStyle}"
 						  Command="{Binding TestPhysicalCommand, RelativeSource={RelativeSource AncestorType={x:Type res:ChannelEditorControlBase}}}"
 						  CommandParameter="{Binding}"
 						  IsChecked="{Binding IsActive, Mode=OneWay}"
 						  Content="{StaticResource PreviewImage}"
 						  ToolTip="Show or hide window"/>
 
-            <Button Grid.Column="10" Style="{DynamicResource SquareImageButtonStyle}"
+            <Button Grid.Column="6" Style="{DynamicResource SquareImageButtonStyle}"
 					Command="{Binding DeletePhysicalCommand, RelativeSource={RelativeSource AncestorType={x:Type res:ChannelEditorControlBase}}}"
 					CommandParameter="{Binding}"
 					Content="{StaticResource DeleteWindowImage}"
 					ToolTip="Delete window definition"/>
-        </Grid>
+        </res:CustomizableGrid>
     </DataTemplate>
 
 

@@ -6,9 +6,10 @@ Imports TextChannelLibrary
 ''' <summary>
 ''' Defines a single text window.
 ''' </summary>
+<Description("Single message")>
 <Serializable>
-Public Class TextWindowPhysicalChannel
-    Inherits TextPhysicalChannel
+Public Class ShowMessageTextInterface
+    Inherits TextOutputInterfaceBase
 
 #Region " Implementation field "
 
@@ -23,6 +24,9 @@ Public Class TextWindowPhysicalChannel
     Private mLeft As Double
 
 
+    ''' <summary>
+    ''' Window left side position [pixels].
+    ''' </summary>
     Public Property Left As Double
         Get
             Return mLeft
@@ -40,6 +44,9 @@ Public Class TextWindowPhysicalChannel
     Private mTop As Double
 
 
+    ''' <summary>
+    ''' Window top side position [pixels].
+    ''' </summary>
     Public Property Top As Double
         Get
             Return mTop
@@ -57,6 +64,9 @@ Public Class TextWindowPhysicalChannel
     Private mWidth As Double
 
 
+    ''' <summary>
+    ''' Window width [pixels].
+    ''' </summary>
     Public Property Width As Double
         Get
             Return mWidth
@@ -74,6 +84,9 @@ Public Class TextWindowPhysicalChannel
     Private mHeight As Double
 
 
+    ''' <summary>
+    ''' Window height [pixels].
+    ''' </summary>
     Public Property Height As Double
         Get
             Return mHeight
@@ -146,6 +159,68 @@ Public Class TextWindowPhysicalChannel
 #End Region
 
 
+#Region " Margin notifying property "
+
+    Private mMargin As Double
+
+
+    ''' <summary>
+    ''' Distance between the window border and the text [pixels].
+    ''' </summary>
+    Public Property Margin As Double
+        Get
+            Return mMargin
+        End Get
+        Set(value As Double)
+            SetField(mMargin, value, Function() Margin)
+        End Set
+    End Property
+
+#End Region
+
+
+#Region " IsDynamic notifying property "
+
+    Private mIsDynamic As Boolean = True
+
+
+    ''' <summary>
+    ''' If <see langword="True"/>, the text is scaled to fit the window.
+    ''' If <see langword="False"/>, the font size is set explicitly by <see cref="FontSize"/>.
+    ''' </summary>
+    Public Property IsDynamic As Boolean
+        Get
+            Return mIsDynamic
+        End Get
+        Set(value As Boolean)
+            SetField(mIsDynamic, value, Function() IsDynamic)
+        End Set
+    End Property
+
+#End Region
+
+
+#Region " FontSize notifying property "
+
+    Private mFontSize As Double = 20
+
+
+    ''' <summary>
+    ''' If <see cref="IsDynamic"/> is <see langword="False"/>,
+    ''' the font size is set explicitly [font units].
+    ''' </summary>
+    Public Property FontSize As Double
+        Get
+            Return mFontSize
+        End Get
+        Set(value As Double)
+            SetField(mFontSize, value, Function() FontSize)
+        End Set
+    End Property
+
+#End Region
+
+
 #Region " Init and clean-up "
 
     Public Sub New()
@@ -163,7 +238,7 @@ Public Class TextWindowPhysicalChannel
 #Region " Equals overrides "
 
     Public Overrides Function Equals(obj As Object) As Boolean
-        Dim other = TryCast(obj, TextWindowPhysicalChannel)
+        Dim other = TryCast(obj, ShowMessageTextInterface)
         If other Is Nothing Then Return False
 
         Return MyBase.Equals(other) AndAlso
@@ -192,7 +267,7 @@ Public Class TextWindowPhysicalChannel
 #Region " ToString override "
 
     Public Overrides Function ToString() As String
-        Return $"Text window {Channel}: {Description}"
+        Return $"Text window {Left},{Top}-{Width},{Height}"
     End Function
 
 #End Region
@@ -200,7 +275,16 @@ Public Class TextWindowPhysicalChannel
 
 #Region " Text operations "
 
-    Public Overrides Sub ShowText(text As String)
+    Public Overrides Sub SendText(text As String)
+        If text IsNot Nothing Then
+            ShowText(text)
+        Else
+            HideText()
+        End If
+    End Sub
+
+
+    Private Sub ShowText(text As String)
         ' To switch focus back
         Dim oldWin = Application.Current.Windows.OfType(Of Window)().SingleOrDefault(Function(w) w.IsActive)
 
@@ -218,7 +302,7 @@ Public Class TextWindowPhysicalChannel
         End If
 
         mWindow.Topmost = True
-        mWindow.Configuration.IsActive = True
+        mWindow.Channel.IsActive = True
 
         ' Set the focus back to main window
         If oldWin IsNot Nothing Then
@@ -227,12 +311,12 @@ Public Class TextWindowPhysicalChannel
     End Sub
 
 
-    Public Overrides Sub HideText()
+    Private Sub HideText()
         If mWindow Is Nothing Then Return
 
         mWindow.Text = String.Empty
         mWindow.Hide()
-        mWindow.Configuration.IsActive = False
+        mWindow.Channel.IsActive = False
     End Sub
 
 #End Region

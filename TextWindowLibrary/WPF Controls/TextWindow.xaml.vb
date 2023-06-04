@@ -1,5 +1,5 @@
 ﻿Imports System.ComponentModel
-
+Imports TextChannelLibrary
 
 ''' <summary>
 ''' Show text in a coloured window.
@@ -54,17 +54,35 @@ Public Class TextWindow
 #End Region
 
 
+#Region " Channel dependency property "
+
+	Public Shared ReadOnly ChannelProperty As DependencyProperty = DependencyProperty.Register(
+		NameOf(Channel), GetType(TextPhysicalChannel), GetType(TextWindow))
+
+
+	Public Property Channel As TextPhysicalChannel
+		Get
+			Return CType(GetValue(ChannelProperty), TextPhysicalChannel)
+		End Get
+		Set(value As TextPhysicalChannel)
+			SetValue(ChannelProperty, value)
+		End Set
+	End Property
+
+#End Region
+
+
 #Region " Configuration dependency property "
 
 	Public Shared ReadOnly ConfigurationProperty As DependencyProperty = DependencyProperty.Register(
-		NameOf(Configuration), GetType(TextWindowPhysicalChannel), GetType(TextWindow))
+		NameOf(Configuration), GetType(ShowMessageTextInterface), GetType(TextWindow))
 
 
-	Public Property Configuration As TextWindowPhysicalChannel
+	Public Property Configuration As ShowMessageTextInterface
 		Get
-			Return CType(GetValue(ConfigurationProperty), TextWindowPhysicalChannel)
+			Return CType(GetValue(ConfigurationProperty), ShowMessageTextInterface)
 		End Get
-		Set(value As TextWindowPhysicalChannel)
+		Set(value As ShowMessageTextInterface)
 			SetValue(ConfigurationProperty, value)
 			AddHandler value.PropertyChanged, AddressOf ConfigurationPropertyChanged
 		End Set

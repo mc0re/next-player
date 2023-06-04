@@ -1,0 +1,55 @@
+﻿<Window x:Class="TextChannelEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TextWindowLibrary"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+		DataContext="{Binding Channel, RelativeSource={RelativeSource Self}}"
+        Title="{Binding Channel, StringFormat='Channel {0}'}"
+		MinWidth="200" Width="250"
+		MinHeight="50"
+		SizeToContent="Height"
+		Background="{DynamicResource BackgroundBrush}"
+		Foreground="{DynamicResource MainTextBrush}">
+
+    <Window.Resources>
+        <DataTemplate x:Key="ShowMessageSettingsTemplate" DataType="local:ShowMessageTextInterface">
+            <Grid>
+                <TextBlock Style="{DynamicResource MainTextStyle}"
+							   VerticalAlignment="Center" Margin="0,0,12,0"
+							   Text="Left"/>
+                <xctk:SingleUpDown Style="{DynamicResource SingleUpDownStyle}"
+									   Value="{Binding Left}"/>
+                <TextBox Grid.Row="4" Style="{DynamicResource TextBoxStyle}" Text="{Binding Top}"/>
+                <TextBox Grid.Row="5" Style="{DynamicResource TextBoxStyle}" Text="{Binding Width}"/>
+                <TextBox Grid.Row="6" Style="{DynamicResource TextBoxStyle}" Text="{Binding Height}"/>
+
+                <xctk:ColorPicker Grid.Row="7"
+							  Style="{DynamicResource ColorPickerStyle}"
+							  SelectedColor="{Binding Background, Converter={StaticResource ColorToWpfColorConverter}}"
+							  ToolTip="Window background color"/>
+                <xctk:ColorPicker Grid.Row="8"
+							  Style="{DynamicResource ColorPickerStyle}"
+							  SelectedColor="{Binding Foreground, Converter={StaticResource ColorToWpfColorConverter}}"
+							  ToolTip="Window foreground color"/>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    
+    
+    <StackPanel>
+        <Expander Style="{DynamicResource ExpanderStyle}" Header="General">
+            <Grid>
+                <TextBox Style="{DynamicResource TextBoxStyle}" Text="{Binding Description}"/>
+
+                <CheckBox Style="{DynamicResource CheckBoxWithTextStyle}"
+						  IsChecked="{Binding IsEnabled}"
+						  Content="Enabled"/>
+
+                <ContentControl Content="{Binding TextInterface}"/>
+            </Grid>
+        </Expander>
+    </StackPanel>
+</Window>

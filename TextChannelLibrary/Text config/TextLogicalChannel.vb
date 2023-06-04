@@ -22,7 +22,7 @@ Public Class TextLogicalChannel
 	Public Sub ShowText(text As String)
 		For Each def In GetPhysicalChannels(Of TextPhysicalChannel, TextChannelLink, ITextEnvironmentStorage)()
 			If def.Link.IsEnabled AndAlso def.Physical.IsEnabled Then
-				def.Physical.ShowText(text)
+				def.Physical.SendText(text)
 			End If
 		Next
 
@@ -33,7 +33,7 @@ Public Class TextLogicalChannel
 	Public Sub HideText()
 		For Each def In GetPhysicalChannels(Of TextPhysicalChannel, TextChannelLink, ITextEnvironmentStorage)()
 			If def.Link.IsEnabled AndAlso def.Physical.IsEnabled Then
-				def.Physical.HideText()
+				def.Physical.SendText(Nothing)
 			End If
 		Next
 

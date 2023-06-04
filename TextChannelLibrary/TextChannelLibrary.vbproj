@@ -90,9 +90,11 @@
     </Compile>
     <Compile Include="Text config\ITextChannelStorage.vb" />
     <Compile Include="Text config\ITextEnvironmentStorage.vb" />
+    <Compile Include="Text config\ITextOutputInterface.vb" />
     <Compile Include="Text config\TextChannelLink.vb" />
     <Compile Include="Text config\TextEnvironmentStorage.vb" />
     <Compile Include="Text config\TextLogicalChannel.vb" />
+    <Compile Include="Text config\TextOutputInterfaceBase.vb" />
     <Compile Include="Text config\TextPhysicalChannel.vb" />
   </ItemGroup>
   <ItemGroup>

@@ -382,6 +382,7 @@ Class PlayerWindow
     Public Sub New()
         ' Assume that configuration files are loaded
         AppConfiguration.SetUpAudioLib()
+        AppConfiguration.SetUpTextLib()
         InterfaceMapper.SetInstance(Of IConfiguration)(AppConfiguration.Instance)
         InterfaceMapper.SetInstance(Of IVolumeConfiguration)(AppConfiguration.Instance)
         InterfaceMapper.SetInstance(Of IEffectDurationConfiguration)(AppConfiguration.Instance)
@@ -414,7 +415,7 @@ Class PlayerWindow
         mVoiceControl = New SpeechRecognitionControl(Me)
 
         ' Add extra serialized types
-        PlayerActionCollection.AddSerializedType(GetType(TextWindowPhysicalChannel))
+        PlayerActionCollection.AddSerializedType(GetType(ShowMessageTextInterface))
     End Sub
 
 

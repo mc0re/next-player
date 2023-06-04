@@ -34,10 +34,26 @@
 			<Trigger Property="IsChecked" Value="True">
 				<Setter Property="Visibility" TargetName="CheckedIcon" Value="Visible"/>
 			</Trigger>
-			<Trigger Property="IsMouseOver" Value="True">
-				<Setter Property="Visibility" TargetName="CheckedIcon" Value="Visible"/>
-				<Setter Property="Opacity" TargetName="CheckedIcon" Value="{StaticResource MouseOverOpacity}"/>
-			</Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="True"/>
+                    <Condition Property="IsChecked" Value="True"/>
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter Property="Visibility" TargetName="CheckedIcon" Value="Visible"/>
+                    <Setter Property="Opacity" TargetName="CheckedIcon" Value="{StaticResource MouseOverOnOpacity}"/>
+                </MultiTrigger.Setters>
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="True"/>
+                    <Condition Property="IsChecked" Value="False"/>
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter Property="Visibility" TargetName="CheckedIcon" Value="Visible"/>
+                    <Setter Property="Opacity" TargetName="CheckedIcon" Value="{StaticResource MouseOverOffOpacity}"/>
+                </MultiTrigger.Setters>
+            </MultiTrigger>
 		</ControlTemplate.Triggers>
 	</ControlTemplate>
 
@@ -68,10 +84,26 @@
 			<Trigger Property="IsChecked" Value="True">
 				<Setter Property="Visibility" TargetName="CheckedIcon" Value="Visible"/>
 			</Trigger>
-			<Trigger Property="IsMouseOver" Value="True">
-				<Setter Property="Visibility" TargetName="CheckedIcon" Value="Visible"/>
-				<Setter Property="Opacity" TargetName="CheckedIcon" Value="{StaticResource MouseOverOpacity}"/>
-			</Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="True"/>
+                    <Condition Property="IsChecked" Value="True"/>
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter Property="Visibility" TargetName="CheckedIcon" Value="Visible"/>
+                    <Setter Property="Opacity" TargetName="CheckedIcon" Value="{StaticResource MouseOverOnOpacity}"/>
+                </MultiTrigger.Setters>
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="True"/>
+                    <Condition Property="IsChecked" Value="False"/>
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter Property="Visibility" TargetName="CheckedIcon" Value="Visible"/>
+                    <Setter Property="Opacity" TargetName="CheckedIcon" Value="{StaticResource MouseOverOffOpacity}"/>
+                </MultiTrigger.Setters>
+            </MultiTrigger>
 		</ControlTemplate.Triggers>
 	</ControlTemplate>
 

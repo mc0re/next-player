@@ -12,7 +12,8 @@ Public Class AsioAudioInterface
 #Region " Commands "
 
     <NonSerialized>
-    Private ReadOnly mOpenAsioControlCommand As DelegateCommand = New DelegateCommand(AddressOf OpenAsioControlCommandExecuted)
+    Private ReadOnly mOpenAsioControlCommand As DelegateCommand = New DelegateCommand(
+        AddressOf OpenAsioControlCommandExecuted, AddressOf OpenAsioControlCommandCanExecute)
 
 
     Public ReadOnly Property OpenAsioControlCommand As DelegateCommand
@@ -20,6 +21,11 @@ Public Class AsioAudioInterface
             Return mOpenAsioControlCommand
         End Get
     End Property
+
+
+    Private Function OpenAsioControlCommandCanExecute(obj As Object) As Boolean
+        Return Not String.IsNullOrEmpty(DriverName)
+    End Function
 
 
     Private Sub OpenAsioControlCommandExecuted(param As Object)
@@ -176,7 +182,7 @@ Public Class AsioAudioInterface
 
             Catch ex As Exception
                 InterfaceMapper.GetImplementation(Of IMessageLog)().LogAudioError(
-                    "Error opening ASIO driver '{0}'", drvName)
+                    "Error opening ASIO driver '{0}': {1}", drvName, ex.Message)
             End Try
         Next
 

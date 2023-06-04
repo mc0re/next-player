@@ -21,11 +21,11 @@ Public Class FileUtility
 			modifDate = File.GetLastWriteTime(absPath)
 
 		Catch ex As UnauthorizedAccessException
-			InterfaceMapper.GetImplementation(Of IMessageLog)().LogLoadingError(
+			InterfaceMapper.GetImplementation(Of IMessageLog)().LogFileError(
 				"No permission to open '{0}': {1}", absPath, ex.Message)
 
 		Catch ex As PathTooLongException
-			InterfaceMapper.GetImplementation(Of IMessageLog)().LogLoadingError(
+			InterfaceMapper.GetImplementation(Of IMessageLog)().LogFileError(
 				"Path too long (max 260 chars): '{0}'", absPath)
 		End Try
 

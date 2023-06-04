@@ -460,7 +460,7 @@ Public Class PlaylistControl
                 cont.Focus()
             Catch ex As Exception
                 ' Apparently, a CLR exception can occur here, probably due to PInvoke
-                InterfaceMapper.GetImplementation(Of IMessageLog)().LogLoadingError(
+                InterfaceMapper.GetImplementation(Of IMessageLog)().LogFileError(
                     $"Exception when setting focus: {ex.Message}")
             End Try
         End If

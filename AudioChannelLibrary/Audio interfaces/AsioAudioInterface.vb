@@ -92,7 +92,7 @@ Public Class AsioAudioInterface
     ''' </summary>
     Public Sub New()
         WeakEventManager(Of AudioChangedListener, EventArgs).
-            AddHandler(AudioChangedListener.Instance, "DevicesUpdated", AddressOf DevicesUpdatedHanlder)
+            AddHandler(AudioChangedListener.Instance, "DevicesUpdated", AddressOf DevicesUpdatedHandler)
         UpdateDeviceInfo()
     End Sub
 
@@ -122,7 +122,7 @@ Public Class AsioAudioInterface
     ''' <summary>
     ''' React on audio device updates.
     ''' </summary>
-    Private Sub DevicesUpdatedHanlder(sender As Object, args As EventArgs)
+    Private Sub DevicesUpdatedHandler(sender As Object, args As EventArgs)
         UpdateDeviceInfo()
     End Sub
 

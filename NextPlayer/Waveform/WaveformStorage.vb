@@ -225,7 +225,7 @@ Public Class WaveformStorage
         Try
             ProcessGeometry(workItem)
         Catch ex As Exception
-            mReporter.LogLoadingError("Exception {0} when processing '{1}'.", ex.Message, workItem.FileName)
+            mReporter.LogFileError("Exception {0} when processing '{1}'.", ex.Message, workItem.FileName)
         Finally
             mReporter.LogWaveformWork(False)
         End Try
@@ -287,7 +287,7 @@ Public Class WaveformStorage
             End Using
 
         Catch ex As Exception
-            InterfaceMapper.GetImplementation(Of IMessageLog)().LogLoadingError(ex.Message)
+            InterfaceMapper.GetImplementation(Of IMessageLog)().LogFileError(ex.Message)
             Return Array.Empty(Of Single)()
         End Try
     End Function

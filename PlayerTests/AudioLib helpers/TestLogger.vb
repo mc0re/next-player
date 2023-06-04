@@ -16,7 +16,7 @@ Public Class TestLogger
 
     End Sub
 
-    Public Sub LogLoadingError(format As String, ParamArray args() As Object) Implements IMessageLog.LogLoadingError
+    Public Sub LogFileError(format As String, ParamArray args() As Object) Implements IMessageLog.LogFileError
 
     End Sub
 

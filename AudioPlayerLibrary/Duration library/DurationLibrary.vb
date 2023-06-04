@@ -71,7 +71,7 @@ Public NotInheritable Class DurationLibrary
             sCurrentInfo.AsInputFile.IsLoadingFailed = True
             sCurrentInfo.AsDuration.HasDuration = False
 
-            InterfaceMapper.GetImplementation(Of IMessageLog)().LogLoadingError(
+            InterfaceMapper.GetImplementation(Of IMessageLog)().LogFileError(
                 "Cannot open as audio file '{0}'", sCurrentInfo.AsInputFile.FileName)
             sCurrentInfo = Nothing
         End If

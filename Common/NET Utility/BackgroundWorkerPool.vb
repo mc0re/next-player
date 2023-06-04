@@ -133,7 +133,7 @@ Public NotInheritable Class BackgroundWorkerPool(Of TItem)
             ' Shut down
         Catch ex As Exception
             ' Report and shut down
-            InterfaceMapper.GetImplementation(Of IMessageLog)().LogLoadingError(
+            InterfaceMapper.GetImplementation(Of IMessageLog)().LogFileError(
                 "Error in background thread: {0}", ex.Message)
         End Try
     End Sub

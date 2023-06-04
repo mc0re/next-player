@@ -73,7 +73,7 @@ Public Class SkinEditorControl
             End Using
 
         Catch ex As Exception
-            InterfaceMapper.GetImplementation(Of IMessageLog).LogLoadingError(ex.Message)
+            InterfaceMapper.GetImplementation(Of IMessageLog).LogFileError(ex.Message)
         End Try
     End Sub
 
@@ -100,7 +100,7 @@ Public Class SkinEditorControl
             SetDefaultSkinCommand.RaiseCanExecuteChanged()
 
         Catch ex As Exception
-            InterfaceMapper.GetImplementation(Of IMessageLog).LogLoadingError(ex.Message)
+            InterfaceMapper.GetImplementation(Of IMessageLog).LogFileError(ex.Message)
         End Try
     End Sub
 

@@ -105,7 +105,7 @@ Public Class SpeechRecognitionControl
 
 		Catch ex As Exception
 			' Probably no audio found, ignore
-			InterfaceMapper.GetImplementation(Of IMessageLog)().LogLoadingError("Recognizer error: {0}", ex.Message)
+			InterfaceMapper.GetImplementation(Of IMessageLog)().LogFileError("Recognizer error: {0}", ex.Message)
 		End Try
 	End Sub
 

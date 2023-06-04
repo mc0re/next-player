@@ -221,7 +221,7 @@ Public Class ExportListWindow
 						Dim e = arch.CreateEntry(Playlist.Name & PlayerActionCollection.PlaylistDefaultExtension)
 
 						Using sw = e.Open()
-							Playlist.Save(sw, String.Empty)
+							Playlist.Save(sw)
 						End Using
 					End Using
 				End Using

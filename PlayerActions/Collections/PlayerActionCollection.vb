@@ -880,7 +880,7 @@ Public Class PlayerActionCollection
 
 
     ''' <summary>
-    ''' Adjust collection before saving.
+    ''' Adjust paths before saving.
     ''' </summary>
     ''' <param name="fileName">Full name of the new playlist location</param>
     Private Sub BeforeSave(fileName As String) Implements IInputFile.BeforeSave
@@ -958,11 +958,17 @@ Public Class PlayerActionCollection
     ''' Save this list to XML.
     ''' </summary>
     ''' <param name="strm">Stream to write to</param>
-    Public Sub Save(strm As Stream, fileToSave As String)
-        BeforeSave(fileToSave)
+    Public Sub Save(strm As Stream, Optional fileToSave As String = Nothing)
+        If Not String.IsNullOrEmpty(fileToSave) Then
+            BeforeSave(fileToSave)
+        End If
+
         Serializer.Serialize(strm, Me)
-        DoesNameExist = True
-        Saved()
+
+        If Not String.IsNullOrEmpty(fileToSave) Then
+            DoesNameExist = True
+            Saved()
+        End If
     End Sub
 
 #End Region

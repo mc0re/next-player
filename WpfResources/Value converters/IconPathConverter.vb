@@ -34,7 +34,7 @@ Public Class IconPathConverter
 
 		Catch ex As Exception
 			Dim logger = InterfaceMapper.GetImplementation(Of IMessageLog)()
-			logger.LogLoadingError("Cannot load icon '{0}': {1}", value, ex.Message)
+			logger.LogFileError("Cannot load icon '{0}': {1}", value, ex.Message)
 			Return Nothing
 		End Try
 	End Function

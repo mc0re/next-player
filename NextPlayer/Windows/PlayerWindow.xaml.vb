@@ -612,6 +612,12 @@ Class PlayerWindow
     <CodeAnalysis.SuppressMessage("Microsoft.Design", "CC0004:Catch block cannot be empty", Justification:="<Pending>")>
     Private Function SavePlaylist(fileName As String) As Boolean
         Try
+            If File.Exists(fileName) Then
+                Dim backupName As String = fileName + ".bak"
+                File.Delete(backupName)
+                File.Move(fileName, backupName)
+            End If
+
             Using writer = File.Open(fileName, FileMode.Create, FileAccess.Write)
                 ActionList.Save(writer, fileName)
                 IsListModified = False
@@ -619,7 +625,7 @@ Class PlayerWindow
             End Using
 
         Catch ex As Exception
-            ' Swallow
+            MessageLogger.LogFileError("Error saving playlist: {0}", ex.Message)
         End Try
 
         Return False

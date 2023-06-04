@@ -193,9 +193,8 @@ Public Class VolumeProvider
         Dim samplesProduced = framesRead * mNofDestChannels
 
         ' Zero-out the whole array.
-        ' I do not know why the array is exactly 4 times bigger than the requested samples,
-        ' but if it is not fully zeroed-out, residual sounds appear.
-        Array.Clear(buffer, offset, samplesProduced * Marshal.SizeOf(Of Single)())
+        ' If it is not fully zeroed-out, residual sounds appear.
+        Array.Clear(buffer, offset, buffer.Length - offset)
 
         If Not mPlaybackInfo.IsMuted AndAlso mAudioLink.IsEnabled AndAlso mDestChannel.IsEnabled Then
             ProcessAndWriteSamples(framesRead, buffer, offset)

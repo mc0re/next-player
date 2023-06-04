@@ -57,7 +57,7 @@ Public Class NotificationCollectionTest
         Public Sub LogLicenseWarning(format As String, ParamArray args() As Object) Implements IMessageLog.LogLicenseWarning
         End Sub
 
-        Public Sub LogLoadingError(format As String, ParamArray args() As Object) Implements IMessageLog.LogLoadingError
+        Public Sub LogFileError(format As String, ParamArray args() As Object) Implements IMessageLog.LogFileError
         End Sub
 
         Public Sub LogAudioError(format As String, ParamArray args() As Object) Implements IMessageLog.LogAudioError

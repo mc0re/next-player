@@ -25,7 +25,7 @@
 
 
     ''' <summary>
-    ''' Report autotrigger information.
+    ''' Report auto-trigger information.
     ''' </summary>
     Sub LogTriggerInfo(triggerList As IEnumerable(Of TriggerSummary))
 
@@ -52,7 +52,13 @@
 
     Sub LogLicenseWarning(format As String, ParamArray args() As Object)
 
-    Sub LogLoadingError(format As String, ParamArray args() As Object)
+
+    ''' <summary>
+    ''' Report a file loading or saving error.
+    ''' </summary>
+    ''' <param name="format">Message string containing references to <paramref name="args"/> like <c>{0}</c></param>
+    ''' <param name="args">Arguments to the message string</param>
+    Sub LogFileError(format As String, ParamArray args() As Object)
 
     Sub LogAudioError(format As String, ParamArray args() As Object)
 

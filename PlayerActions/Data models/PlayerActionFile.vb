@@ -850,7 +850,7 @@ Public Class PlayerActionFile
     ''' There was an error.
     ''' </summary>
     Private Sub MediaFailedHandler(sender As Object, args As MediaFailedEventArgs)
-        InterfaceMapper.GetImplementation(Of IMessageLog)().LogLoadingError(
+        InterfaceMapper.GetImplementation(Of IMessageLog)().LogFileError(
             "{0}: {1}", Path.GetFileName(args.FileName), args.Reason)
         IsLoadingFailed = True
         StopPlayer(False)

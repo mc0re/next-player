@@ -98,8 +98,6 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Style="{DynamicResource MainTextStyle}"
@@ -125,6 +123,14 @@
                                    IsEnabled="{Binding IsDynamic, Converter={StaticResource BooleanNotConverter}}"
                                    Minimum="1"
                                    Value="{Binding FontSize}"/>
+
+                <TextBlock Style="{DynamicResource MainTextStyle}"
+                           Grid.Row="3"
+                           IsEnabled="{Binding IsDynamic, Converter={StaticResource BooleanNotConverter}}"
+						   VerticalAlignment="Center"
+						   Text="Scroll"/>
+                <local:ScrollModeControl Style="{DynamicResource ScrollModesControlStyle}"
+                                          Grid.Row="3" Grid.Column="1"/>
             </Grid>
         </DataTemplate>
     </Window.Resources>

@@ -203,6 +203,27 @@ Public Class RenderTextInterface
 #End Region
 
 
+#Region " ScrollMode notifying property "
+
+    Private mScrollMode As ScrollModes
+
+
+    ''' <summary>
+    ''' What to do if there is more text than fits the window.
+    ''' Only works if <see cref="IsDynamic"/> is <see langword="False"/>.
+    ''' </summary>
+    Public Property ScrollMode As ScrollModes
+        Get
+            Return mScrollMode
+        End Get
+        Set(value As ScrollModes)
+            SetField(mScrollMode, value, Function() ScrollMode)
+        End Set
+    End Property
+
+#End Region
+
+
 #Region " Init and clean-up "
 
     Public Sub New()
@@ -249,7 +270,7 @@ Public Class RenderTextInterface
 #Region " ToString override "
 
     Public Overrides Function ToString() As String
-        Return $"Text window #{mPhysicalChannel.Channel}: {Left},{Top}-{Width},{Height}"
+        Return $"Text window #{mPhysicalChannel?.Channel}: {Left},{Top}-{Width},{Height}"
     End Function
 
 #End Region
@@ -258,7 +279,7 @@ Public Class RenderTextInterface
 #Region " Text operations "
 
     Public Overrides Sub SendText(text As String)
-        If text IsNot Nothing Then
+        If Not String.IsNullOrEmpty(text) Then
             If mWindow Is Nothing Then
                 Dim factory = InterfaceMapper.GetImplementation(Of ITextRendererFactory)()
                 mWindow = factory.Create(Me, mPhysicalChannel)

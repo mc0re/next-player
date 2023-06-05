@@ -500,13 +500,17 @@
 				<Button Style="{DynamicResource RoundImageButtonStyle}" Content="{DynamicResource AddCommentButtonImage}"
 						Command="{StaticResource AddCommentCommand}"
 						ToolTipService.ShowOnDisabled="True" ToolTip="Add comment"/>
-				<Button Style="{DynamicResource RoundImageButtonStyle}" Content="{DynamicResource DeleteButtonImage}"
+
+                <Button Style="{DynamicResource RoundImageButtonStyle}" Content="{DynamicResource DeleteButtonImage}"
 						Command="{StaticResource DeleteFileCommand}"
+                        DockPanel.Dock="Right"
 						ToolTipService.ShowOnDisabled="True" ToolTip="Remove selected action"/>
-				<Button Style="{DynamicResource RoundImageButtonStyle}" Content="{DynamicResource MoveDownButtonImage}" DockPanel.Dock="Right"
+				<Button Style="{DynamicResource RoundImageButtonStyle}" Content="{DynamicResource MoveDownButtonImage}"
+                        DockPanel.Dock="Right"
 						Command="{StaticResource ListItemDownCommand}"
 						ToolTipService.ShowOnDisabled="True" ToolTip="Move selected action down"/>
-				<Button Style="{DynamicResource RoundImageButtonStyle}" Content="{DynamicResource MoveUpButtonImage}" DockPanel.Dock="Right"
+				<Button Style="{DynamicResource RoundImageButtonStyle}" Content="{DynamicResource MoveUpButtonImage}"
+                        DockPanel.Dock="Right"
 						Command="{StaticResource ListItemUpCommand}"
 						ToolTipService.ShowOnDisabled="True" ToolTip="Move selected action up"/>
             </DockPanel>

@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:text="http://nextplayer.nikitins.dk/TextWindowLibrary"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ControlTemplate x:Key="ScrollModesControlTemplate" TargetType="{x:Type text:ScrollModeControl}">
+        <StackPanel Orientation="Horizontal">
+            <ToggleButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						  Content="{DynamicResource NoScrollImage}"
+						  IsChecked="{Binding ScrollMode, Converter={StaticResource EnumToTrueFalseConverter}, ConverterParameter=None}"
+						  ToolTip="No scrolling, the text is clipped"/>
+
+            <ToggleButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						  Content="{DynamicResource HorizontalScrollImage}"
+						  IsChecked="{Binding ScrollMode, Converter={StaticResource EnumToTrueFalseConverter}, ConverterParameter=Horizontal}"
+						  ToolTip="Horizontal scroll (right), the text is reformatted into one line"/>
+
+            <ToggleButton Style="{DynamicResource ToggleImageSettingButtonStyle}"
+						  Content="{DynamicResource VerticalScrollImage}"
+						  IsChecked="{Binding ScrollMode, Converter={StaticResource EnumToTrueFalseConverter}, ConverterParameter=Vertical}"
+						  ToolTip="Vertical scroll (down), the text is wrapped"/>
+        </StackPanel>
+    </ControlTemplate>
+
+
+    <Style x:Key="ScrollModesControlStyle" TargetType="{x:Type text:ScrollModeControl}">
+        <Setter Property="Template" Value="{DynamicResource ScrollModesControlTemplate}"/>
+    </Style>
+
+</ResourceDictionary>

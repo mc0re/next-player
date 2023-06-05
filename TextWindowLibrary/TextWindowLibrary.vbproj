@@ -107,6 +107,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="WPF Controls\ScrollModeControl.vb" />
     <Compile Include="WPF Controls\TextChannelEditorWindow.xaml.vb">
       <DependentUpon>TextChannelEditorWindow.xaml</DependentUpon>
     </Compile>

@@ -97,6 +97,7 @@
     <Compile Include="General\TextChannelLink.vb" />
     <Compile Include="General\TextEnvironmentStorage.vb" />
     <Compile Include="General\TextLogicalChannel.vb" />
+    <Compile Include="Specific\ScrollModes.vb" />
     <Compile Include="Specific\TextOutputInterfaceBase.vb" />
     <Compile Include="General\TextPhysicalChannel.vb" />
   </ItemGroup>

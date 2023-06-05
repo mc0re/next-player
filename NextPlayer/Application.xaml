@@ -32,6 +32,7 @@ ShutdownMode="OnMainWindowClose">
 				<ResourceDictionary Source="Skins/EffectTypeControl.xaml"/>
 				<ResourceDictionary Source="Skins/EffectTargetControl.xaml"/>
 				<ResourceDictionary Source="Skins/SetSlideControl.xaml"/>
+				<ResourceDictionary Source="Skins/ScrollModeControl.xaml"/>
 				<ResourceDictionary Source="Skins/SoundPositionModeControl.xaml"/>
 				<ResourceDictionary Source="Skins/CoordinatesEditorControl.xaml"/>
 				

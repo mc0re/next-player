@@ -479,6 +479,11 @@ Public Class PlaylistControl
         End If
 
         Dim container = ItemContainerGenerator.ContainerFromItem(act)
+        If container Is Nothing Then
+            ' Can happen if an action was deleted in the meantime
+            Return
+        End If
+
         Dim actListItem = CType(container, PlaylistItem)
         actListItem.BringIntoView()
 

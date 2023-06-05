@@ -382,6 +382,7 @@
 				<Grid Name="TextInnerGrid">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
 					
@@ -402,8 +403,19 @@
 								  SelectedValue="{Binding Channel}"
 								  ItemsSource="{res:PlaylistBinding TextLogicalChannels, Mode=OneWay}"/>
                     </DockPanel>
-					
-					<TextBox Grid.Row="1" Style="{DynamicResource TextBoxStyle}"
+
+                    <DockPanel Grid.Row="1" Margin="0,0,0,7">
+                        <CheckBox Style="{StaticResource CheckBoxWithTextStyle}"
+                                  Content="Scroll text"
+                                  IsChecked="{Binding Scroll}"/>
+
+                        <TextBox Style="{DynamicResource TextBoxStyle}"
+								 IsEnabled="{Binding Scroll}"
+								 Text="{Binding ScrollDuration, Converter={StaticResource TimeSpanFormatConverter}}"
+                                 ToolTip="How long does it take to scroll the whole text"/>
+                    </DockPanel>
+                    
+					<TextBox Grid.Row="2" Style="{DynamicResource TextBoxStyle}"
 							 TextWrapping="Wrap" AcceptsReturn="True"
 							 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
 							 VerticalAlignment="Stretch"

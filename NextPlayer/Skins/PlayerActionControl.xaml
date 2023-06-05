@@ -407,7 +407,8 @@
                     <Grid Grid.Row="1" Margin="0,0,0,7">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         
@@ -418,10 +419,17 @@
                         <TextBox Style="{DynamicResource TextBoxStyle}"
                                  Grid.Column="1"
 								 IsEnabled="{Binding Scroll}"
-								 Text="{Binding ScrollDuration, Converter={StaticResource TimeSpanFormatConverter}}"
-                                 ToolTip="How long does it take to scroll the whole text"/>
+								 Text="{Binding ScrollStart, Converter={StaticResource TimeSpanFormatConverter}}"
+                                 ToolTip="How long to wait before start scrolling"/>
 
-                        <Slider Grid.Column="2" Margin="7,0"
+                        <TextBox Style="{DynamicResource TextBoxStyle}"
+                                 Grid.Column="2"
+                                 Margin="7,0"
+								 IsEnabled="{Binding Scroll}"
+								 Text="{Binding ScrollDuration, Converter={StaticResource TimeSpanFormatConverter}}"
+                                 ToolTip="How long to scroll after the initial wait"/>
+
+                        <Slider Grid.Column="3" Margin="7,0"
 								IsEnabled="{Binding Scroll}"
                                 VerticalAlignment="Center"
                                 Value="{Binding ScrollPosition, Mode=TwoWay}" Minimum="0" Maximum="1"

@@ -22,18 +22,26 @@
         <res:BooleanToVisibilityConverter x:Key="BooleanToVisibleCollapsedConverter"/>
         <res:DoubleToMarginConverter x:Key="DoubleToMarginConverter"/>
 
-		
+
+        <Style x:Key="DisplayText" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+            <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}"/>
+        </Style>
+        
+        
         <ControlTemplate x:Key="ZoomedTextNoScroll" TargetType="{x:Type txt:ScalableTextControl}">
             <Viewbox Stretch="Uniform">
-                <TextBlock Foreground="{TemplateBinding Foreground}" Text="{Binding Text}"/>
+                <TextBlock Style="{StaticResource DisplayText}"
+                           Foreground="{TemplateBinding Foreground}"
+                           Text="{Binding Text}"/>
             </Viewbox>
 		</ControlTemplate>
 		
 		
         <ControlTemplate x:Key="FixedTextNoScroll" TargetType="{x:Type txt:ScalableTextControl}">
-            <TextBlock Foreground="{TemplateBinding Foreground}"
-                        FontSize="{Binding Configuration.FontSize}"
-						Text="{Binding Text}"/>
+            <TextBlock Style="{StaticResource DisplayText}"
+                       FontSize="{Binding Configuration.FontSize}"
+					   Text="{Binding Text}"/>
 		</ControlTemplate>
 		
 		
@@ -41,9 +49,9 @@
             <ScrollViewer x:Name="PART_ScrollViewer"
                           HorizontalScrollBarVisibility="Hidden"
                           VerticalScrollBarVisibility="Disabled">
-				<TextBlock Foreground="{TemplateBinding Foreground}"
-							FontSize="{Binding Configuration.FontSize}"
-							Text="{Binding Text, Converter={StaticResource StringToOneLineConverter}}"/>
+                <TextBlock Style="{StaticResource DisplayText}"
+						   FontSize="{Binding Configuration.FontSize}"
+						   Text="{Binding Text, Converter={StaticResource StringToOneLineConverter}}"/>
             </ScrollViewer>
 		</ControlTemplate>
 		
@@ -52,7 +60,7 @@
             <ScrollViewer x:Name="PART_ScrollViewer"
                           HorizontalScrollBarVisibility="Disabled"
                           VerticalScrollBarVisibility="Hidden">
-				<TextBlock Foreground="{TemplateBinding Foreground}"
+				<TextBlock Style="{StaticResource DisplayText}"
 						   FontSize="{Binding Configuration.FontSize}"
 						   Text="{Binding Text}"
                            TextWrapping="Wrap"/>
@@ -62,17 +70,9 @@
 		
 		<Style x:Key="ScalableTextStyle" TargetType="{x:Type txt:ScalableTextControl}">
 			<Setter Property="Foreground" Value="{Binding Configuration.Foreground, Converter={StaticResource ColorConverter}}"/>
+            <Setter Property="Template" Value="{DynamicResource ZoomedTextNoScroll}"/>
             
             <Style.Triggers>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding Configuration.ScrollMode}" Value="None"/>
-                        <Condition Binding="{Binding Configuration.IsDynamic}" Value="True"/>
-                    </MultiDataTrigger.Conditions>
-                    
-					<Setter Property="Template" Value="{DynamicResource ZoomedTextNoScroll}"/>
-                </MultiDataTrigger>
-
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
                         <Condition Binding="{Binding Configuration.ScrollMode}" Value="None"/>

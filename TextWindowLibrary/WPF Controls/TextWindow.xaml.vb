@@ -194,12 +194,22 @@ Public Class TextWindow
 
 
 	Private Sub MouseDownHandler(sender As Object, args As MouseButtonEventArgs) Handles Me.MouseDown
-		mMouseDownCoords = args.GetPosition(Application.Current.MainWindow)
+		Try
+			mMouseDownCoords = Mouse.GetPosition(Application.Current.MainWindow)
+		Catch
+			' Swallow
+		End Try
 	End Sub
 
 
 	Private Sub MouseMoveHandler(sender As Object, args As MouseEventArgs) Handles Me.MouseMove
-		Dim mouseCoords = args.GetPosition(Application.Current.MainWindow)
+		Dim mouseCoords As Point
+		Try
+			mouseCoords = Mouse.GetPosition(Application.Current.MainWindow)
+		Catch
+			Return
+		End Try
+
 		Dim moved = mouseCoords - mMouseDownCoords
 
 		If (args.LeftButton <> MouseButtonState.Pressed AndAlso

@@ -1,4 +1,5 @@
-﻿Imports System.Xml.Serialization
+﻿Imports System.Windows.Threading
+Imports System.Xml.Serialization
 Imports AudioPlayerLibrary
 Imports Common
 Imports TextChannelLibrary
@@ -74,6 +75,46 @@ Public Class PlayerActionText
 #End Region
 
 
+#Region " ScrollStart notifying property "
+
+    Private mScrollStart As TimeSpan
+
+
+    ''' <summary>
+    ''' If <see cref="Scroll"/> is set, how long should we wait
+    ''' before star scrolling the text.
+    ''' </summary>
+    <XmlIgnore, SerializedAs>
+    Public Property ScrollStart As TimeSpan
+        Get
+            Return mScrollStart
+        End Get
+        Set(value As TimeSpan)
+            mScrollStart = value
+            RaisePropertyChanged(Function() ScrollStart)
+        End Set
+    End Property
+
+
+    ''' <summary>
+    ''' If <see cref="Scroll"/> is set, how long should we wait
+    ''' before star scrolling the text.
+    ''' </summary>
+    ''' <remarks>To work around inability to serialize TimeSpan.</remarks>
+    <XmlElement(NameOf(ScrollStart))>
+    <IgnoreForReport()>
+    Public Property ScrollStartSerialized As Double
+        Get
+            Return ScrollStart.TotalMilliseconds()
+        End Get
+        Set(value As Double)
+            ScrollStart = TimeSpan.FromMilliseconds(value)
+        End Set
+    End Property
+
+#End Region
+
+
 #Region " ScrollDuration notifying property "
 
     Private mScrollDuration As TimeSpan
@@ -129,6 +170,13 @@ Public Class PlayerActionText
             Return mScrollPosition
         End Get
         Set(value As Double)
+            If value < 0 Then
+                value = 0
+            ElseIf value > 1 Then
+                value = 1
+            End If
+
+            If mScrollPosition = value Then Return
             mScrollPosition = value
             RaisePropertyChanged(Function() ScrollPosition)
             Dim storage = InterfaceMapper.GetImplementation(Of ITextChannelStorage)()
@@ -169,14 +217,22 @@ Public Class PlayerActionText
 
         If String.IsNullOrEmpty(Text) Then
             ch.HideText()
+            MyBase.Stop(False)
         Else
             ch.ShowText(Text)
+
+            If Scroll And ScrollDuration.Ticks > 0 Then
+                StartPositionTimer()
+            Else
+                MyBase.Stop(False)
+            End If
         End If
     End Sub
 
 
     Public Overrides Sub [Stop](intendedResume As Boolean)
         MyBase.Stop(intendedResume)
+        StopPositionTimer()
 
         If Not intendedResume Then
             ScrollPosition = 0
@@ -193,6 +249,68 @@ Public Class PlayerActionText
         chList.HideAll()
         Dim storage = InterfaceMapper.GetImplementation(Of ITextEnvironmentStorage)()
         storage.HideAll()
+    End Sub
+
+#End Region
+
+
+#Region " Timer "
+
+    ''' <summary>
+    ''' Interval between timer ticks [milliseconds]
+    ''' </summary>
+    Private Const TimerStep As Double = 100
+
+    Private mTimer As DispatcherTimer
+
+    ''' <summary>
+    ''' Start delay [milliseconds].
+    ''' </summary>
+    Private mTimerInitialDelay As Double
+
+    ''' <summary>
+    ''' Position increment for every passed millisecond.
+    ''' </summary>
+    Private mTimerStep As Double
+
+    ''' <summary>
+    ''' Previous tick timestamp.
+    ''' </summary>
+    Private mLastTickTime As DateTime
+
+
+    Private Sub StartPositionTimer()
+        mTimer = New DispatcherTimer With {
+            .Interval = TimeSpan.FromMilliseconds(TimerStep)
+        }
+        AddHandler mTimer.Tick, AddressOf PositionTimerTick
+        mTimerInitialDelay = ScrollStart.TotalMilliseconds
+        mTimerStep = 1.0 / ScrollDuration.TotalMilliseconds
+        mLastTickTime = Date.UtcNow
+        mTimer.Start()
+    End Sub
+
+
+    Private Sub StopPositionTimer()
+        mTimer?.Stop()
+        mTimer = Nothing
+    End Sub
+
+
+    Private Sub PositionTimerTick(sender As Object, e As EventArgs)
+        Dim now = Date.UtcNow
+        Dim passed = (now - mLastTickTime).TotalMilliseconds
+        mLastTickTime = now
+
+        If mTimerInitialDelay > 0 Then
+            mTimerInitialDelay -= passed
+        Else
+            ScrollPosition += mTimerStep * passed
+
+            If ScrollPosition >= 1 Then
+                MyBase.Stop(False)
+            End If
+        End If
     End Sub
 
 #End Region

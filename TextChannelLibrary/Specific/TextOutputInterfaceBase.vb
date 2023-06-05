@@ -20,6 +20,11 @@ Public MustInherit Class TextOutputInterfaceBase
     End Sub
 
 
+    ''' <inheritdoc/>
     Public MustOverride Sub SendText(text As String) Implements ITextOutputInterface.SendText
+
+
+    ''' <inheritdoc/>
+    Public MustOverride Sub SetPosition(position As Double) Implements ITextOutputInterface.SetPosition
 
 End Class

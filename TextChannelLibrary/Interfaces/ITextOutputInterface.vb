@@ -11,4 +11,10 @@ Public Interface ITextOutputInterface
     ''' </summary>
     Sub SendText(text As String)
 
+
+    ''' <summary>
+    ''' Set text playback position, if applicable [0-1].
+    ''' </summary>
+    Sub SetPosition(position As Double)
+
 End Interface

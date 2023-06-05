@@ -709,7 +709,7 @@ Public Class PlayerActionFile
 
 
     ''' <summary>
-    ''' Stop prodycing the sound.
+    ''' Stop producing the sound.
     ''' </summary>
     Public Overrides Sub [Stop](intendedResume As Boolean)
         If intendedResume And mPlayer IsNot Nothing Then

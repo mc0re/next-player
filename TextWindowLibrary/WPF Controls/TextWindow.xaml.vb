@@ -123,6 +123,24 @@ Public Class TextWindow
 #End Region
 
 
+#Region " ScrollPosition dependency property "
+
+	Public Shared ReadOnly ScrollPositionProperty As DependencyProperty = DependencyProperty.Register(
+		NameOf(ScrollPosition), GetType(Double), GetType(TextWindow))
+
+
+	Public Property ScrollPosition As Double Implements ITextRenderer.ScrollPosition
+		Get
+			Return CDbl(GetValue(ScrollPositionProperty))
+		End Get
+		Set(value As Double)
+			SetValue(ScrollPositionProperty, value)
+		End Set
+	End Property
+
+#End Region
+
+
 #Region " Init and clean-up "
 
 	Public Sub New()

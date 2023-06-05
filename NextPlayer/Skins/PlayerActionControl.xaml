@@ -404,16 +404,31 @@
 								  ItemsSource="{res:PlaylistBinding TextLogicalChannels, Mode=OneWay}"/>
                     </DockPanel>
 
-                    <DockPanel Grid.Row="1" Margin="0,0,0,7">
+                    <Grid Grid.Row="1" Margin="0,0,0,7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
                         <CheckBox Style="{StaticResource CheckBoxWithTextStyle}"
                                   Content="Scroll text"
                                   IsChecked="{Binding Scroll}"/>
 
                         <TextBox Style="{DynamicResource TextBoxStyle}"
+                                 Grid.Column="1"
 								 IsEnabled="{Binding Scroll}"
 								 Text="{Binding ScrollDuration, Converter={StaticResource TimeSpanFormatConverter}}"
                                  ToolTip="How long does it take to scroll the whole text"/>
-                    </DockPanel>
+
+                        <Slider Grid.Column="2" Margin="7,0"
+								IsEnabled="{Binding Scroll}"
+                                VerticalAlignment="Center"
+                                Value="{Binding ScrollPosition, Mode=TwoWay}" Minimum="0" Maximum="1"
+                                SmallChange="0.01"
+                                LargeChange="0.1"
+                                ToolTip="Text scrolling position"/>
+                    </Grid>
                     
 					<TextBox Grid.Row="2" Style="{DynamicResource TextBoxStyle}"
 							 TextWrapping="Wrap" AcceptsReturn="True"

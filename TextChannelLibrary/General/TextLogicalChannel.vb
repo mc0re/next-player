@@ -40,6 +40,17 @@ Public Class TextLogicalChannel
 		IsActive = False
 	End Sub
 
+
+	Public Sub SetPosition(position As Double)
+		For Each def In GetPhysicalChannels(Of TextPhysicalChannel, TextChannelLink, ITextEnvironmentStorage)()
+			If def.Link.IsEnabled AndAlso def.Physical.IsEnabled Then
+				def.Physical.SetPosition(position)
+			End If
+		Next
+
+		IsActive = False
+	End Sub
+
 #End Region
 
 End Class

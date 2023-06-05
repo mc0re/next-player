@@ -292,6 +292,13 @@ Public Class RenderTextInterface
         End If
     End Sub
 
+
+    Public Overrides Sub SetPosition(position As Double)
+        If mWindow IsNot Nothing Then
+            mWindow.ScrollPosition = position
+        End If
+    End Sub
+
 #End Region
 
 End Class

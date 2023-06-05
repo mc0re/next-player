@@ -114,6 +114,32 @@ Public Class PlayerActionText
 #End Region
 
 
+#Region " ScrollPosition notifying property "
+
+    Private mScrollPosition As Double
+
+
+    ''' <summary>
+    ''' Scrolling position (0-1).
+    ''' Not for storing, playback-only property.
+    ''' </summary>
+    <XmlIgnore>
+    Public Property ScrollPosition As Double
+        Get
+            Return mScrollPosition
+        End Get
+        Set(value As Double)
+            mScrollPosition = value
+            RaisePropertyChanged(Function() ScrollPosition)
+            Dim storage = InterfaceMapper.GetImplementation(Of ITextChannelStorage)()
+            Dim ch = storage.Logical.Channel(Channel)
+            ch.SetPosition(value)
+        End Set
+    End Property
+
+#End Region
+
+
 #Region " Init and clean-up "
 
     Public Sub New()
@@ -127,7 +153,14 @@ Public Class PlayerActionText
 
 #Region " PlayerAction overrides "
 
+    Public Overrides Sub PrepareStart()
+        MyBase.PrepareStart()
+        ScrollPosition = 0
+    End Sub
+
+
     Public Overrides Sub Start()
+        MyBase.Start()
         Dim storage = InterfaceMapper.GetImplementation(Of ITextChannelStorage)()
         Dim ch = storage.Logical.Channel(Channel)
 
@@ -138,6 +171,15 @@ Public Class PlayerActionText
             ch.HideText()
         Else
             ch.ShowText(Text)
+        End If
+    End Sub
+
+
+    Public Overrides Sub [Stop](intendedResume As Boolean)
+        MyBase.Stop(intendedResume)
+
+        If Not intendedResume Then
+            ScrollPosition = 0
         End If
     End Sub
 

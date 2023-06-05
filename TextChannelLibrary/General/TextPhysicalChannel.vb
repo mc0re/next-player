@@ -149,8 +149,17 @@ Public Class TextPhysicalChannel
 #End Region
 
 
+#Region " API "
+
     Public Sub SendText(text As String)
         mTextInterface?.SendText(text)
     End Sub
+
+
+    Public Sub SetPosition(position As Double)
+        mTextInterface?.SetPosition(position)
+    End Sub
+
+#End Region
 
 End Class

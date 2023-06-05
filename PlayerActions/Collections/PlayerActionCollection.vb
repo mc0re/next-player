@@ -936,10 +936,12 @@ Public Class PlayerActionCollection
             newList.IsLoadingFailed = False
 
         Catch ex As Exception
+            InterfaceMapper.GetImplementation(Of IMessageLog)().LogFileError(
+                "Error loading playlist: " & ex.Message)
+
             If newList IsNot Nothing Then
                 newList.IsLoadingFailed = True
             End If
-            Throw
 
         Finally
             sIsUpdateEventEnabled = True

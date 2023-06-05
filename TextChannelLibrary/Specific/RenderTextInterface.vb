@@ -1,20 +1,18 @@
 ﻿Imports System.ComponentModel
-Imports System.Xml.Serialization
-Imports TextChannelLibrary
-
+Imports Common
 
 ''' <summary>
-''' Defines a single text window.
+''' Shows the text in a window.
 ''' </summary>
-<Description("Single message")>
+<Description("Box")>
 <Serializable>
-Public Class ShowMessageTextInterface
+Public Class RenderTextInterface
     Inherits TextOutputInterfaceBase
 
 #Region " Implementation field "
 
     <NonSerialized>
-    Private mWindow As TextWindow
+    Private mWindow As ITextRenderer
 
 #End Region
 
@@ -101,28 +99,20 @@ Public Class ShowMessageTextInterface
 
 #Region " Background notifying property "
 
-    Private mBackground As System.Drawing.Color
+    Private mBackground As Integer
 
 
-    <XmlIgnore>
+    ''' <summary>
+    ''' Window background colour.
+    ''' Use <c>System.Drawing.Color.FromArgb</c>
+    ''' </summary>
     <Category("Appearance"), Description("The background colour")>
-    Public Property Background As System.Drawing.Color
+    Public Property Background As Integer
         Get
             Return mBackground
         End Get
-        Set(value As System.Drawing.Color)
-            SetField(mBackground, value, Function() Background)
-        End Set
-    End Property
-
-
-    <XmlElement(NameOf(Background))>
-    Public Property BackgroundSerializable As Integer
-        Get
-            Return mBackground.ToArgb()
-        End Get
         Set(value As Integer)
-            mBackground = System.Drawing.Color.FromArgb(value)
+            SetField(mBackground, value, Function() Background)
         End Set
     End Property
 
@@ -131,28 +121,20 @@ Public Class ShowMessageTextInterface
 
 #Region " Foreground notifying property "
 
-    Private mForeground As System.Drawing.Color
+    Private mForeground As Integer
 
 
-    <XmlIgnore>
+    ''' <summary>
+    ''' Window text colour.
+    ''' Use <c>System.Drawing.Color.FromArgb</c>
+    ''' </summary>
     <Category("Appearance"), Description("The foreground colour")>
-    Public Property Foreground As System.Drawing.Color
+    Public Property Foreground As Integer
         Get
             Return mForeground
         End Get
-        Set(value As System.Drawing.Color)
-            SetField(mForeground, value, Function() Foreground)
-        End Set
-    End Property
-
-
-    <XmlElement(NameOf(Foreground))>
-    Public Property ForegroundSerializable As Integer
-        Get
-            Return mForeground.ToArgb()
-        End Get
         Set(value As Integer)
-            mForeground = System.Drawing.Color.FromArgb(value)
+            SetField(mForeground, value, Function() Foreground)
         End Set
     End Property
 
@@ -181,7 +163,7 @@ Public Class ShowMessageTextInterface
 
 #Region " IsDynamic notifying property "
 
-    Private mIsDynamic As Boolean = True
+    Private mIsDynamic As Boolean
 
 
     ''' <summary>
@@ -224,12 +206,12 @@ Public Class ShowMessageTextInterface
 #Region " Init and clean-up "
 
     Public Sub New()
-        Left = 0
-        Top = 0
         Width = 400
         Height = 100
-        Background = System.Drawing.Color.Black
-        Foreground = System.Drawing.Color.White
+        Margin = 20
+        Background = &HFF000000
+        Foreground = &HFFFFFFFF
+        IsDynamic = True
     End Sub
 
 #End Region
@@ -238,7 +220,7 @@ Public Class ShowMessageTextInterface
 #Region " Equals overrides "
 
     Public Overrides Function Equals(obj As Object) As Boolean
-        Dim other = TryCast(obj, ShowMessageTextInterface)
+        Dim other = TryCast(obj, RenderTextInterface)
         If other Is Nothing Then Return False
 
         Return MyBase.Equals(other) AndAlso
@@ -246,8 +228,8 @@ Public Class ShowMessageTextInterface
             Top = other.Top AndAlso
             Width = other.Width AndAlso
             Height = other.Height AndAlso
-            BackgroundSerializable = other.BackgroundSerializable AndAlso
-            ForegroundSerializable = other.ForegroundSerializable
+            Background = other.Background AndAlso
+            Foreground = other.Foreground
     End Function
 
 
@@ -257,8 +239,8 @@ Public Class ShowMessageTextInterface
             Top.GetHashCode() Xor
             Width.GetHashCode() Xor
             Height.GetHashCode() Xor
-            BackgroundSerializable.GetHashCode() Xor
-            ForegroundSerializable.GetHashCode()
+            Background.GetHashCode() Xor
+            Foreground.GetHashCode()
     End Function
 
 #End Region
@@ -267,7 +249,7 @@ Public Class ShowMessageTextInterface
 #Region " ToString override "
 
     Public Overrides Function ToString() As String
-        Return $"Text window {Left},{Top}-{Width},{Height}"
+        Return $"Text window #{mPhysicalChannel.Channel}: {Left},{Top}-{Width},{Height}"
     End Function
 
 #End Region
@@ -277,46 +259,16 @@ Public Class ShowMessageTextInterface
 
     Public Overrides Sub SendText(text As String)
         If text IsNot Nothing Then
-            ShowText(text)
+            If mWindow Is Nothing Then
+                Dim factory = InterfaceMapper.GetImplementation(Of ITextRendererFactory)()
+                mWindow = factory.Create(Me, mPhysicalChannel)
+            End If
+
+            mWindow.Show(text)
         Else
-            HideText()
+            mWindow?.Hide()
+            mWindow = Nothing
         End If
-    End Sub
-
-
-    Private Sub ShowText(text As String)
-        ' To switch focus back
-        Dim oldWin = Application.Current.Windows.OfType(Of Window)().SingleOrDefault(Function(w) w.IsActive)
-
-        ' Create if does not exist
-        If mWindow Is Nothing Then
-            mWindow = New TextWindow() With {
-                .Configuration = Me
-            }
-        End If
-
-        mWindow.Text = text
-
-        If Not mWindow.IsVisible Then
-            mWindow.Show()
-        End If
-
-        mWindow.Topmost = True
-        mWindow.Channel.IsActive = True
-
-        ' Set the focus back to main window
-        If oldWin IsNot Nothing Then
-            oldWin.Focus()
-        End If
-    End Sub
-
-
-    Private Sub HideText()
-        If mWindow Is Nothing Then Return
-
-        mWindow.Text = String.Empty
-        mWindow.Hide()
-        mWindow.Channel.IsActive = False
     End Sub
 
 #End Region

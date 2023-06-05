@@ -7,6 +7,7 @@ Imports Common
 ''' Manages a connection to the physical text output.
 ''' Could be displayed in a window, sent as SMS, text-to-speech...
 ''' </summary>
+<CLSCompliant(True)>
 <Serializable>
 Public Class TextPhysicalChannel
     Inherits ChannelBase
@@ -92,6 +93,7 @@ Public Class TextPhysicalChannel
             If value.Equals(mTextInterface) Then Return
 
             mTextInterface = value
+            mTextInterface.SetChannel(Me)
             RaisePropertyChanged(NameOf(TextInterface))
 
             Dim implInfo = TextInterfaceTypeList.FirstOrDefault(

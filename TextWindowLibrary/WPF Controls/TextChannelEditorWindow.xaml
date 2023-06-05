@@ -7,7 +7,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
 		DataContext="{Binding Channel, RelativeSource={RelativeSource Self}}"
-        Title="{Binding Channel, StringFormat='Channel {0}'}"
+        Title="{Binding Channel, StringFormat='Text {0}'}"
 		MinWidth="200" Width="250"
 		MinHeight="50"
 		SizeToContent="Height"
@@ -15,25 +15,116 @@
 		Foreground="{DynamicResource MainTextBrush}">
 
     <Window.Resources>
-        <DataTemplate x:Key="ShowMessageSettingsTemplate" DataType="local:ShowMessageTextInterface">
+        <DataTemplate x:Key="PositionSettingsTemplate" DataType="local:RenderTextInterface">
             <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                
                 <TextBlock Style="{DynamicResource MainTextStyle}"
-							   VerticalAlignment="Center" Margin="0,0,12,0"
-							   Text="Left"/>
-                <xctk:SingleUpDown Style="{DynamicResource SingleUpDownStyle}"
-									   Value="{Binding Left}"/>
-                <TextBox Grid.Row="4" Style="{DynamicResource TextBoxStyle}" Text="{Binding Top}"/>
-                <TextBox Grid.Row="5" Style="{DynamicResource TextBoxStyle}" Text="{Binding Width}"/>
-                <TextBox Grid.Row="6" Style="{DynamicResource TextBoxStyle}" Text="{Binding Height}"/>
+						   VerticalAlignment="Center" Margin="0,0,12,0"
+						   Text="Left"/>
+                <xctk:DoubleUpDown Style="{DynamicResource CoordinateUpDownStyle}"
+                                   Grid.Column="1"
+                                   Text="LEFT"
+                                   Value="{Binding Left}"/>
+                
+                <TextBlock Style="{DynamicResource MainTextStyle}"
+                           Grid.Row="1"
+						   VerticalAlignment="Center" Margin="0,0,12,0"
+						   Text="Top"/>
+                <xctk:DoubleUpDown Style="{DynamicResource CoordinateUpDownStyle}"
+                                   Grid.Row="1" Grid.Column="1"
+                                   Value="{Binding Top}"/>
+                
+                <TextBlock Style="{DynamicResource MainTextStyle}"
+                           Grid.Row="2"
+						   VerticalAlignment="Center" Margin="0,0,12,0"
+						   Text="Width"/>
+                <xctk:DoubleUpDown Style="{DynamicResource CoordinateUpDownStyle}"
+                                   Grid.Row="2" Grid.Column="1"
+                                   Minimum="10"
+                                   Value="{Binding Width}"/>
+                
+                <TextBlock Style="{DynamicResource MainTextStyle}"
+                           Grid.Row="3"
+						   VerticalAlignment="Center" Margin="0,0,12,0"
+						   Text="Height"/>
+                <xctk:DoubleUpDown Style="{DynamicResource CoordinateUpDownStyle}"
+                                   Grid.Row="3" Grid.Column="1"
+                                   Minimum="10"
+                                   Value="{Binding Height}"/>
 
-                <xctk:ColorPicker Grid.Row="7"
-							  Style="{DynamicResource ColorPickerStyle}"
-							  SelectedColor="{Binding Background, Converter={StaticResource ColorToWpfColorConverter}}"
-							  ToolTip="Window background color"/>
-                <xctk:ColorPicker Grid.Row="8"
-							  Style="{DynamicResource ColorPickerStyle}"
-							  SelectedColor="{Binding Foreground, Converter={StaticResource ColorToWpfColorConverter}}"
-							  ToolTip="Window foreground color"/>
+                <TextBlock Style="{DynamicResource MainTextStyle}"
+                           Grid.Row="4"
+						   VerticalAlignment="Center" Margin="0,0,12,0"
+						   Text="Background"/>
+                <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}"
+                                  Grid.Row="4" Grid.Column="1"
+                                  Width="NaN"
+							      SelectedColor="{Binding Background, Converter={StaticResource ColorToWpfColorConverter}}"
+							      ToolTip="Window background color"/>
+                
+                <TextBlock Style="{DynamicResource MainTextStyle}"
+                           Grid.Row="5"
+						   VerticalAlignment="Center" Margin="0,0,12,0"
+						   Text="Foreground"/>
+                <xctk:ColorPicker Style="{DynamicResource ColorPickerStyle}"
+                                  Grid.Row="5" Grid.Column="1"
+                                  Width="NaN"
+							      SelectedColor="{Binding Foreground, Converter={StaticResource ColorToWpfColorConverter}}"
+							      ToolTip="Window foreground color"/>
+            </Grid>
+        </DataTemplate>
+
+        
+        <DataTemplate x:Key="ContentSettingsTemplate" DataType="local:RenderTextInterface">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Style="{DynamicResource MainTextStyle}"
+						   VerticalAlignment="Center" Margin="0,0,12,0"
+						   Text="Margin"/>
+                <xctk:DoubleUpDown Style="{DynamicResource CoordinateUpDownStyle}"
+                                   Grid.Column="1"
+                                   Minimum="0"
+                                   Value="{Binding Margin}"/>
+                
+                <CheckBox Style="{DynamicResource CheckBoxWithTextStyle}"
+                          Grid.Row="1" Grid.ColumnSpan="2"
+						  IsChecked="{Binding IsDynamic}"
+						  Content="Fit text"/>
+
+                <TextBlock Style="{DynamicResource MainTextStyle}"
+                           Grid.Row="2"
+                           IsEnabled="{Binding IsDynamic, Converter={StaticResource BooleanNotConverter}}"
+						   VerticalAlignment="Center" Margin="0,0,12,0"
+						   Text="Font size"/>
+                <xctk:DoubleUpDown Style="{DynamicResource CoordinateUpDownStyle}"
+                                   Grid.Row="2" Grid.Column="1"
+                                   IsEnabled="{Binding IsDynamic, Converter={StaticResource BooleanNotConverter}}"
+                                   Minimum="1"
+                                   Value="{Binding FontSize}"/>
             </Grid>
         </DataTemplate>
     </Window.Resources>
@@ -41,15 +132,23 @@
     
     <StackPanel>
         <Expander Style="{DynamicResource ExpanderStyle}" Header="General">
-            <Grid>
+            <StackPanel>
                 <TextBox Style="{DynamicResource TextBoxStyle}" Text="{Binding Description}"/>
 
                 <CheckBox Style="{DynamicResource CheckBoxWithTextStyle}"
 						  IsChecked="{Binding IsEnabled}"
 						  Content="Enabled"/>
+            </StackPanel>
+        </Expander>
 
-                <ContentControl Content="{Binding TextInterface}"/>
-            </Grid>
+        <Expander Style="{DynamicResource ExpanderStyle}" Header="Window">
+            <ContentControl Content="{Binding TextInterface}"
+                            ContentTemplate="{StaticResource PositionSettingsTemplate}"/>
+        </Expander>
+
+        <Expander Style="{DynamicResource ExpanderStyle}" Header="Content">
+            <ContentControl Content="{Binding TextInterface}"
+                            ContentTemplate="{StaticResource ContentSettingsTemplate}"/>
         </Expander>
     </StackPanel>
 </Window>

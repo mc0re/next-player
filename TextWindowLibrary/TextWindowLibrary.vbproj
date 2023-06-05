@@ -92,7 +92,7 @@
     <Compile Include="..\CommonAssemblyInfo.vb">
       <Link>CommonAssemblyInfo.vb</Link>
     </Compile>
-    <Compile Include="Storage\ShowMessageTextInterface.vb" />
+    <Compile Include="TextRendererFactory.vb" />
     <Compile Include="WPF Controls\ScalableTextControl.vb" />
     <None Include="..\Docs\Storage.dgml">
       <Link>Storage.dgml</Link>

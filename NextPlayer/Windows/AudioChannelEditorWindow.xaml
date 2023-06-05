@@ -8,7 +8,7 @@
         xmlns:audioch="clr-namespace:AudioChannelLibrary;assembly=AudioChannelLibrary"
         mc:Ignorable="d"
 		DataContext="{Binding Channel, RelativeSource={RelativeSource Self}}"
-        Title="{Binding Channel, StringFormat='Channel {0}'}"
+        Title="{Binding Channel, StringFormat='Audio {0}'}"
 		MinWidth="200" Width="250"
 		MinHeight="50"
 		SizeToContent="Height"

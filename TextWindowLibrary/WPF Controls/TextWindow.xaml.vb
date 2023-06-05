@@ -6,6 +6,7 @@ Imports TextChannelLibrary
 ''' </summary>
 <TemplatePart(Name:="PART_ToolTipContainer")>
 Public Class TextWindow
+	Implements ITextRenderer
 
 #Region " Events "
 
@@ -75,14 +76,14 @@ Public Class TextWindow
 #Region " Configuration dependency property "
 
 	Public Shared ReadOnly ConfigurationProperty As DependencyProperty = DependencyProperty.Register(
-		NameOf(Configuration), GetType(ShowMessageTextInterface), GetType(TextWindow))
+		NameOf(Configuration), GetType(RenderTextInterface), GetType(TextWindow))
 
 
-	Public Property Configuration As ShowMessageTextInterface
+	Public Property Configuration As RenderTextInterface
 		Get
-			Return CType(GetValue(ConfigurationProperty), ShowMessageTextInterface)
+			Return CType(GetValue(ConfigurationProperty), RenderTextInterface)
 		End Get
-		Set(value As ShowMessageTextInterface)
+		Set(value As RenderTextInterface)
 			SetValue(ConfigurationProperty, value)
 			AddHandler value.PropertyChanged, AddressOf ConfigurationPropertyChanged
 		End Set
@@ -130,6 +131,37 @@ Public Class TextWindow
 
 		' Add any initialization after the InitializeComponent() call.
 		mToolTipContainer = CType(FindName(NameOf(PART_ToolTipContainer)), FrameworkElement)
+	End Sub
+
+#End Region
+
+
+#Region " ITextRenderer API "
+
+	Private Sub ShowText(text As String) Implements ITextRenderer.Show
+		' To switch focus back
+		Dim oldWin = Application.Current.Windows.OfType(Of Window)().SingleOrDefault(Function(w) w.IsActive)
+
+		Me.Text = text
+
+		If Not IsVisible Then
+			Show()
+		End If
+
+		Topmost = True
+		Channel.IsActive = True
+
+		' Set the focus back to main window
+		If oldWin IsNot Nothing Then
+			oldWin.Focus()
+		End If
+	End Sub
+
+
+	Private Sub HideText() Implements ITextRenderer.Hide
+		Text = String.Empty
+		Hide()
+		Channel.IsActive = False
 	End Sub
 
 #End Region

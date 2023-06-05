@@ -62,18 +62,28 @@
         <Border.ToolTip>
 			<ToolTip>
 				<ToolTip.Content>
-					<TextBlock>
-						<TextBlock.Text>
-							<MultiBinding Converter="{StaticResource StringFormatConverter}"
-										  ConverterParameter="Pos ({0}, {1}), size {2} x {3}">
+                    <StackPanel>
+						<TextBlock>
+							<TextBlock.Text>
+								<MultiBinding Converter="{StaticResource StringFormatConverter}"
+											  ConverterParameter="Position (click): {0}, {1}">
 
-								<Binding Path="Configuration.Left"/>
-								<Binding Path="Configuration.Top"/>
-								<Binding Path="Configuration.Width"/>
-								<Binding Path="Configuration.Height"/>
-							</MultiBinding>
-						</TextBlock.Text>
-					</TextBlock>
+									<Binding Path="Configuration.Left"/>
+									<Binding Path="Configuration.Top"/>
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+						<TextBlock>
+							<TextBlock.Text>
+								<MultiBinding Converter="{StaticResource StringFormatConverter}"
+											  ConverterParameter="Size (right-click): {0} x {1}">
+
+									<Binding Path="Configuration.Width"/>
+									<Binding Path="Configuration.Height"/>
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+                    </StackPanel>
 				</ToolTip.Content>
 			</ToolTip>
 		</Border.ToolTip>

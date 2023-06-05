@@ -168,4 +168,13 @@
 		<Setter Property="MouseWheelActiveTrigger" Value="MouseOver"/>
 	</Style>
 
+
+	<Style x:Key="CoordinateUpDownStyle" TargetType="{x:Type xctk:DoubleUpDown}" BasedOn="{StaticResource BaseUpDownStyle}">
+		<Setter Property="Increment" Value="1"/>
+		<Setter Property="FormatString" Value="0"/>
+		<Setter Property="AllowSpin" Value="True"/>
+		<Setter Property="AutoSelectBehavior" Value="OnFocus"/>
+		<Setter Property="MouseWheelActiveTrigger" Value="MouseOver"/>
+	</Style>
+
 </ResourceDictionary>

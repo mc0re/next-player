@@ -73,6 +73,8 @@
     <Compile Include="..\CommonAssemblyInfo.vb">
       <Link>CommonAssemblyInfo.vb</Link>
     </Compile>
+    <Compile Include="Interfaces\ITextRenderer.vb" />
+    <Compile Include="Interfaces\ITextRendererFactory.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -88,14 +90,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Text config\ITextChannelStorage.vb" />
-    <Compile Include="Text config\ITextEnvironmentStorage.vb" />
-    <Compile Include="Text config\ITextOutputInterface.vb" />
-    <Compile Include="Text config\TextChannelLink.vb" />
-    <Compile Include="Text config\TextEnvironmentStorage.vb" />
-    <Compile Include="Text config\TextLogicalChannel.vb" />
-    <Compile Include="Text config\TextOutputInterfaceBase.vb" />
-    <Compile Include="Text config\TextPhysicalChannel.vb" />
+    <Compile Include="Specific\RenderTextInterface.vb" />
+    <Compile Include="Interfaces\ITextChannelStorage.vb" />
+    <Compile Include="Interfaces\ITextEnvironmentStorage.vb" />
+    <Compile Include="Interfaces\ITextOutputInterface.vb" />
+    <Compile Include="General\TextChannelLink.vb" />
+    <Compile Include="General\TextEnvironmentStorage.vb" />
+    <Compile Include="General\TextLogicalChannel.vb" />
+    <Compile Include="Specific\TextOutputInterfaceBase.vb" />
+    <Compile Include="General\TextPhysicalChannel.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

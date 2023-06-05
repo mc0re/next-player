@@ -743,6 +743,7 @@ Public Class AppConfiguration
     Public Shared Sub SetUpAudioLib()
         If Instance Is Nothing Then Return
 
+        ' Set default interface
         InterfaceMapper.SetType(Of IAudioOutputInterface, WaveOutAudioInterface)()
 
         If CType(Instance.CurrentEnvironment, AppEnvironmentConfiguration).UseNAudio Then
@@ -758,7 +759,10 @@ Public Class AppConfiguration
     Public Shared Sub SetUpTextLib()
         If Instance Is Nothing Then Return
 
-        InterfaceMapper.SetType(Of ITextOutputInterface, ShowMessageTextInterface)()
+        InterfaceMapper.SetInstance(Of ITextRendererFactory)(New TextRendererFactory())
+
+        ' Set default interface
+        InterfaceMapper.SetType(Of ITextOutputInterface, RenderTextInterface)()
     End Sub
 
 #End Region

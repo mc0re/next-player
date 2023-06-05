@@ -415,7 +415,7 @@ Class PlayerWindow
         mVoiceControl = New SpeechRecognitionControl(Me)
 
         ' Add extra serialized types
-        PlayerActionCollection.AddSerializedType(GetType(ShowMessageTextInterface))
+        PlayerActionCollection.AddSerializedType(GetType(RenderTextInterface))
     End Sub
 
 

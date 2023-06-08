@@ -177,7 +177,7 @@ Public Class VolumeProvider
         Catch ex As Exception
             ' If something happened to the file reader
             Dim log = InterfaceMapper.GetImplementation(Of IMessageLog)()
-            log.LogAudioError(ex.Message)
+            log.LogAudioError("Error playing '{0}': {1}", mPlaybackInfo.ActionName, ex.Message)
             Return 0
         End Try
 

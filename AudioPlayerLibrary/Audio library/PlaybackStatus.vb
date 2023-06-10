@@ -134,6 +134,9 @@ Public Class PlaybackStatus
 
 #Region " API "
 
+    ''' <summary>
+    ''' Reset the whole playback
+    ''' </summary>
     Public Sub Reset()
         IsActive = False
         IsPlaying = False

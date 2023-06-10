@@ -176,7 +176,7 @@ Public Class NotificationCollectionTest
         Dim list = TestPlaylistUtility.CreatePlaylist("PP1 EE1-S")
         PlaylistStructureLibrary.ArrangeStructure(list)
 
-        mNotif.SetNotification(0, 0, list(1))
+        mNotif.SetNotification(1, 1, list(1))
 
         Assert.IsTrue(mReported)
         Assert.AreEqual(0, mTriggerList.Count)

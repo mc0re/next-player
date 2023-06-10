@@ -314,7 +314,7 @@
 										 Style="{DynamicResource PlayerActionStyle}"/>
 
 				<Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource FrameBrush}">
-					<UniformGrid Rows="1">
+					<UniformGrid Rows="1" HorizontalAlignment="Left">
 						<TextBlock Style="{DynamicResource MainTextStyle}" VerticalAlignment="Center"
 								   Text="Follow"/>
 						<CheckBox Style="{DynamicResource CheckBoxWithTextStyle}"

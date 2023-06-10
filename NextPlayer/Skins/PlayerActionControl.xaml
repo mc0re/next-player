@@ -409,12 +409,15 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         
                         <CheckBox Style="{StaticResource CheckBoxWithTextStyle}"
-                                  Content="Scroll text"
-                                  IsChecked="{Binding Scroll}"/>
+                                  Content="Scroll"
+                                  IsChecked="{Binding Scroll}"
+                                  ToolTip="Enable automatic text scrolling, like karaoke"/>
 
                         <TextBox Style="{DynamicResource TextBoxStyle}"
                                  Grid.Column="1"
@@ -429,7 +432,20 @@
 								 Text="{Binding ScrollDuration, Converter={StaticResource TimeSpanFormatConverter}}"
                                  ToolTip="How long to scroll after the initial wait"/>
 
-                        <Slider Grid.Column="3" Margin="7,0"
+                        <CheckBox Style="{StaticResource CheckBoxWithTextStyle}"
+                                  Grid.Column="3"
+                                  Content="Hide"
+                                  IsChecked="{Binding AutoHide}"
+                                  ToolTip="Auto-hide the text window"/>
+
+                        <TextBox Style="{DynamicResource TextBoxStyle}"
+                                 Grid.Column="4"
+								 IsEnabled="{Binding AutoHide}"
+                                 Margin="7,0"
+								 Text="{Binding AutoHidePeriod, Converter={StaticResource TimeSpanFormatConverter}}"
+                                 ToolTip="Hide the text after this period (0 means 'forever')"/>
+
+                        <Slider Grid.Column="5" Margin="7,0"
 								IsEnabled="{Binding Scroll}"
                                 VerticalAlignment="Center"
                                 Value="{Binding ScrollPosition, Mode=TwoWay}" Minimum="0" Maximum="1"

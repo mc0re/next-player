@@ -26,6 +26,7 @@ Public Class PlayerActionText
         Set(value As String)
             mText = value
             RaisePropertyChanged(Function() Text)
+            ScrollPosition = 0
         End Set
     End Property
 
@@ -188,6 +189,65 @@ Public Class PlayerActionText
 #End Region
 
 
+#Region " AutoHide notifying property "
+
+    Private mAutoHide As Boolean
+
+
+    ''' <summary>
+    ''' Whether to hide the text after some time.
+    ''' </summary>
+    Public Property AutoHide As Boolean
+        Get
+            Return mAutoHide
+        End Get
+        Set(value As Boolean)
+            mAutoHide = value
+            RaisePropertyChanged(Function() AutoHide)
+        End Set
+    End Property
+
+#End Region
+
+
+#Region " AutoHidePeriod notifying property "
+
+    Private mAutoHidePeriod As TimeSpan
+
+
+    ''' <summary>
+    ''' For how long the text is shown (if <see cref="AutoHide"/> is enabled).
+    ''' </summary>
+    <XmlIgnore, SerializedAs>
+    Public Property AutoHidePeriod As TimeSpan
+        Get
+            Return mAutoHidePeriod
+        End Get
+        Set(value As TimeSpan)
+            mAutoHidePeriod = value
+            RaisePropertyChanged(Function() AutoHidePeriod)
+        End Set
+    End Property
+
+
+    ''' <summary>
+    ''' For how long the text is shown.
+    ''' </summary>
+    ''' <remarks>To work around inability to serialize TimeSpan.</remarks>
+    <XmlElement(NameOf(AutoHidePeriod))>
+    <IgnoreForReport()>
+    Public Property AutoHidePeriodSerialized As Double
+        Get
+            Return AutoHidePeriod.TotalMilliseconds()
+        End Get
+        Set(value As Double)
+            AutoHidePeriod = TimeSpan.FromMilliseconds(value)
+        End Set
+    End Property
+
+#End Region
+
+
 #Region " Init and clean-up "
 
     Public Sub New()
@@ -221,7 +281,7 @@ Public Class PlayerActionText
         Else
             ch.ShowText(Text)
 
-            If Scroll And ScrollDuration.Ticks > 0 Then
+            If Scroll Or AutoHide And AutoHidePeriod.Ticks > 0 Then
                 StartPositionTimer()
             Else
                 MyBase.Stop(False)
@@ -264,16 +324,6 @@ Public Class PlayerActionText
     Private mTimer As DispatcherTimer
 
     ''' <summary>
-    ''' Start delay [milliseconds].
-    ''' </summary>
-    Private mTimerInitialDelay As Double
-
-    ''' <summary>
-    ''' Position increment for every passed millisecond.
-    ''' </summary>
-    Private mTimerStep As Double
-
-    ''' <summary>
     ''' Previous tick timestamp.
     ''' </summary>
     Private mLastTickTime As DateTime
@@ -284,9 +334,8 @@ Public Class PlayerActionText
             .Interval = TimeSpan.FromMilliseconds(TimerStep)
         }
         AddHandler mTimer.Tick, AddressOf PositionTimerTick
-        mTimerInitialDelay = ScrollStart.TotalMilliseconds
-        mTimerStep = 1.0 / ScrollDuration.TotalMilliseconds
         mLastTickTime = Date.UtcNow
+        SetPlayPosition(TimeSpan.Zero)
         mTimer.Start()
     End Sub
 
@@ -299,17 +348,40 @@ Public Class PlayerActionText
 
     Private Sub PositionTimerTick(sender As Object, e As EventArgs)
         Dim now = Date.UtcNow
-        Dim passed = (now - mLastTickTime).TotalMilliseconds
+        Dim passed = now - mLastTickTime
         mLastTickTime = now
 
-        If mTimerInitialDelay > 0 Then
-            mTimerInitialDelay -= passed
-        Else
-            ScrollPosition += mTimerStep * passed
+        SetPlayPosition(PlayPosition + passed)
+        Dim playPositionMs = PlayPosition.TotalMilliseconds
+        Dim scrollStartMs = ScrollStart.TotalMilliseconds
+        Dim scrollDurationMs = ScrollDuration.TotalMilliseconds
 
-            If ScrollPosition >= 1 Then
-                MyBase.Stop(False)
+        If AutoHide And PlayPosition >= AutoHidePeriod Then
+            [Stop](False)
+            Dim storage = InterfaceMapper.GetImplementation(Of ITextChannelStorage)()
+            Dim ch = storage.Logical.Channel(Channel)
+            ch.HideText()
+            Return
+        End If
+
+        If Not Scroll Or scrollDurationMs = 0 Then Return
+
+        If playPositionMs < scrollStartMs Then
+            ' Waiting for scroll start
+            Return
+        End If
+
+        ScrollPosition = (playPositionMs - scrollStartMs) / scrollDurationMs
+
+        If playPositionMs >= scrollStartMs + scrollDurationMs Then
+            If AutoHide Then
+                ' Done with scrolling, don't stop the timer
+                MyBase.Stop(True)
+            Else
+                [Stop](True)
             End If
+
+            Return
         End If
     End Sub
 

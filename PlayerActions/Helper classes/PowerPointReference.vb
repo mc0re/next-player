@@ -4,6 +4,7 @@ Imports Common
 Imports AudioPlayerLibrary
 Imports NetOffice.OfficeApi.Enums
 
+
 ''' <summary>
 ''' Establishes a reference to PowerPoint application.
 ''' </summary>

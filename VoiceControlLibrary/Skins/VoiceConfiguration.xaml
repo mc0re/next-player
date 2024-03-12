@@ -50,6 +50,7 @@
 
             <res:EnvironmentSelector Style="{DynamicResource EnvironmentSelectorStyle}" Padding="2,4">
                 <CheckBox Name="VoiceControl"
+                          Style="{DynamicResource CheckBoxWithTextStyle}"
 						  Content="Allow voice control"
 						  IsChecked="{res:ConfigBinding IsVoiceControlEnabled}"/>
             </res:EnvironmentSelector>

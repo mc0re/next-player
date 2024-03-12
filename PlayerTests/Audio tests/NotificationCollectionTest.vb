@@ -594,6 +594,30 @@ Public Class NotificationCollectionTest
         Assert.AreEqual(New Date(1970, 1, 1, 0, 0, 9), mTriggerList.Last.NextTime)
     End Sub
 
+
+    <TestMethod>
+    Public Sub Notifications_ChangePlaybackTime()
+        Dim list = TestPlaylistUtility.CreatePlaylist("PP1 PP2-E1")
+        PlaylistStructureLibrary.ArrangeStructure(list)
+
+        mNotif.SetNotification(0, 0, list(1))
+
+        Dim last = mTriggerList.Last
+        Assert.AreEqual(1, mTriggerList.Count)
+        Assert.AreEqual("P2", last.NextAction)
+        Assert.AreEqual(New Date(1970, 1, 1, 0, 0, 11), last.NextTime)
+
+        mNotif.CheckNotifications(0, 0, 0, 8000)
+
+        Assert.AreEqual(1, mTriggerList.Count)
+        Assert.AreEqual("P2", last.NextAction)
+        Assert.AreEqual(New Date(1970, 1, 1, 0, 0, 11), last.NextTime)
+
+        mNotif.CheckNotifications(0, 0, 8000, 12000)
+
+        Assert.AreEqual(0, mTriggerList.Count)
+    End Sub
+
 #End Region
 
 

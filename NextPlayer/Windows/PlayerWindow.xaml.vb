@@ -10,6 +10,7 @@ Imports AudioChannelLibrary
 Imports AudioPlayerLibrary
 Imports Common
 Imports PlayerActions
+Imports Serilog
 Imports TextChannelLibrary
 Imports TextWindowLibrary
 Imports VoiceControlLibrary
@@ -58,6 +59,12 @@ Class PlayerWindow
     ''' Audio manager to handle multiple playbacks.
     ''' </summary>
     Private WithEvents mAudioMgr As IAudioManager
+
+
+    ''' <summary>
+    ''' Logger.
+    ''' </summary>
+    Private ReadOnly mLogger As ILogger
 
 #End Region
 
@@ -380,6 +387,8 @@ Class PlayerWindow
     ''' Process configuration options.
     ''' </summary>
     Public Sub New()
+        mLogger = InterfaceMapper.GetImplementation(Of ILogger)()
+
         ' Assume that configuration files are loaded
         AppConfiguration.SetUpAudioLib()
         InterfaceMapper.SetInstance(Of IConfiguration)(AppConfiguration.Instance)
@@ -577,8 +586,12 @@ Class PlayerWindow
         InterfaceMapper.GetImplementation(Of IMessageLog)().ClearLog("Loading " & fileName)
 
         ActionList = PlayerActionCollection.LoadFromFile(fileName)
-        If ActionList Is Nothing Then Return False
+        If ActionList Is Nothing Then
+            mLogger.Information($"Loaded playlist '{fileName}', empty.")
+            Return False
+        End If
 
+        mLogger.Information($"Loaded playlist '{fileName}', {ActionList.Items.Count} items.")
         IsListModified = False
         ResetPlayer()
         AppConfiguration.Instance.LastPlaylistFile = fileName
@@ -621,11 +634,13 @@ Class PlayerWindow
             Using writer = File.Open(fileName, FileMode.Create, FileAccess.Write)
                 ActionList.Save(writer, fileName)
                 IsListModified = False
+                mLogger.Information($"Saved playlist '{fileName}'.")
                 Return True
             End Using
 
         Catch ex As Exception
             MessageLogger.LogFileError("Error saving playlist: {0}", ex.Message)
+            mLogger.Warning(ex, $"Saving playlist '{fileName}' failed.")
         End Try
 
         Return False
@@ -807,6 +822,7 @@ Class PlayerWindow
 
         For Each delElem In delList
             ActionList.Items.Remove(delElem)
+            mLogger.Information($"Deleted item '{delElem.Name}'.")
 
             Dim asFile = TryCast(delElem, PlayerActionFile)
             If asFile IsNot Nothing Then
@@ -826,6 +842,7 @@ Class PlayerWindow
             ActionList.Items.RemoveAt(curIdx)
             ActionList.Items.Insert(curIdx - 1, elem)
             Playlist.SelectedIndex = curIdx - 1
+            mLogger.Information($"Moved item '{elem.Name}' from index {curIdx} to {curIdx - 1}.")
         End If
     End Sub
 
@@ -837,6 +854,7 @@ Class PlayerWindow
             ActionList.Items.RemoveAt(curIdx)
             ActionList.Items.Insert(curIdx + 1, elem)
             Playlist.SelectedIndex = curIdx + 1
+            mLogger.Information($"Moved item '{elem.Name}' from index {curIdx} to {curIdx + 1}.")
         End If
     End Sub
 
@@ -873,6 +891,7 @@ Class PlayerWindow
         item.FileToPlay = dlg.FileName
         item.FileTimestamp = Date.MinValue
         item.IsLoadingFailed = True ' To re-calculate duration
+        mLogger.Information($"Replaced file in item '{item.Name}' to '{dlg.FileName}'.")
         item.AfterLoad(String.Empty)
 
         WaveformStorage.ForceUpdate(dlg.FileName, Dispatcher)

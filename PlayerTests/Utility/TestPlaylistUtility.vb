@@ -9,22 +9,28 @@ Public Class TestPlaylistUtility
     ''' Space-separated list of actions.
     ''' 
     ''' The first letter defines the action type:
-    ''' - P - main line producer
-    ''' - E - main line effect
-    ''' - p - parallel line producer
-    ''' - e - parallel line effect
+    ''' <list type="bullet">
+    '''   <item><term>P</term> <description>main line producer</description></item>
+    '''   <item><term>E</term> <description>main line effect</description></item>
+    '''   <item><term>p</term> <description>parallel line producer</description></item>
+    '''   <item><term>e</term> <description>parallel line effect</description></item>
+    ''' </list>
     ''' 
-    ''' Then follows the action name until '-'.
+    ''' <para>
+    ''' Then follows the action name until <c>-</c> or space.
     ''' 
-    ''' If present, the next section defines the delay type. Absent assumes manual.
+    ''' </para>
+    ''' If present, the next section (after <c>-</c>) defines the delay type. Absent assumes manual.
     ''' The first letter can be:
-    ''' - S - start of the last producer (default delay = 0)
-    ''' - E - end of the last producer (default delay = 0)
-    ''' - s - start of the last action (default delay = 0)
-    ''' - e - end of the last action (default delay = 0)
-    ''' - p - start with playlist clock (at 1 hour)
-    ''' - w - start with wall clock (at 12:00)
-    ''' - m - manual start
+    ''' <list type="bullet">
+    '''   <item><term>S</term> <description>start of the last producer (default delay = 0)</description></item>
+    '''   <item><term>E</term> <description>end of the last producer (default delay = 0)</description></item>
+    '''   <item><term>s</term> <description>start of the last action (default delay = 0)</description></item>
+    '''   <item><term>e</term> <description>end of the last action (default delay = 0)</description></item>
+    '''   <item><term>p</term> <description>start with playlist clock (at 1 hour)</description></item>
+    '''   <item><term>w</term> <description>start with wall clock (at 12:00)</description></item>
+    '''   <item><term>m</term> <description>manual start</description></item>
+    ''' </list>
     ''' 
     ''' If present, the next number is delay in seconds.
     ''' </param>

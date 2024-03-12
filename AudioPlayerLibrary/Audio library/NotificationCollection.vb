@@ -141,7 +141,10 @@ Public Class NotificationCollection
     ''' </summary>
     Public Sub RecalculateTriggers(curWallTime As Double, curPlayTime As Double)
         For Each ni In mNotificationList
-            ni.Trigger.CalculateEndTime(If(ni.IsAbsolute, curWallTime, curPlayTime))
+            If ni.Trigger.IsAbsolute Then
+                ni.Trigger.CalculateEndTime(If(ni.IsAbsolute, curWallTime, curPlayTime))
+            End If
+
             ni.UpdatePosition(GetStartTime(ni.Action, ni.Trigger))
         Next
 

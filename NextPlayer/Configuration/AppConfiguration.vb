@@ -1,10 +1,12 @@
-﻿Imports System.ComponentModel
+﻿Imports System.Collections.ObjectModel
+Imports System.ComponentModel
 Imports System.IO
 Imports System.Reflection
 Imports AudioChannelLibrary
 Imports AudioPlayerLibrary
 Imports Common
 Imports PlayerActions
+Imports VoiceControlLibrary
 Imports WpfResources
 
 
@@ -284,6 +286,86 @@ Public Class AppConfiguration
 #End Region
 
 
+#Region " IsVoiceControlEnabled dependency property "
+
+    Public Shared ReadOnly IsVoiceControlEnabledProperty As DependencyProperty = DependencyProperty.Register(
+        NameOf(IsVoiceControlEnabled), GetType(Boolean), GetType(AppConfiguration),
+        New FrameworkPropertyMetadata(New PropertyChangedCallback(AddressOf IsVoiceControlEnabledChangedHandler)))
+
+
+    <Category("Common Properties"), Description("Whether voice control is enabled; mapped from current environment")>
+    Public Property IsVoiceControlEnabled As Boolean Implements IVoiceConfiguration.IsVoiceControlEnabled
+        Get
+            Return CBool(GetValue(IsVoiceControlEnabledProperty))
+        End Get
+        Set(value As Boolean)
+            SetValue(IsVoiceControlEnabledProperty, value)
+        End Set
+    End Property
+
+
+    Private Shared Sub IsVoiceControlEnabledChangedHandler(obj As DependencyObject, args As DependencyPropertyChangedEventArgs)
+        Dim this = DirectCast(obj, AppConfiguration)
+        this.mCurrentEnvironment.IsVoiceControlEnabled = CBool(args.NewValue)
+    End Sub
+
+#End Region
+
+
+#Region " VoiceControlFeedbackChannel dependency property "
+
+    Public Shared ReadOnly VoiceControlFeedbackChannelProperty As DependencyProperty = DependencyProperty.Register(
+        NameOf(VoiceControlFeedbackChannel), GetType(Integer), GetType(AppConfiguration),
+        New FrameworkPropertyMetadata(New PropertyChangedCallback(AddressOf VoiceControlFeedbackChannelChangedHandler)))
+
+
+    <SaveOnChange>
+    <Category("Common Properties"), Description("Which audio channel to use for voice feedback")>
+    Public Property VoiceControlFeedbackChannel As Integer Implements IVoiceConfiguration.VoiceControlFeedbackChannel
+        Get
+            Return CInt(GetValue(VoiceControlFeedbackChannelProperty))
+        End Get
+        Set(value As Integer)
+            SetValue(VoiceControlFeedbackChannelProperty, value)
+        End Set
+    End Property
+
+
+    Private Shared Sub VoiceControlFeedbackChannelChangedHandler(obj As DependencyObject, args As DependencyPropertyChangedEventArgs)
+        Dim this = DirectCast(obj, AppConfiguration)
+        this.mCurrentEnvironment.VoiceControlFeedbackChannel = CInt(args.NewValue)
+    End Sub
+
+#End Region
+
+
+#Region " VoiceControlFeedbackVoice dependency property "
+
+    Public Shared ReadOnly VoiceControlFeedbackVoiceProperty As DependencyProperty = DependencyProperty.Register(
+        NameOf(VoiceControlFeedbackVoice), GetType(String), GetType(AppConfiguration),
+        New FrameworkPropertyMetadata(New PropertyChangedCallback(AddressOf VoiceControlFeedbackVoiceChangedHandler)))
+
+
+    <SaveOnChange>
+    <Category("Common Properties"), Description("Which pre-installed voice to use for voice feedback")>
+    Public Property VoiceControlFeedbackVoice As String Implements IVoiceConfiguration.VoiceControlFeedbackVoice
+        Get
+            Return CStr(GetValue(VoiceControlFeedbackVoiceProperty))
+        End Get
+        Set(value As String)
+            SetValue(VoiceControlFeedbackVoiceProperty, value)
+        End Set
+    End Property
+
+
+    Private Shared Sub VoiceControlFeedbackVoiceChangedHandler(obj As DependencyObject, args As DependencyPropertyChangedEventArgs)
+        Dim this = DirectCast(obj, AppConfiguration)
+        this.mCurrentEnvironment.VoiceControlFeedbackVoice = CStr(args.NewValue)
+    End Sub
+
+#End Region
+
+
 #Region " EnvironmentSettingsList dependency property "
 
     Private Shared ReadOnly EnvironmentSettingsListPropertyKey As DependencyPropertyKey = DependencyProperty.RegisterReadOnly(
@@ -335,6 +417,7 @@ Public Class AppConfiguration
 
         this.CurrentEnvironment = env
         this.EnvironmentName = env.Name
+        InterfaceMapper.GetImplementation(Of ISpeechSynthesizer)().Setup()
 
         ' If already loaded, change. If not, do that when loaded.
         If this.CurrentActionCollection Is Nothing Then Return
@@ -431,28 +514,17 @@ Public Class AppConfiguration
 #End Region
 
 
-#Region " IsVoiceControlEnabled dependency property "
+#Region " SynthesizedVoices property "
 
-    Public Shared ReadOnly IsVoiceControlEnabledProperty As DependencyProperty = DependencyProperty.Register(
-        NameOf(IsVoiceControlEnabled), GetType(Boolean), GetType(AppConfiguration),
-        New FrameworkPropertyMetadata(New PropertyChangedCallback(AddressOf IsVoiceControlEnabledChangedHandler)))
-
-
-    <Category("Common Properties"), Description("Whether voice control is enabled; mapped from current environment")>
-    Public Property IsVoiceControlEnabled As Boolean Implements IVoiceConfiguration.IsVoiceControlEnabled
+    ''' <summary>
+    ''' When the duration for effect is not defined.
+    ''' </summary>
+    Public ReadOnly Property SynthesizedVoices As IEnumerable(Of String)
         Get
-            Return CBool(GetValue(IsVoiceControlEnabledProperty))
+            Dim synth = InterfaceMapper.GetImplementation(Of ISpeechSynthesizer)()
+            Return synth.SynthesizedVoices
         End Get
-        Set(value As Boolean)
-            SetValue(IsVoiceControlEnabledProperty, value)
-        End Set
     End Property
-
-
-    Private Shared Sub IsVoiceControlEnabledChangedHandler(obj As DependencyObject, args As DependencyPropertyChangedEventArgs)
-        Dim this = DirectCast(obj, AppConfiguration)
-        this.mCurrentEnvironment.IsVoiceControlEnabled = CBool(args.NewValue)
-    End Sub
 
 #End Region
 
@@ -542,6 +614,8 @@ Public Class AppConfiguration
 
         SetUpAudioLib()
         this.IsVoiceControlEnabled = appSett.IsVoiceControlEnabled
+        this.VoiceControlFeedbackChannel = appSett.VoiceControlFeedbackChannel
+        this.VoiceControlFeedbackVoice = appSett.VoiceControlFeedbackVoice
         InterfaceMapper.SetInstance(Of IVoiceConfiguration)(this)
     End Sub
 
@@ -553,6 +627,13 @@ Public Class AppConfiguration
         Select Case args.PropertyName
             Case NameOf(AppEnvironmentConfiguration.IsVoiceControlEnabled)
                 IsVoiceControlEnabled = mCurrentEnvironment.IsVoiceControlEnabled
+
+            Case NameOf(AppEnvironmentConfiguration.VoiceControlFeedbackChannel)
+                VoiceControlFeedbackChannel = mCurrentEnvironment.VoiceControlFeedbackChannel
+
+            Case NameOf(AppEnvironmentConfiguration.VoiceControlFeedbackVoice)
+                VoiceControlFeedbackVoice = mCurrentEnvironment.VoiceControlFeedbackVoice
+                InterfaceMapper.GetImplementation(Of ISpeechSynthesizer)().Setup()
         End Select
 
         Dim ownedArgs = TryCast(args, OwnedPropertyChangedEventArgs)
@@ -629,6 +710,8 @@ Public Class AppConfiguration
                 .IsEditEnabled = envConfig.IsEditEnabled,
                 .IsPositionChangeEnabled = envConfig.IsPositionChangeEnabled,
                 .IsVoiceControlEnabled = envConfig.IsVoiceControlEnabled,
+                .VoiceControlFeedbackChannel = envConfig.VoiceControlFeedbackChannel,
+                .VoiceControlFeedbackVoice = envConfig.VoiceControlFeedbackVoice,
                 .UseNAudio = envConfig.UseNAudio,
                 .PlayerWindowPosition = envConfig.PlayerWindowPosition,
                 .MainWindowSplit = envConfig.MainWindowSplit,
@@ -679,6 +762,8 @@ Public Class AppConfiguration
                 .IsEditEnabled = envSett.IsEditEnabled,
                 .IsPositionChangeEnabled = envSett.IsPositionChangeEnabled,
                 .IsVoiceControlEnabled = envSett.IsVoiceControlEnabled,
+                .VoiceControlFeedbackChannel = envSett.VoiceControlFeedbackChannel,
+                .VoiceControlFeedbackVoice = envSett.VoiceControlFeedbackVoice,
                 .UseNAudio = envSett.UseNAudio,
                 .PlayerWindowPosition = envSett.PlayerWindowPosition,
                 .MainWindowSplit = envSett.MainWindowSplit,
@@ -745,9 +830,11 @@ Public Class AppConfiguration
         If CType(Instance.CurrentEnvironment, AppEnvironmentConfiguration).UseNAudio Then
             ' NAudio
             InterfaceMapper.SetType(Of IAudioPlayer, NAudioPlayer)()
+            InterfaceMapper.SetType(Of IVoicePlayer, NAudioPlayer)()
         Else
             ' Standard MediaPlayer
             InterfaceMapper.SetType(Of IAudioPlayer, MediaPlayerWrapper)()
+            InterfaceMapper.SetType(Of IVoicePlayer, MediaPlayerWrapper)()
         End If
     End Sub
 

@@ -80,6 +80,42 @@ Public Class AppEnvironmentConfiguration
 #End Region
 
 
+#Region " VoiceControlFeedbackChannel notifying property "
+
+	Private mVoiceControlFeedbackChannel As Integer
+
+
+	<Category("Common Properties"), Description("Channel for voice feedback")>
+	Public Property VoiceControlFeedbackChannel As Integer
+		Get
+			Return mVoiceControlFeedbackChannel
+		End Get
+		Set(value As Integer)
+			SetField(mVoiceControlFeedbackChannel, value, Function() VoiceControlFeedbackChannel)
+		End Set
+	End Property
+
+#End Region
+
+
+#Region " VoiceControlFeedbackVoice notifying property "
+
+	Private mVoiceControlFeedbackVoice As String
+
+
+	<Category("Common Properties"), Description("Voice name for voice feedback")>
+	Public Property VoiceControlFeedbackVoice As String
+		Get
+			Return mVoiceControlFeedbackVoice
+		End Get
+		Set(value As String)
+			SetField(mVoiceControlFeedbackVoice, value, Function() VoiceControlFeedbackVoice)
+		End Set
+	End Property
+
+#End Region
+
+
 #Region " UseNAudio notifying property "
 
 	Private mUseNAudio As Boolean = True

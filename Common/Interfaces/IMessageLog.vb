@@ -3,7 +3,7 @@
     ''' <summary>
     ''' Start a new log section, possibly cleaning up the previous entries.
     ''' </summary>
-    Sub ClearLog(reason As String)
+    Sub ClearLog(reason As String, shortReason As String)
 
 
     ''' <summary>

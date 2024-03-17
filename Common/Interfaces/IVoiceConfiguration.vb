@@ -8,4 +8,10 @@ Public Interface IVoiceConfiguration
 
 	ReadOnly Property VoiceCommands As VoiceCommandConfigItemCollection
 
+
+	ReadOnly Property VoiceControlFeedbackChannel As Integer
+
+
+	ReadOnly Property VoiceControlFeedbackVoice As String
+
 End Interface

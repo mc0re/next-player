@@ -4,7 +4,7 @@ Imports Common
 Public Class TestLogger
     Implements IMessageLog
 
-    Public Sub ClearLog(reason As String) Implements IMessageLog.ClearLog
+    Public Sub ClearLog(reason As String, shortReason As String) Implements IMessageLog.ClearLog
 
     End Sub
 

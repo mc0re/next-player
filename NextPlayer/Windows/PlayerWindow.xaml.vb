@@ -55,6 +55,9 @@ Class PlayerWindow
     Private WithEvents mVoiceControl As SpeechRecognitionControl
 
 
+    Private mSynthesizer As ISpeechSynthesizer
+
+
     ''' <summary>
     ''' Audio manager to handle multiple playbacks.
     ''' </summary>
@@ -388,6 +391,7 @@ Class PlayerWindow
     ''' </summary>
     Public Sub New()
         mLogger = InterfaceMapper.GetImplementation(Of ILogger)()
+        InterfaceMapper.SetInstance(Of ISpeechSynthesizer)(New SpeechSynthesizerControl)
 
         ' Assume that configuration files are loaded
         AppConfiguration.SetUpAudioLib()
@@ -583,7 +587,7 @@ Class PlayerWindow
     ''' </param>
     Private Function LoadPlaylist(fileName As String) As Boolean
         FileCache.Instance.Clear()
-        InterfaceMapper.GetImplementation(Of IMessageLog)().ClearLog("Loading " & fileName)
+        InterfaceMapper.GetImplementation(Of IMessageLog)().ClearLog("Loading " & fileName, "Loading playlist")
 
         ActionList = PlayerActionCollection.LoadFromFile(fileName)
         If ActionList Is Nothing Then
@@ -633,8 +637,12 @@ Class PlayerWindow
 
             Using writer = File.Open(fileName, FileMode.Create, FileAccess.Write)
                 ActionList.Save(writer, fileName)
-                IsListModified = False
-                mLogger.Information($"Saved playlist '{fileName}'.")
+
+                If IsListModified Then
+                    IsListModified = False
+                    mLogger.Information($"Saved playlist '{fileName}'.")
+                End If
+
                 Return True
             End Using
 
@@ -782,6 +790,7 @@ Class PlayerWindow
         For Each act In From fileName In dlg.FileNames Select New PlayerActionFile(fileName)
             act.AfterLoad(String.Empty)
             AddItemToList(curIdx, act)
+            mLogger.Information($"Added file item '{act.FileToPlay} at index {curIdx}'.")
             curIdx += 1
         Next
 
@@ -794,6 +803,7 @@ Class PlayerWindow
     ''' </summary>
     Private Sub AddActionToPlaylist(action As PlayerAction)
         AddItemToList(Playlist.SelectedIndex, action)
+        mLogger.Information($"Added item '{action.Name} at index {Playlist.SelectedIndex}'.")
     End Sub
 
 #End Region
@@ -1460,7 +1470,7 @@ Class PlayerWindow
     ''' Stop all sounds, reset the player state.
     ''' </summary>
     Private Sub ResetPlaylistCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
-        InterfaceMapper.GetImplementation(Of IMessageLog)().ClearLog("Reset playlist")
+        InterfaceMapper.GetImplementation(Of IMessageLog)().ClearLog("Reset playlist", "Playlist reset")
         ResetPlayer()
         SetPlaylistInFocus()
     End Sub
@@ -1471,7 +1481,7 @@ Class PlayerWindow
     ''' unless specified by a clock or manual starts.
     ''' </summary>
     Private Sub StartPlaylistCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
-        InterfaceMapper.GetImplementation(Of IMessageLog)().ClearLog("Start playlist in passive mode")
+        InterfaceMapper.GetImplementation(Of IMessageLog)().ClearLog("Start playlist in passive mode", "Passive mode, waiting")
         mAudioMgr.StartWaiting()
         SetPlaylistInFocus()
     End Sub

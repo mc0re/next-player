@@ -1,4 +1,5 @@
 ﻿Imports Common
+Imports Serilog
 
 
 ''' <summary>
@@ -20,15 +21,33 @@ Public Class NotificationCollection
 #End Region
 
 
+#Region " Uiogger property "
+
+    Private mUiLogger As IMessageLog
+
+
+    Public ReadOnly Property UiLogger As IMessageLog
+        Get
+            If mUiLogger Is Nothing Then
+                mUiLogger = InterfaceMapper.GetImplementation(Of IMessageLog)(True)
+            End If
+
+            Return mUiLogger
+        End Get
+    End Property
+
+#End Region
+
+
 #Region " Logger property "
 
-    Private mLogger As IMessageLog
+    Private mLogger As ILogger
 
 
-    Public ReadOnly Property Logger As IMessageLog
+    Public ReadOnly Property Logger As ILogger
         Get
             If mLogger Is Nothing Then
-                mLogger = InterfaceMapper.GetImplementation(Of IMessageLog)(True)
+                mLogger = InterfaceMapper.GetImplementation(Of ILogger)(True)
             End If
 
             Return mLogger
@@ -112,6 +131,11 @@ Public Class NotificationCollection
                Not notifInfo.IsAfter(curWallTick, curPlayTick) Then
 
                 ' Actual but not yet executed
+                If notifInfo.Trigger.IsAbsolute Then
+                    Logger.Information($"Trigger '{notifInfo.Action.Name}' activated because wall time is between {prevWallTick} and {curWallTick}, must be {notifInfo.Position}.")
+                Else
+                    Logger.Information($"Trigger '{notifInfo.Action.Name}' activated because '{notifInfo.Trigger.Action.Name}' position is between {prevPlayTick} and {curPlayTick}, must be {notifInfo.Position}.")
+                End If
                 notifInfo.IsTriggered = True
                 ReportTriggers()
                 res.Add(notifInfo.Action)
@@ -224,13 +248,13 @@ Public Class NotificationCollection
 
         ' Check request validity
         If Not refPoint.HasDuration AndAlso triggeredAction.DelayType = DelayTypes.TimedBeforeEnd Then
-            Logger?.LogTriggerMessage("Trying to set before-end-trigger with no end time for '{0}'",
+            UiLogger?.LogTriggerMessage("Trying to set before-end-trigger with no end time for '{0}'",
                                       triggeredAction)
             Return Nothing
         End If
 
         If Not refPoint.HasDuration AndAlso triggeredAction.DelayType = DelayTypes.TimedAfterEnd Then
-            Logger?.LogTriggerMessage("Trying to set after-end-trigger with no end time for '{0}'",
+            UiLogger?.LogTriggerMessage("Trying to set after-end-trigger with no end time for '{0}'",
                                       triggeredAction)
             Return Nothing
         End If
@@ -280,7 +304,7 @@ Public Class NotificationCollection
                 .NextTime = tm
             }
 
-        Logger?.LogTriggerInfo(seq.ToList())
+        UiLogger?.LogTriggerInfo(seq.ToList())
     End Sub
 
 #End Region

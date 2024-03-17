@@ -1,5 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
+Imports AudioChannelLibrary
+Imports AudioPlayerLibrary
 Imports Common
 
 
@@ -7,6 +9,14 @@ Imports Common
 Public Class MessageLogControl
     Inherits Control
     Implements IMessageLog
+
+    <Flags>
+    Private Enum LogDestinations
+        MessageBox = 1
+        Speech = 2
+        All = 3
+    End Enum
+
 
 #Region " Fields "
 
@@ -24,6 +34,42 @@ Public Class MessageLogControl
 #Region " OfflineText property "
 
     Public Property OfflineText As String
+
+#End Region
+
+
+#Region " VoiceConfig property "
+
+    Private mVoiceConfig As IVoiceConfiguration
+
+
+    Public ReadOnly Property VoiceConfig As IVoiceConfiguration
+        Get
+            If mVoiceConfig Is Nothing Then
+                mVoiceConfig = InterfaceMapper.GetImplementation(Of IVoiceConfiguration)()
+            End If
+
+            Return mVoiceConfig
+        End Get
+    End Property
+
+#End Region
+
+
+#Region " Speaker property "
+
+    Private mSpeaker As ISpeechSynthesizer
+
+
+    Public ReadOnly Property Speaker As ISpeechSynthesizer
+        Get
+            If mSpeaker Is Nothing Then
+                mSpeaker = InterfaceMapper.GetImplementation(Of ISpeechSynthesizer)()
+            End If
+
+            Return mSpeaker
+        End Get
+    End Property
 
 #End Region
 
@@ -256,8 +302,9 @@ Public Class MessageLogControl
 
 #Region " IMessageLog implementation "
 
-    Public Sub ClearLog(reason As String) Implements IMessageLog.ClearLog
-        AddText("--- " & reason)
+    Public Sub ClearLog(reason As String, shortReason As String) Implements IMessageLog.ClearLog
+        AddText(LogDestinations.MessageBox, "--- " & reason)
+        AddText(LogDestinations.Speech, shortReason)
     End Sub
 
 
@@ -350,13 +397,25 @@ Public Class MessageLogControl
 
 #Region " Utility "
 
+    ''' <summary>
+    ''' Post the text onto the UI and to the voice feedback.
+    ''' </summary>
     Private Sub AddText(format As String, ParamArray args() As Object)
+        AddText(LogDestinations.All, format, args)
+    End Sub
+
+
+    ''' <summary>
+    ''' Post the text onto the UI and/or to the voice feedback, depending on <paramref name="mode"/>.
+    ''' </summary>
+    Private Sub AddText(mode As LogDestinations, format As String, ParamArray args() As Object)
         Dim str = String.Format(format, args)
         If str = mLastLine Then Return
 
         mLastLine = str
 
-        Dispatcher.BeginInvoke(
+        If mode.HasFlag(LogDestinations.MessageBox) Then
+            Dispatcher.BeginInvoke(
             Sub()
                 If IsLoaded Then
                     Text = Text & str & vbCrLf
@@ -365,6 +424,11 @@ Public Class MessageLogControl
                     OfflineText = OfflineText & str & vbCrLf
                 End If
             End Sub)
+        End If
+
+        If mode.HasFlag(LogDestinations.Speech) AndAlso VoiceConfig.IsVoiceControlEnabled Then
+            Speaker?.Speak(str)
+        End If
     End Sub
 
 #End Region

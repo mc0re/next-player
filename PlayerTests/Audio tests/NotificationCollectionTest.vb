@@ -1,6 +1,8 @@
 ﻿Imports System.Diagnostics.CodeAnalysis
 Imports AudioPlayerLibrary
 Imports Common
+Imports Serilog
+Imports Serilog.Sinks.InMemory
 
 
 <TestClass>
@@ -21,7 +23,7 @@ Public Class NotificationCollectionTest
         End Sub
 
 
-        Public Sub ClearLog(reason As String) Implements IMessageLog.ClearLog
+        Public Sub ClearLog(reason As String, shortReason As String) Implements IMessageLog.ClearLog
         End Sub
 
         Public Sub LogFileCacheInfo(size As Integer) Implements IMessageLog.LogFileCacheInfo
@@ -98,6 +100,7 @@ Public Class NotificationCollectionTest
     Public Sub Initialize()
         InterfaceMapper.SetInstance(Of IEffectDurationConfiguration)(New TestEffectDurationConfiguration())
         InterfaceMapper.SetInstance(Of IMessageLog)(New TriggerLogger(mTriggerList))
+        InterfaceMapper.SetInstance(Of ILogger)(New LoggerConfiguration().WriteTo.InMemory().CreateLogger())
 
         mTimeService = New TestTimeService()
         InterfaceMapper.SetInstance(Of ITimeService)(mTimeService)

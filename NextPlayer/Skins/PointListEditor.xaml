@@ -93,8 +93,8 @@
 			<Setter.Value>
 				<MultiBinding Converter="{StaticResource MaxPositionConverter}">
 					<Binding Path="Points" RelativeSource="{RelativeSource Self}"/>
-					<Binding Path="HasDuration" RelativeSource="{RelativeSource Self}"/>
-					<Binding Path="Duration" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="HasDuration"/>
+					<Binding Path="Duration"/>
 					<Binding Path="NoDurationFactor" RelativeSource="{RelativeSource Self}"/>
 					<Binding Path="PointsVersion" RelativeSource="{RelativeSource Self}"/>
 				</MultiBinding>
@@ -104,8 +104,8 @@
 			<Setter.Value>
 				<MultiBinding Converter="{StaticResource PointsToPathConverter}">
 					<Binding Path="Points" RelativeSource="{RelativeSource Self}"/>
-					<Binding Path="HasDuration" RelativeSource="{RelativeSource Self}"/>
-					<Binding Path="Duration" RelativeSource="{RelativeSource Self}"/>
+					<Binding Path="HasDuration"/>
+					<Binding Path="Duration"/>
 					<Binding Path="NoDurationFactor" RelativeSource="{RelativeSource Self}"/>
 					<Binding Path="PointsVersion" RelativeSource="{RelativeSource Self}"/>
 				</MultiBinding>

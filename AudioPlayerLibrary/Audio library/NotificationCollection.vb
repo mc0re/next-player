@@ -89,6 +89,7 @@ Public Class NotificationCollection
 
         For Each delNotif In delList
             mNotificationList.Remove(delNotif)
+            mLogger.Information($"Notification for {delNotif.Action.Name} removed from the list upon request.")
         Next
 
         ReportTriggers()
@@ -105,6 +106,7 @@ Public Class NotificationCollection
 
         For Each delNotif In delList
             mNotificationList.Remove(delNotif)
+            mLogger.Information($"Notification for {delNotif.Action.Name} removed from the list because it's triggered.")
         Next
 
         ReportTriggers()

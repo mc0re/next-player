@@ -30,7 +30,8 @@
 		<CommandBinding Command="{StaticResource UpdateFileCommand}" Executed="UpdateFileCommandExecuted" CanExecute="HasPptFileCommandCanExecute"/>
 		<CommandBinding Command="{StaticResource OpenPptCommand}" Executed="OpenPptCommandExecuted" CanExecute="HasPptFileCommandCanExecute"/>
         <CommandBinding Command="{StaticResource ShowLinkEditorCommand}" Executed="ShowLinkEditorCommandExecuted"/>
-	</Window.CommandBindings>
+        <CommandBinding Command="{StaticResource TestVoiceFeedbackCommand}" Executed="TestVoiceFeedbackCommandExecuted" CanExecute="TestVoiceFeedbackCommandCanExecute"/>
+    </Window.CommandBindings>
 
 	
 	<Grid>

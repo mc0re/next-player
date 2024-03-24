@@ -360,18 +360,19 @@ Public NotInheritable Class NAudioPlayer
 
         Try
             mLogicalChannelNr = channelNo
+            mNofSourceChannels = 1
+            mFileName = "Synthesized"
             CreateGeneratorFactory()
 
             ' The WaveFormat must match the generated one in SpeechSynthesizerControl
             CollectLinks(Function() New RawSourceWaveStream(strm, New WaveFormat(44100, 16, 1)))
             Play()
 
-            mFileName = "Synthesized"
             RaiseEvent MediaOpened(Me, EventArgs.Empty)
 
         Catch ex As Exception
             CloseUnsafe(False)
-            RaiseEvent MediaFailed(Me, New MediaFailedEventArgs With {.FileName = "Synthesized", .Reason = ex.Message})
+            RaiseEvent MediaFailed(Me, New MediaFailedEventArgs With {.FileName = mFileName, .Reason = ex.Message})
         End Try
     End Sub
 
@@ -380,6 +381,9 @@ Public NotInheritable Class NAudioPlayer
     ''' Collect all assigned links and connected physical channels.
     ''' For each physical channel create a player with a shared mPlaybackInfo.
     ''' </summary>
+    ''' <param name="generateStreamFn">
+    ''' A function to generate a <see cref="WaveStream"/> for each linked physical channel.
+    ''' </param>
     Private Sub CollectLinks(generateStreamFn As Func(Of WaveStream))
         If mInfoList.IsEmpty() Then
             For Each chOutput In mAudioConfig.GetLinks(mLogicalChannelNr)

@@ -132,6 +132,7 @@
     <Compile Include="Markup extensions\DelayBinding\DelayMultiBindingExtension.vb" />
     <Compile Include="Markup extensions\DelayBinding\MultiBindingExtensionBase.vb" />
     <Compile Include="Markup extensions\SkinColorBindingExtension.vb" />
+    <Compile Include="Markup extensions\VoiceConfigBindingExtension.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

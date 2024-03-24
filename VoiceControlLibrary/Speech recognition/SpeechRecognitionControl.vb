@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports System.Globalization
 Imports System.Speech.Recognition
 Imports Common
 
@@ -218,7 +219,9 @@ Public Class SpeechRecognitionControl
         Next
 
         Try
-            Dim gb As New GrammarBuilder(commandChoices)
+            Dim gb As New GrammarBuilder(commandChoices) With {
+                .Culture = New CultureInfo("en-GB")
+            }
             Return New Grammar(gb)
 
         Catch ex As Exception

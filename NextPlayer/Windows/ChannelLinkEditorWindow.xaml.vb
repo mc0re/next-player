@@ -64,6 +64,11 @@ Public Class ChannelLinkEditorWindow
 
 #Region " Command handlers "
 
+	Private Sub CloseDialogClick(sender As Object, e As RoutedEventArgs)
+		Close()
+	End Sub
+
+
 	Private Sub DeleteLinkClick(sender As Object, e As RoutedEventArgs)
 		DeleteLinkCommand.Execute(Link)
 		Close()

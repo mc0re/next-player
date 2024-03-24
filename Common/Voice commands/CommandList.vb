@@ -18,7 +18,7 @@
         {"SetNextCommand", "Set action as next", "Set next"},
         {"SelectActiveCommand", "Select active action in the playlist", "Select active"},
         {"SelectNextCommand", "Select next action in the playlist", "Select next"},
- _
+                                                                                   _
         {"LoadPlaylistCommand", "Load playlist", "Load list"},
         {"SavePlaylistCommand", "Save playlist in a new file", "Save list"},
         {"NewPlaylistCommand", "Create a new playlist", "New list"},
@@ -30,10 +30,11 @@
         {"DeleteFileCommand", "Delete selected action", "Delete this"},
         {"ListItemUpCommand", "Move action up the playlist", "Move up"},
         {"ListItemDownCommand", "Move action down the playlist", "Move down"},
- _
+                                                                              _
         {"RelativeVolumeUpCommand", "Decrease volume of all actions but this", "Emphasize up"},
         {"RelativeVolumeDownCommand", "Increase volume of all actions but this", "Emphasize down"},
         {"PlaySampleCommand", "Play test sound from the selected channel", "Play sample"},
+        {"TestVoiceFeedbackCommand", "Play test sound for voice feedback", "Test voice"},
         {"MaxVolumeCommand", "Set volume to the maximum before clipping occurs", "Volume maximum"},
         {"VolumeUpCommand", "Increase volume of this action", "Volume up"},
         {"VolumeDownCommand", "Decrease volume of this action", "Volume down"},
@@ -45,7 +46,7 @@
         {"CoordinateYUpCommand", "Move the sound location backwards", "Position back"},
         {"CoordinateZDownCommand", "Move the sound location up", "Position down"},
         {"CoordinateZUpCommand", "Move the sound location down", "Position up"},
- _
+                                                                                _
         {"ReplaceFileCommand", "Replace file in the action", "Replace file"},
         {"UpdateFileCommand", "Update file information", "Update file"},
         {"ShowSettingsCommand", "Show settings dialog", "Show settings"},

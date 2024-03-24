@@ -426,7 +426,7 @@ Public Class MessageLogControl
             End Sub)
         End If
 
-        If mode.HasFlag(LogDestinations.Speech) AndAlso VoiceConfig.IsVoiceControlEnabled Then
+        If mode.HasFlag(LogDestinations.Speech) Then
             Speaker?.Speak(str)
         End If
     End Sub

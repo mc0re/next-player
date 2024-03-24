@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Reflection
 Imports System.Speech.AudioFormat
 Imports System.Speech.Synthesis
 Imports Common
@@ -64,8 +65,11 @@ Public NotInheritable Class SpeechSynthesizerControl
 
         Dim audioStream As New MemoryStream
         Dim outputFormat = New SpeechAudioFormatInfo(44100, AudioBitsPerSample.Sixteen, AudioChannel.Mono)
+
         mSynth.SetOutputToAudioStream(audioStream, outputFormat)
         mSynth.Speak(text)
+        mSynth.SetOutputToNull()
+        audioStream.Seek(0, SeekOrigin.Begin)
         mPlayer.PlayAndForget(audioStream, mVoiceConfig.VoiceControlFeedbackChannel)
     End Sub
 

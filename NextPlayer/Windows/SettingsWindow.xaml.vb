@@ -201,6 +201,27 @@ Partial Public Class SettingsWindow
         wnd.Show()
     End Sub
 
+
+    ''' <summary>
+    ''' Whether a 3D positioning command may be executed.
+    ''' </summary>
+    Private Sub TestVoiceFeedbackCommandCanExecute(sender As Object, args As CanExecuteRoutedEventArgs)
+        Dim config = InterfaceMapper.GetImplementation(Of IVoiceConfiguration)()
+        args.CanExecute = config.IsVoiceControlEnabled
+    End Sub
+
+
+    ''' <summary>
+    ''' Test voice feedback.
+    ''' The channel and current voice are taken from the configuration.
+    ''' </summary>
+    Private Sub TestVoiceFeedbackCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
+        Dim synth = InterfaceMapper.GetImplementation(Of ISpeechSynthesizer)()
+        Dim config = InterfaceMapper.GetImplementation(Of IVoiceConfiguration)()
+
+        synth?.Speak(config.VoiceControlFeedbackVoice)
+    End Sub
+
 #End Region
 
 End Class

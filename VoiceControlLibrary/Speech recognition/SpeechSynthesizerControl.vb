@@ -1,5 +1,4 @@
 ﻿Imports System.IO
-Imports System.Reflection
 Imports System.Speech.AudioFormat
 Imports System.Speech.Synthesis
 Imports Common

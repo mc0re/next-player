@@ -381,6 +381,27 @@ Class PlayerWindow
 
 #End Region
 
+
+#Region " MessageLog property "
+
+    Private mMessageLog As IMessageLog
+
+
+    Private Property MessageLog As IMessageLog
+        Get
+            If mMessageLog Is Nothing Then
+                mMessageLog = InterfaceMapper.GetImplementation(Of IMessageLog)()
+            End If
+
+            Return mMessageLog
+        End Get
+        Set
+            mMessageLog = Value
+        End Set
+    End Property
+
+#End Region
+
 #End Region
 
 
@@ -460,16 +481,10 @@ Class PlayerWindow
 
         SetPlaylistInFocus()
 
-        Try
-            Dim vc = InterfaceMapper.GetImplementation(Of IVoiceConfiguration)()
-            If vc.IsVoiceControlEnabled Then
-                mVoiceControl.StartListening(ActionList.MaxParallels, ActionList.Items.Count)
-            End If
-
-        Catch ex As Exception
-            InterfaceMapper.GetImplementation(Of IMessageLog)().LogVoiceInfo(
-                "Error when preparing voice recognition: " & ex.Message)
-        End Try
+        Dim vc = InterfaceMapper.GetImplementation(Of IVoiceConfiguration)()
+        If vc.IsVoiceControlEnabled Then
+            mVoiceControl.StartListening(ActionList.MaxParallels, ActionList.Items.Count)
+        End If
     End Sub
 
 
@@ -494,7 +509,6 @@ Class PlayerWindow
 #Region " Background saving utility "
 
     Private WithEvents mSaveTimer As New Timers.Timer() With {.AutoReset = False}
-
 
     ''' <summary>
     ''' If the playlist is assigned to a file, save it.
@@ -1072,6 +1086,7 @@ Class PlayerWindow
         If item Is Nothing Then Return
 
         item.Volume += AppConfiguration.Instance.VolumeStep
+        MessageLog.LogCommandExecuted(CommandMessages.VolumeSet, item.Volume)
     End Sub
 
 
@@ -1083,6 +1098,7 @@ Class PlayerWindow
         If item Is Nothing Then Return
 
         item.Volume -= AppConfiguration.Instance.VolumeStep
+        MessageLog.LogCommandExecuted(CommandMessages.VolumeSet, item.Volume)
     End Sub
 
 
@@ -1095,6 +1111,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Panning
         item.Balance -= AppConfiguration.Instance.PanningStep
+        MessageLog.LogCommandExecuted(CommandMessages.PanningSet, item.Balance)
     End Sub
 
 
@@ -1107,6 +1124,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Panning
         item.Balance += AppConfiguration.Instance.PanningStep
+        MessageLog.LogCommandExecuted(CommandMessages.PanningSet, item.Balance)
     End Sub
 
 
@@ -1119,6 +1137,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Coordinates
         item.X -= AppConfiguration.Instance.CoordinateStep
+        MessageLog.LogCommandExecuted(CommandMessages.CoordinateXSet, item.X)
     End Sub
 
 
@@ -1131,6 +1150,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Coordinates
         item.X += AppConfiguration.Instance.CoordinateStep
+        MessageLog.LogCommandExecuted(CommandMessages.CoordinateXSet, item.X)
     End Sub
 
 
@@ -1143,6 +1163,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Coordinates
         item.Y -= AppConfiguration.Instance.CoordinateStep
+        MessageLog.LogCommandExecuted(CommandMessages.CoordinateYSet, item.Y)
     End Sub
 
 
@@ -1155,6 +1176,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Coordinates
         item.Y += AppConfiguration.Instance.CoordinateStep
+        MessageLog.LogCommandExecuted(CommandMessages.CoordinateYSet, item.Y)
     End Sub
 
 
@@ -1167,6 +1189,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Coordinates
         item.Z -= AppConfiguration.Instance.CoordinateStep
+        MessageLog.LogCommandExecuted(CommandMessages.CoordinateZSet, item.Z)
     End Sub
 
 
@@ -1179,6 +1202,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Coordinates
         item.Z += AppConfiguration.Instance.CoordinateStep
+        MessageLog.LogCommandExecuted(CommandMessages.CoordinateZSet, item.Z)
     End Sub
 
 #End Region

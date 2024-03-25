@@ -77,9 +77,11 @@
     <Compile Include="..\CommonAssemblyInfo.vb">
       <Link>CommonAssemblyInfo.vb</Link>
     </Compile>
+    <Compile Include="Interfaces\CommandMessages.vb" />
     <Compile Include="Interfaces\ISpeechSynthesizer.vb" />
     <Compile Include="Interfaces\ITimeService.vb" />
     <Compile Include="Interfaces\IVoicePlayer.vb" />
+    <Compile Include="Interfaces\VoiceMessages.vb" />
     <Compile Include="NET Utility\BucketList.vb" />
     <Compile Include="Positioning\2D\Line2D\Border2D.vb" />
     <Compile Include="Positioning\2D\Line2D\LineCutResult.vb" />

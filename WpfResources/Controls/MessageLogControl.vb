@@ -303,8 +303,8 @@ Public Class MessageLogControl
 #Region " IMessageLog implementation "
 
     Public Sub ClearLog(reason As String, shortReason As String) Implements IMessageLog.ClearLog
-        AddText(LogDestinations.MessageBox, "--- " & reason)
-        AddText(LogDestinations.Speech, shortReason)
+        AddMessage(LogDestinations.MessageBox, "--- " & reason)
+        AddMessage(LogDestinations.Speech, shortReason)
     End Sub
 
 
@@ -328,8 +328,43 @@ Public Class MessageLogControl
     End Sub
 
 
-    Public Sub LogVoiceInfo(format As String, ParamArray args() As Object) Implements IMessageLog.LogVoiceInfo
-        AddText(format, args)
+    Public Sub LogVoiceInfo(message As VoiceMessages, ParamArray args() As Object) Implements IMessageLog.LogVoiceInfo
+        Select Case message
+            Case VoiceMessages.ErrorInStartListening
+                AddTextMessage(String.Format("Error when preparing voice recognition: {0}.", args))
+                AddVoiceMessage("Error when preparing voice recognition")
+
+            Case VoiceMessages.ErrorInGrammar
+                AddTextMessage(String.Format("Error when building grammar: {0}.", args))
+                AddVoiceMessage("Error when building grammar")
+
+            Case VoiceMessages.CommandNotFound
+                AddTextMessage(String.Format("Command '{0}' not found.", args))
+                AddVoiceMessage(String.Format("Command '{0}' not found.", args))
+
+            Case VoiceMessages.RecognitionStarted
+                AddTextMessage("Voice recognition started.")
+                AddVoiceMessage("Voice recognition started.")
+
+            Case VoiceMessages.RecognitionUpdated
+                AddTextMessage("Voice commands updated.")
+                AddVoiceMessage("Voice commands updated.")
+
+            Case VoiceMessages.CommandRecognized
+                AddTextMessage(String.Format("Voice command recognized '{0}', confidence {1:F2}.", args))
+                AddVoiceMessage(CStr(args(0)))
+
+            Case VoiceMessages.CommandNotInList
+                AddTextMessage(String.Format("Voice command '{0}' not found in the list.", args))
+                AddVoiceMessage(String.Format("'{0}' not found.", args))
+
+            Case VoiceMessages.CommandRejected
+                AddTextMessage(String.Format("Voice command '{0}' rejected, confidence {1:F2}.", args))
+                AddVoiceMessage(String.Format("'{0}' rejected.", args))
+
+            Case Else
+                AddTextMessage(String.Format("Unknown voice message '{0}'.", message))
+        End Select
     End Sub
 
 
@@ -392,6 +427,24 @@ Public Class MessageLogControl
         Dispatcher.BeginInvoke(Sub() FigureCacheSize = size)
     End Sub
 
+
+    Public Sub LogCommandExecuted(message As CommandMessages, ParamArray args() As Object) Implements IMessageLog.LogCommandExecuted
+        Select Case message
+            Case CommandMessages.VolumeSet
+                AddVoiceMessage(String.Format("Volume {0:F2}.", args))
+            Case CommandMessages.PanningSet
+                AddVoiceMessage(String.Format("Panning {0:F2}.", args))
+            Case CommandMessages.CoordinateXSet
+                AddVoiceMessage(String.Format("X {0:F2}.", args))
+            Case CommandMessages.CoordinateYSet
+                AddVoiceMessage(String.Format("Y {0:F2}.", args))
+            Case CommandMessages.CoordinateZSet
+                AddVoiceMessage(String.Format("Z {0:F2}.", args))
+            Case Else
+                AddTextMessage(String.Format("Unknown command message '{0}'.", message))
+        End Select
+    End Sub
+
 #End Region
 
 
@@ -401,34 +454,44 @@ Public Class MessageLogControl
     ''' Post the text onto the UI and to the voice feedback.
     ''' </summary>
     Private Sub AddText(format As String, ParamArray args() As Object)
-        AddText(LogDestinations.All, format, args)
+        AddMessage(LogDestinations.All, format, args)
     End Sub
 
 
     ''' <summary>
     ''' Post the text onto the UI and/or to the voice feedback, depending on <paramref name="mode"/>.
     ''' </summary>
-    Private Sub AddText(mode As LogDestinations, format As String, ParamArray args() As Object)
+    Private Sub AddMessage(mode As LogDestinations, format As String, ParamArray args() As Object)
         Dim str = String.Format(format, args)
-        If str = mLastLine Then Return
-
-        mLastLine = str
-
         If mode.HasFlag(LogDestinations.MessageBox) Then
-            Dispatcher.BeginInvoke(
-            Sub()
-                If IsLoaded Then
-                    Text = Text & str & vbCrLf
-                    mScroller?.ScrollToEnd()
-                Else
-                    OfflineText = OfflineText & str & vbCrLf
-                End If
-            End Sub)
+            AddTextMessage(str)
         End If
 
         If mode.HasFlag(LogDestinations.Speech) Then
-            Speaker?.Speak(str)
+            AddVoiceMessage(str)
         End If
+    End Sub
+
+
+    Private Sub AddTextMessage(message As String)
+        If message = mLastLine Then Return
+
+        mLastLine = message
+
+        Dispatcher.BeginInvoke(
+            Sub()
+                If IsLoaded Then
+                    Text = Text & message & vbCrLf
+                    mScroller?.ScrollToEnd()
+                Else
+                    OfflineText = OfflineText & message & vbCrLf
+                End If
+            End Sub)
+    End Sub
+
+
+    Private Sub AddVoiceMessage(str As String)
+        Speaker?.Speak(str)
     End Sub
 
 #End Region

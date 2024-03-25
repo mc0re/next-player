@@ -46,7 +46,7 @@
 
     Sub LogTriggerMessage(format As String, ParamArray args() As Object)
 
-    Sub LogVoiceInfo(format As String, ParamArray args() As Object)
+    Sub LogVoiceInfo(message As VoiceMessages, ParamArray args() As Object)
 
     Sub LogKeyError(format As String, ParamArray args() As Object)
 
@@ -64,4 +64,6 @@
 
     Sub LogPowerPointError(format As String, ParamArray args() As Object)
 
+
+    Sub LogCommandExecuted(value As CommandMessages, ParamArray args() As Object)
 End Interface

@@ -95,6 +95,27 @@ Public Class SpeechRecognitionControl
 #End Region
 
 
+#Region " MessageLog property "
+
+    Private mMessageLog As IMessageLog
+
+
+    Private Property MessageLog As IMessageLog
+        Get
+            If mMessageLog Is Nothing Then
+                mMessageLog = InterfaceMapper.GetImplementation(Of IMessageLog)()
+            End If
+
+            Return mMessageLog
+        End Get
+        Set
+            mMessageLog = Value
+        End Set
+    End Property
+
+#End Region
+
+
 #Region " Init and clean-up "
 
     Public Sub New(cmdTarget As Control)
@@ -131,8 +152,7 @@ Public Class SpeechRecognitionControl
         For Each cmdDef In voice.VoiceCommands
             Dim rcmd = TryCast(Application.Current.FindResource(cmdDef.CommandName), RoutedCommand)
             If rcmd Is Nothing Then
-                InterfaceMapper.GetImplementation(Of IMessageLog)().
-                    LogVoiceInfo("Command '{0}' not found", cmdDef.CommandName)
+                MessageLog.LogVoiceInfo(VoiceMessages.CommandNotFound, cmdDef.CommandName)
                 Continue For
             End If
 
@@ -225,8 +245,7 @@ Public Class SpeechRecognitionControl
             Return New Grammar(gb)
 
         Catch ex As Exception
-            InterfaceMapper.GetImplementation(Of IMessageLog)().LogVoiceInfo(
-                "Error when building grammar: " & ex.Message)
+            MessageLog.LogVoiceInfo(VoiceMessages.ErrorInGrammar, ex.Message)
             Return Nothing
         End Try
     End Function
@@ -253,18 +272,15 @@ Public Class SpeechRecognitionControl
             If Not hasGr Then
                 mSpeechRecognizer.RecognizeAsync(RecognizeMode.Multiple)
 
-                InterfaceMapper.GetImplementation(Of IMessageLog)().LogVoiceInfo(
-                    "Voice recognition started")
+                MessageLog.LogVoiceInfo(VoiceMessages.RecognitionStarted)
             Else
-                InterfaceMapper.GetImplementation(Of IMessageLog)().LogVoiceInfo(
-                    "Voice commands updated")
+                MessageLog.LogVoiceInfo(VoiceMessages.RecognitionUpdated)
             End If
 
             Return True
 
         Catch ex As Exception
-            InterfaceMapper.GetImplementation(Of IMessageLog)().LogVoiceInfo(
-                "Error when initializing voice recognition: " & ex.Message)
+            MessageLog.LogVoiceInfo(VoiceMessages.ErrorInStartListening, ex.Message)
             Return False
         End Try
     End Function
@@ -290,13 +306,11 @@ Public Class SpeechRecognitionControl
     ''' Command is recognized, execute.
     ''' </summary>
     Private Sub OnSpeechRecognized(sender As Object, args As SpeechRecognizedEventArgs)
-        InterfaceMapper.GetImplementation(Of IMessageLog)().
-            LogVoiceInfo("Voice command recognized '{0}', confidence {1:F2}.", args.Result.Text, args.Result.Confidence)
+        MessageLog.LogVoiceInfo(VoiceMessages.CommandRecognized, args.Result.Text, args.Result.Confidence)
 
         Dim cmd As VoiceOperation = Nothing
         If Not mVoiceControls.TryGetValue(args.Result.Text, cmd) Then
-            InterfaceMapper.GetImplementation(Of IMessageLog)().
-                LogVoiceInfo("Voice command '{0}' not found in the list.", args.Result.Text)
+            MessageLog.LogVoiceInfo(VoiceMessages.CommandNotInList, args.Result.Text)
             Return
         End If
 
@@ -308,8 +322,7 @@ Public Class SpeechRecognitionControl
     ''' Unrecognized command.
     ''' </summary>
     Private Sub OnSpeechRejected(sender As Object, args As SpeechRecognitionRejectedEventArgs)
-        InterfaceMapper.GetImplementation(Of IMessageLog)().
-            LogVoiceInfo("Voice command '{0}' rejected, confidence {1:F2}", args.Result.Text, args.Result.Confidence)
+        MessageLog.LogVoiceInfo(VoiceMessages.CommandRejected, args.Result.Text, args.Result.Confidence)
     End Sub
 
 #End Region

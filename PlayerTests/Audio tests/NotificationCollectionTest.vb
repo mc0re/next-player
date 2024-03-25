@@ -50,7 +50,7 @@ Public Class NotificationCollectionTest
         Public Sub LogTriggerMessage(format As String, ParamArray args() As Object) Implements IMessageLog.LogTriggerMessage
         End Sub
 
-        Public Sub LogVoiceInfo(format As String, ParamArray args() As Object) Implements IMessageLog.LogVoiceInfo
+        Public Sub LogVoiceInfo(message As VoiceMessages, ParamArray args() As Object) Implements IMessageLog.LogVoiceInfo
         End Sub
 
         Public Sub LogKeyError(format As String, ParamArray args() As Object) Implements IMessageLog.LogKeyError
@@ -67,6 +67,10 @@ Public Class NotificationCollectionTest
 
         Public Sub LogPowerPointError(format As String, ParamArray args() As Object) Implements IMessageLog.LogPowerPointError
         End Sub
+
+        Public Sub LogCommandExecuted(message As CommandMessages, ParamArray args() As Object) Implements IMessageLog.LogCommandExecuted
+        End Sub
+
     End Class
 
 #End Region

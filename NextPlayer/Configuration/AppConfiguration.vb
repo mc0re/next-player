@@ -273,6 +273,9 @@ Public Class AppConfiguration
     Public Shared ReadOnly VoiceCommandsProperty As DependencyProperty = VoiceCommandsPropertyKey.DependencyProperty
 
 
+    ''' <summary>
+    ''' This list is essentially a copy of <see cref="AppCommandList"/>.
+    ''' </summary>
     <Category("Common Properties"), Description("A list of voice command definitions")>
     Public Property VoiceCommands As VoiceCommandConfigItemCollection Implements IVoiceConfiguration.VoiceCommands
         Get
@@ -878,22 +881,28 @@ Public Class AppConfiguration
 #Region " Voice command utility "
 
     ''' <summary>
+    ''' In case the app has changed, and the settings need to be updated.
+    ''' Compare <paramref name="cmdList"/> with the commands in the application (see <see cref="AppCommandList"/>).
     ''' Add missing commands, remove non-existing ones.
+    ''' Modifies <paramref name="cmdList"/>.
     ''' </summary>
-    ''' <remarks>Uses <see cref="AppCommandList"/></remarks>
     Private Shared Sub CheckVoiceCommands(cmdList As VoiceCommandConfigItemCollection)
         Dim newList As New VoiceCommandConfigItemCollection
 
-        For Each registeredCmd In AppCommandList
-            Dim toAdd = cmdList.FirstOrDefault(Function(c) c.CommandName = registeredCmd.CommandName)
+        ' Add commands in the app but not in command list as disabled.
+        ' Keeps the order of the app commands.
+        For Each appGroup In AppCommandList
+            For Each appCmd In appGroup
+                Dim toAdd = cmdList.FirstOrDefault(Function(c) c.CommandName = appCmd.CommandName)
 
-            If toAdd Is Nothing Then
-                toAdd = New VoiceCommandConfigItem(registeredCmd.CommandName, registeredCmd.DefaultText) With {
-                    .IsEnabled = False
-                }
-            End If
+                If toAdd Is Nothing Then
+                    toAdd = New VoiceCommandConfigItem(appCmd.CommandName, appCmd.DefaultText) With {
+                        .IsEnabled = False
+                    }
+                End If
 
-            newList.Add(toAdd)
+                newList.Add(toAdd)
+            Next
         Next
 
         cmdList.Clear()

@@ -199,6 +199,7 @@
     <Compile Include="Report utility\IgnoreForReportAttribute.vb" />
     <Compile Include="Value converters\ColorToWpfColorConverter.vb" />
     <Compile Include="Value converters\StringFormatConverter.vb" />
+    <Compile Include="Voice commands\CommandFlags.vb" />
     <Compile Include="Voice commands\CommandList.vb" />
     <Compile Include="Voice commands\CommandParameterTypes.vb" />
     <Compile Include="Interfaces\IEffectDurationConfiguration.vb" />
@@ -223,6 +224,8 @@
     <Compile Include="Voice commands\VoiceCommandConfigItem.vb" />
     <Compile Include="Voice commands\VoiceCommandConfigItemCollection.vb" />
     <Compile Include="Voice commands\VoiceCommandDescription.vb" />
+    <Compile Include="Voice commands\VoiceCommandDescriptionCollection.vb" />
+    <Compile Include="Voice commands\VoiceCommandDescriptionGroup.vb" />
     <Compile Include="WindowPosition.vb" />
     <None Include="packages.config" />
   </ItemGroup>

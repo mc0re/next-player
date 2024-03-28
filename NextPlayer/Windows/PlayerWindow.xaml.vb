@@ -1339,6 +1339,16 @@ Class PlayerWindow
         End If
     End Sub
 
+
+    Private Sub WhatCanISayCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
+        Dim commands = mVoiceControl.VoiceOperationList.
+            Where(Function(v) v.Setting.IsEnabled AndAlso Not v.Definition.Flags.HasFlag(CommandFlags.HideFromList)).
+            Select(Function(v) v.Setting.RecognitionText)
+
+        Dim str = String.Join(", ", commands)
+        MessageLog.LogVoiceInfo(VoiceMessages.YieldCommandList, str)
+    End Sub
+
 #End Region
 
 

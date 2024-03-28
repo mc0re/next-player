@@ -156,12 +156,11 @@ Public Class SpeechRecognitionControl
                 Continue For
             End If
 
-            Dim cmdDesc = CommandList.GetCommandDescription(cmdDef.CommandName)
+            Dim cmdDesc = GetCommandDescription(cmdDef.CommandName)
             Dim cmd As New CommandSettingItem() With {
                     .Setting = cmdDef,
                     .Command = rcmd,
-                    .ParameterType = cmdDesc.ParameterType,
-                    .Description = cmdDesc.Description
+                    .Definition = cmdDesc
                 }
             VoiceOperationList.Add(cmd)
         Next
@@ -201,7 +200,7 @@ Public Class SpeechRecognitionControl
             If Not cmdDef.Setting.IsEnabled Then Continue For
             commandFound = True
 
-            If cmdDef.ParameterType = CommandParameterTypes.None Then
+            If cmdDef.Definition.ParameterType = CommandParameterTypes.None Then
                 Dim cmd As New VoiceOperation() With {
                     .Setting = cmdDef.Setting,
                     .Command = cmdDef.Command,
@@ -211,7 +210,7 @@ Public Class SpeechRecognitionControl
                 mVoiceControls.Add(cmd.RecognizedText, cmd)
             Else
                 Dim maxIndex As Integer
-                If cmdDef.ParameterType = CommandParameterTypes.ParallelIndex Then
+                If cmdDef.Definition.ParameterType = CommandParameterTypes.ParallelIndex Then
                     maxIndex = maxPars
                 Else
                     maxIndex = maxItems

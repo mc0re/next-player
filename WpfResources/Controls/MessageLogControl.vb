@@ -362,6 +362,9 @@ Public Class MessageLogControl
                 AddTextMessage(String.Format("Voice command '{0}' rejected, confidence {1:F2}.", args))
                 AddVoiceMessage(String.Format("'{0}' rejected.", args))
 
+            Case VoiceMessages.YieldCommandList
+                AddVoiceMessage(String.Format("Possible commands: {0}", args))
+
             Case Else
                 AddTextMessage(String.Format("Unknown voice message '{0}'.", message))
         End Select
@@ -454,7 +457,7 @@ Public Class MessageLogControl
     ''' Post the text onto the UI and to the voice feedback.
     ''' </summary>
     Private Sub AddText(format As String, ParamArray args() As Object)
-        AddMessage(LogDestinations.All, format, args)
+        Dispatcher.BeginInvoke(Sub() AddMessage(LogDestinations.All, format, args))
     End Sub
 
 

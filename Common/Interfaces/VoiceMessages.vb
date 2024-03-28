@@ -40,4 +40,9 @@
     ''' Parameters: command and confidence level.
     ''' </summary>
     CommandRejected
+
+    ''' <summary>
+    ''' Parameter: a string with commands.
+    ''' </summary>
+    YieldCommandList
 End Enum

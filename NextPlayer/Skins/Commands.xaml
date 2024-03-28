@@ -52,12 +52,10 @@
 	<RoutedUICommand x:Key="ShowAboutCommand" Text="About" />
 	
 	<RoutedUICommand x:Key="ShowTextWindowCommand" Text="Show or hide text window" />
+    <RoutedUICommand x:Key="WhatCanISayCommand" Text="List available comands" />
 	<RoutedUICommand x:Key="CloseWindowCommand" Text="Accept and close dialog" />
 	<RoutedUICommand x:Key="CancelWindowCommand" Text="Reject and close dialog" />
 	<RoutedUICommand x:Key="PlaySampleCommand" Text="Play or stop a sample on the given channel" />
     <RoutedUICommand x:Key="TestVoiceFeedbackCommand" Text="Play voice feedback test" />
-	<RoutedUICommand x:Key="OrderLicenseCommand" Text="Order a new license" />
-	<RoutedUICommand x:Key="PasteLicenseCommand" Text="Paste license from clipboard" />
-	<RoutedUICommand x:Key="DeleteLicenseCommand" Text="Delete current license" />
 
 </ResourceDictionary>

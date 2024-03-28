@@ -88,6 +88,7 @@
 		<CommandBinding Command="{StaticResource SelectNextCommand}" Executed="SelectNextCommandExecuted" CanExecute="HasNextActionCommandCanExecute"/>
 
 		<CommandBinding Command="{StaticResource ShowTextWindowCommand}" Executed="ShowTextWindowCommandExecuted"/>
+		<CommandBinding Command="{StaticResource WhatCanISayCommand}" Executed="WhatCanISayCommandExecuted"/>
     </Window.CommandBindings>
 
     

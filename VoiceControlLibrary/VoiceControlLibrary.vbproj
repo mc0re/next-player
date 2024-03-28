@@ -110,6 +110,7 @@
     <Compile Include="Speech recognition\SpeechRecognitionControl.vb" />
     <Compile Include="Speech recognition\CommandSettingItem.vb" />
     <Compile Include="Speech recognition\SpeechSynthesizerControl.vb" />
+    <Compile Include="Speech recognition\VoiceCommandSettingItemCollection.vb" />
     <Compile Include="Speech recognition\VoiceOperation.vb" />
     <Compile Include="WPF controls\CommandConfigurationControl.vb" />
     <EmbeddedResource Include="My Project\Resources.resx">

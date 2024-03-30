@@ -25,6 +25,14 @@ Public Class VoiceCommandConfigItem
 #End Region
 
 
+#Region " Definition property "
+
+	<NonSerialized>
+	Public Definition As VoiceCommandDescription
+
+#End Region
+
+
 #Region " Init and clean-up "
 
 	' ReSharper disable once MemberCanBePrivate.Global

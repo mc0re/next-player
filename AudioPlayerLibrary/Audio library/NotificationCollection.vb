@@ -39,12 +39,12 @@ Public Class NotificationCollection
 #End Region
 
 
-#Region " Logger property "
+#Region " Logger lazy property "
 
     Private mLogger As ILogger
 
 
-    Public ReadOnly Property Logger As ILogger
+    Private ReadOnly Property Logger As ILogger
         Get
             If mLogger Is Nothing Then
                 mLogger = InterfaceMapper.GetImplementation(Of ILogger)(True)

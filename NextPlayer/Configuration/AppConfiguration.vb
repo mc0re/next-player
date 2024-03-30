@@ -901,6 +901,8 @@ Public Class AppConfiguration
                     }
                 End If
 
+                toAdd.Definition = appCmd
+
                 newList.Add(toAdd)
             Next
         Next

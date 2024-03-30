@@ -32,6 +32,11 @@
     CommandRecognized
 
     ''' <summary>
+    ''' Same as <see cref="CommandRecognized"/>, but without voice prompt.
+    ''' </summary>
+    CommandRecognizedNoConfirmation
+
+    ''' <summary>
     ''' Parameters: command.
     ''' </summary>
     CommandNotInList

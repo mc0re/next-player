@@ -354,6 +354,9 @@ Public Class MessageLogControl
                 AddTextMessage(String.Format("Voice command recognized '{0}', confidence {1:F2}.", args))
                 AddVoiceMessage(CStr(args(0)))
 
+            Case VoiceMessages.CommandRecognizedNoConfirmation
+                AddTextMessage(String.Format("Voice command recognized '{0}', confidence {1:F2}.", args))
+
             Case VoiceMessages.CommandNotInList
                 AddTextMessage(String.Format("Voice command '{0}' not found in the list.", args))
                 AddVoiceMessage(String.Format("'{0}' not found.", args))
@@ -435,14 +438,34 @@ Public Class MessageLogControl
         Select Case message
             Case CommandMessages.VolumeSet
                 AddVoiceMessage(String.Format("Volume {0:F2}.", args))
+
             Case CommandMessages.PanningSet
                 AddVoiceMessage(String.Format("Panning {0:F2}.", args))
+
             Case CommandMessages.CoordinateXSet
                 AddVoiceMessage(String.Format("X {0:F2}.", args))
+
             Case CommandMessages.CoordinateYSet
                 AddVoiceMessage(String.Format("Y {0:F2}.", args))
+
             Case CommandMessages.CoordinateZSet
                 AddVoiceMessage(String.Format("Z {0:F2}.", args))
+
+            Case CommandMessages.Started
+                AddVoiceMessage(String.Format("Playing {0}.", args))
+
+            Case CommandMessages.StartPassive
+                AddVoiceMessage("Waiting for command or time.")
+
+            Case CommandMessages.Stopped
+                AddVoiceMessage(String.Format("Stopped {0}.", args))
+
+            Case CommandMessages.StoppedAll
+                AddVoiceMessage("Playlist stopped.")
+
+            Case CommandMessages.Selected
+                AddVoiceMessage(String.Format("Selected {0}, {1}.", args))
+
             Case Else
                 AddTextMessage(String.Format("Unknown command message '{0}'.", message))
         End Select

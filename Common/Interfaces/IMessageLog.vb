@@ -65,5 +65,9 @@
     Sub LogPowerPointError(format As String, ParamArray args() As Object)
 
 
-    Sub LogCommandExecuted(value As CommandMessages, ParamArray args() As Object)
+    ''' <summary>
+    ''' Report that a command is executed successfully. Pass on parameters if needed.
+    ''' </summary>
+    Sub LogCommandExecuted(message As CommandMessages, ParamArray args() As Object)
+
 End Interface

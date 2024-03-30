@@ -42,7 +42,7 @@
 					 Text="{Binding Setting.RecognitionText}"/>
 			
             <TextBlock Grid.Column="3" Style="{DynamicResource MainTextStyle}" TextWrapping="Wrap"
-				       Text="{Binding Description}"/>
+				       Text="{Binding Definition.Description}"/>
         </Grid>
     </DataTemplate>
 

@@ -113,7 +113,7 @@
                 </ScrollViewer>
             </TabItem>
 
-            <TabItem Style="{DynamicResource TabItemStyle}" Header="Command mapping">
+            <TabItem Style="{DynamicResource TabItemStyle}" Header="Voice control">
                 <ScrollViewer Style="{DynamicResource ScrollViewerAutoStyle}">
                     <voice:CommandConfigurationControl Style="{DynamicResource VoiceConfigurationStyle}"
 												 ItemsSource="{Binding VoiceCommands, ElementName=Window}"/>

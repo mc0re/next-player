@@ -2,13 +2,13 @@
 
 #Disable Warning CC0108 ' You should use nameof instead of the parameter element name string
     <CodeAnalysis.SuppressMessage("Design", "CC0021:You should use nameof instead of the parameter element name string",
-                                  Justification:="These are strings, not names")>
+                                  Justification:="These are string constants, not names")>
     Public ReadOnly AppCommandList As New VoiceCommandDescriptionGroup() From {
         {"Playlist control", New VoiceCommandDescriptionCollection() From {
             {"PlayNextCommand", "Play next action", "Next"},
             {"PlayAgainCommand", "Replay the active action", "Replay"},
             {"ResetPlaylistCommand", "Reset playlist position", "Reset playlist"},
-            {"StartPlaylistCommand", "Start playlist in passive mode", "Passive", CommandFlags.Confirm},
+            {"StartPlaylistCommand", "Start playlist in passive mode", "Start passive"},
             {"StopCommand", "Stop all actions", "Stop"},
             {"ResumeCommand", "Resume stopped main actions", "Resume"},
             {"PlayStopParallelCommand", "Play and stop parallel action; index appended", "", CommandParameterTypes.ParallelIndex}

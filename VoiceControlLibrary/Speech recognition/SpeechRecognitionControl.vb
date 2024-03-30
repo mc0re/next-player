@@ -43,7 +43,8 @@ Public Class SpeechRecognitionControl
 
 
     ''' <summary>
-    ''' A list of commands.
+    ''' A list of commands the player can understand.
+    ''' The "numeric" commands are "unrolled".
     ''' Key is recognition text.
     ''' </summary>
     Private ReadOnly mVoiceControls As New Dictionary(Of String, VoiceOperation)()
@@ -191,7 +192,6 @@ Public Class SpeechRecognitionControl
         If Not VoiceOperationList.Any() Then Return Nothing
 
         Dim commandFound = False
-        Dim commandChoices As New Choices()
 
         ' Fill mVoiceControls
         mVoiceControls.Clear()
@@ -233,12 +233,8 @@ Public Class SpeechRecognitionControl
         If Not commandFound Then Return Nothing
 
         ' Create grammar
-        For Each cmdText In mVoiceControls.Keys
-            commandChoices.Add(cmdText)
-        Next
-
         Try
-            Dim gb As New GrammarBuilder(commandChoices) With {
+            Dim gb As New GrammarBuilder(New Choices(mVoiceControls.Keys.ToArray())) With {
                 .Culture = New CultureInfo("en-GB")
             }
             Return New Grammar(gb)
@@ -305,13 +301,14 @@ Public Class SpeechRecognitionControl
     ''' Command is recognized, execute.
     ''' </summary>
     Private Sub OnSpeechRecognized(sender As Object, args As SpeechRecognizedEventArgs)
-        MessageLog.LogVoiceInfo(VoiceMessages.CommandRecognized, args.Result.Text, args.Result.Confidence)
-
         Dim cmd As VoiceOperation = Nothing
         If Not mVoiceControls.TryGetValue(args.Result.Text, cmd) Then
             MessageLog.LogVoiceInfo(VoiceMessages.CommandNotInList, args.Result.Text)
             Return
         End If
+
+        Dim response = IIf(cmd.Setting.Definition.Flags.HasFlag(CommandFlags.Confirm), VoiceMessages.CommandRecognized, VoiceMessages.CommandRecognizedNoConfirmation)
+        MessageLog.LogVoiceInfo(response, args.Result.Text, args.Result.Confidence)
 
         cmd.Command.Execute(cmd.Parameter, mCommandTarget)
     End Sub

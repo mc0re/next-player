@@ -50,4 +50,12 @@
     ''' Parameter: a string with commands.
     ''' </summary>
     YieldCommandList
+
+    NoItemSelected
+
+    ''' <summary>
+    ''' Parameter: a string with triggers.
+    ''' </summary>
+    YieldTriggerList
+
 End Enum

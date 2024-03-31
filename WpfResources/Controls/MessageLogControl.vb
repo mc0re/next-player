@@ -368,6 +368,12 @@ Public Class MessageLogControl
             Case VoiceMessages.YieldCommandList
                 AddVoiceMessage(String.Format("Possible commands: {0}", args))
 
+            Case VoiceMessages.YieldTriggerList
+                AddVoiceMessage(String.Format("Current triggers: {0}", GenerateTriggersList()))
+
+            Case VoiceMessages.NoItemSelected
+                AddVoiceMessage("No item is selected in the playlist, command ignored.")
+
             Case Else
                 AddTextMessage(String.Format("Unknown voice message '{0}'.", message))
         End Select
@@ -519,6 +525,25 @@ Public Class MessageLogControl
     Private Sub AddVoiceMessage(str As String)
         Speaker?.Speak(str)
     End Sub
+
+
+    Private Function GenerateTriggersList() As Object
+        If NextTriggerList.Count = 0 Then Return "None"
+
+        Dim lst = NextTriggerList.Select(Function(t) $"{t.NextAction} at {TimeToHuman(t.IsAbsolute, t.NextTime)}")
+        Return String.Join(", ", lst)
+    End Function
+
+
+    Private Function TimeToHuman(isAbsolute As Boolean, time As Date) As String
+        If isAbsolute Then
+            Return "Exactly " + time.ToString("T")
+        Else
+            Dim hr = If(time.Hour > 0, $"{time.Hour} hour ", "")
+            Dim ms = $"{time.Minute}:{time.Second}"
+            Return hr + ms
+        End If
+    End Function
 
 #End Region
 

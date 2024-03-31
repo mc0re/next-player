@@ -225,6 +225,7 @@ Public Class AudioPlaybackLibrary
         Dim res = New AudioActions()
 
         res.Stopping.Add(act)
+        mNotifications.ClearDependentNotification(act)
         mPlayingList.Remove(act)
         VerifyPlayingStatus()
 
@@ -242,6 +243,8 @@ Public Class AudioPlaybackLibrary
         Dim res = New AudioActions()
 
         For Each act In mPlayingList.ToList()
+            mNotifications.ClearDependentNotification(act)
+
             If act.ExecutionType = ExecutionTypes.Parallel Then
                 res.Stopping.Add(act)
                 mPlayingList.Remove(act)

@@ -54,6 +54,7 @@
         }},
         {"System control", New VoiceCommandDescriptionCollection() From {
             {"WhatCanISayCommand", "List available voice commands", "What can I say", CommandFlags.HideFromList},
+            {"ListTriggersCommand", "List active triggers", "List triggers"},
             {"PlaySampleCommand", "Play test sound from the selected channel", "Play sample"},
             {"TestVoiceFeedbackCommand", "Play test sound for voice feedback", "Test voice"},
             {"ShowSettingsCommand", "Show settings dialog", "Show settings", CommandFlags.Confirm},

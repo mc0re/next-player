@@ -53,6 +53,7 @@
 	
 	<RoutedUICommand x:Key="ShowTextWindowCommand" Text="Show or hide text window" />
     <RoutedUICommand x:Key="WhatCanISayCommand" Text="List available comands" />
+    <RoutedUICommand x:Key="ListTriggersCommand" Text="List active triggers" />
 	<RoutedUICommand x:Key="CloseWindowCommand" Text="Accept and close dialog" />
 	<RoutedUICommand x:Key="CancelWindowCommand" Text="Reject and close dialog" />
 	<RoutedUICommand x:Key="PlaySampleCommand" Text="Play or stop a sample on the given channel" />

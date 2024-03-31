@@ -89,6 +89,7 @@
 
 		<CommandBinding Command="{StaticResource ShowTextWindowCommand}" Executed="ShowTextWindowCommandExecuted"/>
 		<CommandBinding Command="{StaticResource WhatCanISayCommand}" Executed="WhatCanISayCommandExecuted"/>
+		<CommandBinding Command="{StaticResource ListTriggersCommand}" Executed="ListTriggersCommandExecuted"/>
     </Window.CommandBindings>
 
     

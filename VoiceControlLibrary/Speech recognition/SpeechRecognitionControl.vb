@@ -265,6 +265,7 @@ Public Class SpeechRecognitionControl
             mSpeechRecognizer.LoadGrammarAsync(gr)
 
             If Not hasGr Then
+                mSpeechRecognizer.SetInputToDefaultAudioDevice()
                 mSpeechRecognizer.RecognizeAsync(RecognizeMode.Multiple)
 
                 MessageLog.LogVoiceInfo(VoiceMessages.RecognitionStarted)
@@ -310,7 +311,11 @@ Public Class SpeechRecognitionControl
         Dim response = IIf(cmd.Setting.Definition.Flags.HasFlag(CommandFlags.Confirm), VoiceMessages.CommandRecognized, VoiceMessages.CommandRecognizedNoConfirmation)
         MessageLog.LogVoiceInfo(response, args.Result.Text, args.Result.Confidence)
 
-        cmd.Command.Execute(cmd.Parameter, mCommandTarget)
+        If cmd.Command.CanExecute(cmd.Parameter, mCommandTarget) Then
+            cmd.Command.Execute(cmd.Parameter, mCommandTarget)
+        Else
+            MessageLog.LogVoiceInfo(VoiceMessages.NoItemSelected)
+        End If
     End Sub
 
 

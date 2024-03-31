@@ -82,8 +82,8 @@
         <Setter Property="ColumnDefList">
             <Setter.Value>
                 <res:ColumnDefinitionList>
-					<ColumnDefinition Width="Auto" SharedSizeGroup="EnabledFlag"/>
 					<ColumnDefinition Width="Auto" SharedSizeGroup="ChannelNumber"/>
+					<ColumnDefinition Width="Auto" SharedSizeGroup="EnabledFlag"/>
 					<ColumnDefinition Width="*" MinWidth="80"/> <!-- Description -->
                     <ColumnDefinition Width="Auto" SharedSizeGroup="AdditionalSetup"/>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="LinkList"/>
@@ -98,8 +98,8 @@
     <!-- Logical channel, table header (only first 3 columns) -->
     <DataTemplate x:Key="LogicalHeaderTemplate" DataType="{x:Type res:ChannelEditorControlBase}">
         <res:CustomizableGrid Style="{DynamicResource LogicalChannelRowStyle}">
-            <TextBlock Grid.Column="0" Style="{DynamicResource ColumnHeaderStyle}" Text="Use"/>
-            <TextBlock Grid.Column="1" Style="{DynamicResource ColumnHeaderStyle}" Text="Ch #"/>
+            <TextBlock Grid.Column="0" Style="{DynamicResource ColumnHeaderStyle}" Text="Ch #"/>
+            <TextBlock Grid.Column="1" Style="{DynamicResource ColumnHeaderStyle}" Text="Use"/>
             <TextBlock Grid.Column="2" Style="{DynamicResource ColumnHeaderStyle}" Text="Description"/>
 			<TextBlock Grid.Column="4" Style="{DynamicResource ColumnHeaderStyle}" Text="Physical"/>
 		</res:CustomizableGrid>
@@ -128,12 +128,11 @@
     <!-- Logical channel, table row with channel link list -->
     <DataTemplate x:Key="LogicalItemTemplate" DataType="{x:Type common:ChannelBase}">
         <res:CustomizableGrid Style="{DynamicResource LogicalChannelRowStyle}">
-			<!-- Common data -->
-			<CheckBox Style="{DynamicResource CheckBoxNoTextStyle}" IsChecked="{Binding IsEnabled}"/>
-			
-            <TextBlock Grid.Column="1" Style="{DynamicResource MainTextStyle}"
+			<!-- Common data -->	
+            <TextBlock Style="{DynamicResource MainTextStyle}"
 					   VerticalAlignment="Center" HorizontalAlignment="Center"
 					   Text="{Binding Channel}"/>
+			<CheckBox Grid.Column="1" Style="{DynamicResource CheckBoxNoTextStyle}" IsChecked="{Binding IsEnabled}"/>
 			
             <TextBox Grid.Column="2" Style="{DynamicResource TextBoxInEditorStyle}"
 					 Text="{Binding Description}"/>

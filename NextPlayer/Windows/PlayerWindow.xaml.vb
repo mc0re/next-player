@@ -387,17 +387,14 @@ Class PlayerWindow
     Private mMessageLog As IMessageLog
 
 
-    Private Property MessageLog As IMessageLog
+    Private ReadOnly Property MessageLog As IMessageLog
         Get
             If mMessageLog Is Nothing Then
-                mMessageLog = InterfaceMapper.GetImplementation(Of IMessageLog)()
+                mMessageLog = InterfaceMapper.GetImplementation(Of IMessageLog)(True)
             End If
 
             Return mMessageLog
         End Get
-        Set
-            mMessageLog = Value
-        End Set
     End Property
 
 #End Region
@@ -1361,6 +1358,11 @@ Class PlayerWindow
         MessageLog.LogVoiceInfo(VoiceMessages.YieldCommandList, str)
     End Sub
 
+
+    Private Sub ListTriggersCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
+        MessageLog.LogVoiceInfo(VoiceMessages.YieldTriggerList)
+    End Sub
+
 #End Region
 
 
@@ -1463,10 +1465,18 @@ Class PlayerWindow
     ''' Whether the action is coming from UI and shall interrupt previous actions.
     ''' It is not, when it comes from Next button or a trigger.
     ''' </param>
-    Private Sub SetItemActiveAndPlay(item As IPlayerAction, interrupt As ExecutionTypes)
+    Private Sub SetItemActiveAndPlay(
+        item As IPlayerAction,
+        interrupt As ExecutionTypes,
+        Optional restart As Boolean = False
+        )
         If item Is Nothing Then Return
 
-        mAudioMgr.Play(item, interrupt)
+        If restart Then
+            mAudioMgr.Restart(item, ExecutionTypes.MainStopPrev)
+        Else
+            mAudioMgr.Play(item, interrupt)
+        End If
     End Sub
 
 
@@ -1491,7 +1501,9 @@ Class PlayerWindow
     ''' Parallel actions are left untouched.
     ''' </summary>
     Private Sub PlayAgainCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
-        SetItemActiveAndPlay(ReplayAction, ExecutionTypes.MainStopAll)
+        If ReplayAction Is Nothing Then Return
+
+        SetItemActiveAndPlay(ReplayAction, ExecutionTypes.MainStopAll, True)
         MessageLog.LogCommandExecuted(CommandMessages.Started, ReplayAction.Name)
         SetPlaylistInFocus()
     End Sub

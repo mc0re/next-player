@@ -1,7 +1,4 @@
 ﻿''' <summary>
-''' This class is used for defining, how commands are shown in UI.
-''' </summary>
-''' <summary>
 ''' A collection of command definitions for UI (Settings dialog).
 ''' </summary>
 Public Class VoiceCommandDescriptionCollection

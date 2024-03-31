@@ -285,6 +285,22 @@ Public Class NotificationCollectionTest
 
 
     <TestMethod>
+    Public Sub Notifications_ClearDependentTrigger()
+        Dim list = TestPlaylistUtility.CreatePlaylist("PP1 EE1-S5")
+        PlaylistStructureLibrary.ArrangeStructure(list)
+
+        mNotif.SetNotification(0, 0, list(1))
+
+        Assert.IsTrue(mReported)
+        Assert.AreEqual(1, mTriggerList.Count)
+
+        mNotif.ClearDependentNotification(list(0))
+
+        Assert.AreEqual(0, mTriggerList.Count)
+    End Sub
+
+
+    <TestMethod>
     Public Sub Notifications_ClearAll()
         Dim list = TestPlaylistUtility.CreatePlaylist("PP1 EE1-S5")
         PlaylistStructureLibrary.ArrangeStructure(list)

@@ -97,6 +97,24 @@ Public Class NotificationCollection
 
 
     ''' <summary>
+    ''' Remove all triggers relying on the given action.
+    ''' </summary>
+    ''' <return>True if the trigger was removed, False if was not found</return>
+    Public Sub ClearDependentNotification(toRemove As IPlayerAction)
+        Dim delList = (
+            From notif In mNotificationList Where notif.Trigger.Action.Equals(toRemove)
+            ).ToList()
+
+        For Each delNotif In delList
+            mNotificationList.Remove(delNotif)
+            Logger.Information($"Notification for '{delNotif.Action.Name}' removed as dependant on '{toRemove.Name}'.")
+        Next
+
+        ReportTriggers()
+    End Sub
+
+
+    ''' <summary>
     ''' Remove all passed triggers.
     ''' </summary>
     Public Sub RemoveTriggeredNotifications()
@@ -303,7 +321,8 @@ Public Class NotificationCollection
             Order By tm
             Select New TriggerSummary With {
                 .NextAction = ni.Action.Name,
-                .NextTime = tm
+                .NextTime = tm,
+                .IsAbsolute = ni.IsAbsolute
             }
 
         UiLogger?.LogTriggerInfo(seq.ToList())

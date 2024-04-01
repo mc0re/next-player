@@ -1,5 +1,6 @@
 ﻿Imports System.ComponentModel
 Imports System.Globalization
+Imports System.Security.Policy
 Imports System.Speech.Recognition
 Imports Common
 
@@ -252,34 +253,53 @@ Public Class SpeechRecognitionControl
     ''' <returns>False if no commands, True if commands are set up, and the engine can be started</returns>
     Public Function StartListening(maxPars As Integer, maxItems As Integer) As Boolean
         Try
-            Dim hasGr = mSpeechRecognizer.Grammars.Any()
             Dim gr = PrepareGrammar(maxPars, maxItems)
-            If gr Is Nothing Then Return False
+            RemoveHandler mSpeechRecognizer.RecognizerUpdateReached, AddressOf SpeechRecognitionOffHandler
+            RemoveHandler mSpeechRecognizer.RecognizerUpdateReached, AddressOf SpeechRecognitionOnHandler
 
-            mSpeechRecognizer.RequestRecognizerUpdate()
-            mSpeechRecognizer.UnloadAllGrammars()
-            mSpeechRecognizer.UpdateRecognizerSetting("CFGConfidenceRejectionThreshold", 20)
-            mSpeechRecognizer.UpdateRecognizerSetting("HighConfidenceThreshold", 80)
-            mSpeechRecognizer.UpdateRecognizerSetting("NormalConfidenceThreshold", 50)
-            mSpeechRecognizer.UpdateRecognizerSetting("LowConfidenceThreshold", 20)
-            mSpeechRecognizer.LoadGrammarAsync(gr)
-
-            If Not hasGr Then
-                mSpeechRecognizer.SetInputToDefaultAudioDevice()
-                mSpeechRecognizer.RecognizeAsync(RecognizeMode.Multiple)
-
-                MessageLog.LogVoiceInfo(VoiceMessages.RecognitionStarted)
+            If gr Is Nothing Then
+                AddHandler mSpeechRecognizer.RecognizerUpdateReached, AddressOf SpeechRecognitionOffHandler
             Else
-                MessageLog.LogVoiceInfo(VoiceMessages.RecognitionUpdated)
+                AddHandler mSpeechRecognizer.RecognizerUpdateReached, AddressOf SpeechRecognitionOnHandler
             End If
 
-            Return True
+            mSpeechRecognizer.RequestRecognizerUpdate(gr)
+            Return gr IsNot Nothing
 
         Catch ex As Exception
             MessageLog.LogVoiceInfo(VoiceMessages.ErrorInStartListening, ex.Message)
             Return False
         End Try
     End Function
+
+
+    Private Sub SpeechRecognitionOffHandler(sender As Object, e As RecognizerUpdateReachedEventArgs)
+        mSpeechRecognizer.UnloadAllGrammars()
+        StopListening()
+        MessageLog.LogVoiceInfo(VoiceMessages.RecognitionStopped)
+    End Sub
+
+
+    Private Sub SpeechRecognitionOnHandler(sender As Object, e As RecognizerUpdateReachedEventArgs)
+        Dim gr = CType(e.UserToken, Grammar)
+        Dim hasGr = mSpeechRecognizer.Grammars.Any()
+
+        mSpeechRecognizer.UnloadAllGrammars()
+        mSpeechRecognizer.UpdateRecognizerSetting("CFGConfidenceRejectionThreshold", 20)
+        mSpeechRecognizer.UpdateRecognizerSetting("HighConfidenceThreshold", 80)
+        mSpeechRecognizer.UpdateRecognizerSetting("NormalConfidenceThreshold", 50)
+        mSpeechRecognizer.UpdateRecognizerSetting("LowConfidenceThreshold", 20)
+        mSpeechRecognizer.LoadGrammarAsync(gr)
+
+        If Not hasGr Then
+            mSpeechRecognizer.SetInputToDefaultAudioDevice()
+            mSpeechRecognizer.RecognizeAsync(RecognizeMode.Multiple)
+
+            MessageLog.LogVoiceInfo(VoiceMessages.RecognitionStarted)
+        Else
+            MessageLog.LogVoiceInfo(VoiceMessages.RecognitionUpdated)
+        End If
+    End Sub
 
 
     ''' <summary>

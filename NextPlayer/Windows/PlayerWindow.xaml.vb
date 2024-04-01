@@ -1437,7 +1437,7 @@ Class PlayerWindow
     Private Sub ActionList_MouseDoubleClick(sender As Object, args As MouseButtonEventArgs)
         Dim item = GetActionFromEventSource(args.OriginalSource)
 
-        SetItemActiveAndPlay(item, ExecutionTypes.MainStopPrev)
+        SetItemActiveAndPlay(item, ExecutionTypes.MainStopPrev, item.Equals(ReplayAction))
     End Sub
 
 #End Region

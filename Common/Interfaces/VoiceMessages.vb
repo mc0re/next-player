@@ -27,6 +27,11 @@
     RecognitionUpdated
 
     ''' <summary>
+    ''' Parameters: none.
+    ''' </summary>
+    RecognitionStopped
+
+    ''' <summary>
     ''' Parameters: command and confidence level.
     ''' </summary>
     CommandRecognized
@@ -51,6 +56,9 @@
     ''' </summary>
     YieldCommandList
 
+    ''' <summary>
+    ''' Parameters: none.
+    ''' </summary>
     NoItemSelected
 
     ''' <summary>

@@ -346,6 +346,10 @@ Public Class MessageLogControl
                 AddTextMessage("Voice recognition started.")
                 AddVoiceMessage("Voice recognition started.")
 
+            Case VoiceMessages.RecognitionStopped
+                AddTextMessage("Voice recognition stopped.")
+                AddVoiceMessage("Voice recognition stopped.")
+
             Case VoiceMessages.RecognitionUpdated
                 AddTextMessage("Voice commands updated.")
                 AddVoiceMessage("Voice commands updated.")
@@ -523,7 +527,10 @@ Public Class MessageLogControl
 
 
     Private Sub AddVoiceMessage(str As String)
-        Speaker?.Speak(str)
+        Dispatcher.BeginInvoke(
+            Sub()
+                Speaker?.Speak(str)
+            End Sub)
     End Sub
 
 

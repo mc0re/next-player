@@ -486,7 +486,6 @@ Public Class PlaylistControl
 
         Dim actListItem = CType(container, PlaylistItem)
         actListItem.BringIntoView()
-
         mLastItemInFocus = actListItem
     End Sub
 

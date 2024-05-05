@@ -77,7 +77,11 @@
     <Compile Include="..\CommonAssemblyInfo.vb">
       <Link>CommonAssemblyInfo.vb</Link>
     </Compile>
+    <Compile Include="Interfaces\CommandMessages.vb" />
+    <Compile Include="Interfaces\ISpeechSynthesizer.vb" />
     <Compile Include="Interfaces\ITimeService.vb" />
+    <Compile Include="Interfaces\IVoicePlayer.vb" />
+    <Compile Include="Interfaces\VoiceMessages.vb" />
     <Compile Include="NET Utility\BucketList.vb" />
     <Compile Include="Positioning\2D\Line2D\Border2D.vb" />
     <Compile Include="Positioning\2D\Line2D\LineCutResult.vb" />
@@ -195,6 +199,7 @@
     <Compile Include="Report utility\IgnoreForReportAttribute.vb" />
     <Compile Include="Value converters\ColorToWpfColorConverter.vb" />
     <Compile Include="Value converters\StringFormatConverter.vb" />
+    <Compile Include="Voice commands\CommandFlags.vb" />
     <Compile Include="Voice commands\CommandList.vb" />
     <Compile Include="Voice commands\CommandParameterTypes.vb" />
     <Compile Include="Interfaces\IEffectDurationConfiguration.vb" />
@@ -219,6 +224,8 @@
     <Compile Include="Voice commands\VoiceCommandConfigItem.vb" />
     <Compile Include="Voice commands\VoiceCommandConfigItemCollection.vb" />
     <Compile Include="Voice commands\VoiceCommandDescription.vb" />
+    <Compile Include="Voice commands\VoiceCommandDescriptionCollection.vb" />
+    <Compile Include="Voice commands\VoiceCommandDescriptionGroup.vb" />
     <Compile Include="WindowPosition.vb" />
     <None Include="packages.config" />
   </ItemGroup>

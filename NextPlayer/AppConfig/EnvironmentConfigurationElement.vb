@@ -69,6 +69,36 @@ Public Class EnvironmentConfigurationElement
 #End Region
 
 
+#Region " VoiceControlFeedbackChannel property "
+
+	<ConfigurationProperty(NameOf(VoiceControlFeedbackChannel))>
+	Public Property VoiceControlFeedbackChannel As Integer
+		Get
+			Return CInt(Me(NameOf(VoiceControlFeedbackChannel)))
+		End Get
+		Set(value As Integer)
+			Me(NameOf(VoiceControlFeedbackChannel)) = value
+		End Set
+	End Property
+
+#End Region
+
+
+#Region " VoiceControlFeedbackVoice property "
+
+	<ConfigurationProperty(NameOf(VoiceControlFeedbackVoice))>
+	Public Property VoiceControlFeedbackVoice As String
+		Get
+			Return CStr(Me(NameOf(VoiceControlFeedbackVoice)))
+		End Get
+		Set(value As String)
+			Me(NameOf(VoiceControlFeedbackVoice)) = value
+		End Set
+	End Property
+
+#End Region
+
+
 #Region " UseNAudio property "
 
 	<ConfigurationProperty(NameOf(UseNAudio), DefaultValue:=True)>

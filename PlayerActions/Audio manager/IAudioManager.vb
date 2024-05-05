@@ -61,15 +61,21 @@ Public Interface IAudioManager
 
 
     ''' <summary>
+    ''' Start the playlist without actually playing anything at the moment.
+    ''' </summary>
+    Sub StartWaiting()
+
+
+    ''' <summary>
     ''' Request playing the given action on the timeline defined by the item.
     ''' </summary>
     Sub Play(item As IPlayerAction, interrupt As ExecutionTypes)
 
 
     ''' <summary>
-    ''' Start the playlist without actually playing anything at the moment.
+    ''' Request stopping and replaying the given action on the timeline defined by the item.
     ''' </summary>
-    Sub StartWaiting()
+    Sub Restart(item As IPlayerAction, interrupt As ExecutionTypes)
 
 
     ''' <summary>

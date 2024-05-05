@@ -69,7 +69,7 @@ Public Class PointsToPathConverter
 		Next
 
 		' Continue the line until the end of canvas.
-		lines.Add(New LineSegment(New Point(lastX, lastPt.Y), False))
+		lines.Add(New LineSegment(New Point(lastX, lastPt.Y), True))
 
 		' Make sure the line meets Y=0.
 		If lastPt.Y <> 0 Then

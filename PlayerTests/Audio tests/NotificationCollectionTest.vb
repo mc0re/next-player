@@ -1,6 +1,8 @@
 ﻿Imports System.Diagnostics.CodeAnalysis
 Imports AudioPlayerLibrary
 Imports Common
+Imports Serilog
+Imports Serilog.Sinks.InMemory
 
 
 <TestClass>
@@ -21,7 +23,7 @@ Public Class NotificationCollectionTest
         End Sub
 
 
-        Public Sub ClearLog(reason As String) Implements IMessageLog.ClearLog
+        Public Sub ClearLog(reason As String, shortReason As String) Implements IMessageLog.ClearLog
         End Sub
 
         Public Sub LogFileCacheInfo(size As Integer) Implements IMessageLog.LogFileCacheInfo
@@ -48,7 +50,7 @@ Public Class NotificationCollectionTest
         Public Sub LogTriggerMessage(format As String, ParamArray args() As Object) Implements IMessageLog.LogTriggerMessage
         End Sub
 
-        Public Sub LogVoiceInfo(format As String, ParamArray args() As Object) Implements IMessageLog.LogVoiceInfo
+        Public Sub LogVoiceInfo(message As VoiceMessages, ParamArray args() As Object) Implements IMessageLog.LogVoiceInfo
         End Sub
 
         Public Sub LogKeyError(format As String, ParamArray args() As Object) Implements IMessageLog.LogKeyError
@@ -65,6 +67,10 @@ Public Class NotificationCollectionTest
 
         Public Sub LogPowerPointError(format As String, ParamArray args() As Object) Implements IMessageLog.LogPowerPointError
         End Sub
+
+        Public Sub LogCommandExecuted(message As CommandMessages, ParamArray args() As Object) Implements IMessageLog.LogCommandExecuted
+        End Sub
+
     End Class
 
 #End Region
@@ -98,6 +104,7 @@ Public Class NotificationCollectionTest
     Public Sub Initialize()
         InterfaceMapper.SetInstance(Of IEffectDurationConfiguration)(New TestEffectDurationConfiguration())
         InterfaceMapper.SetInstance(Of IMessageLog)(New TriggerLogger(mTriggerList))
+        InterfaceMapper.SetInstance(Of ILogger)(New LoggerConfiguration().WriteTo.InMemory().CreateLogger())
 
         mTimeService = New TestTimeService()
         InterfaceMapper.SetInstance(Of ITimeService)(mTimeService)
@@ -272,6 +279,22 @@ Public Class NotificationCollectionTest
         Assert.AreEqual(1, mTriggerList.Count)
 
         mNotif.ClearNotification(list(1))
+
+        Assert.AreEqual(0, mTriggerList.Count)
+    End Sub
+
+
+    <TestMethod>
+    Public Sub Notifications_ClearDependentTrigger()
+        Dim list = TestPlaylistUtility.CreatePlaylist("PP1 EE1-S5")
+        PlaylistStructureLibrary.ArrangeStructure(list)
+
+        mNotif.SetNotification(0, 0, list(1))
+
+        Assert.IsTrue(mReported)
+        Assert.AreEqual(1, mTriggerList.Count)
+
+        mNotif.ClearDependentNotification(list(0))
 
         Assert.AreEqual(0, mTriggerList.Count)
     End Sub
@@ -592,6 +615,30 @@ Public Class NotificationCollectionTest
         Assert.AreEqual(1, mTriggerList.Count)
         Assert.AreEqual("E1", mTriggerList.Last.NextAction)
         Assert.AreEqual(New Date(1970, 1, 1, 0, 0, 9), mTriggerList.Last.NextTime)
+    End Sub
+
+
+    <TestMethod>
+    Public Sub Notifications_ChangePlaybackTime()
+        Dim list = TestPlaylistUtility.CreatePlaylist("PP1 PP2-E1")
+        PlaylistStructureLibrary.ArrangeStructure(list)
+
+        mNotif.SetNotification(0, 0, list(1))
+
+        Dim last = mTriggerList.Last
+        Assert.AreEqual(1, mTriggerList.Count)
+        Assert.AreEqual("P2", last.NextAction)
+        Assert.AreEqual(New Date(1970, 1, 1, 0, 0, 11), last.NextTime)
+
+        mNotif.CheckNotifications(0, 0, 0, 8000)
+
+        Assert.AreEqual(1, mTriggerList.Count)
+        Assert.AreEqual("P2", last.NextAction)
+        Assert.AreEqual(New Date(1970, 1, 1, 0, 0, 11), last.NextTime)
+
+        mNotif.CheckNotifications(0, 0, 8000, 12000)
+
+        Assert.AreEqual(0, mTriggerList.Count)
     End Sub
 
 #End Region

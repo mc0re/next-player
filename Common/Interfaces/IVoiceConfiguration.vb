@@ -3,9 +3,15 @@
 ''' </summary>
 Public Interface IVoiceConfiguration
 
+	ReadOnly Property VoiceCommands As VoiceCommandConfigItemCollection
+
+
 	Property IsVoiceControlEnabled As Boolean
 
 
-	ReadOnly Property VoiceCommands As VoiceCommandConfigItemCollection
+	Property VoiceControlFeedbackChannel As Integer
+
+
+	Property VoiceControlFeedbackVoice As String
 
 End Interface

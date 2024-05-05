@@ -20,15 +20,15 @@
 	<DataTemplate x:Key="TextLogicalHeaderTemplate">
 		<Grid>
 			<Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" SharedSizeGroup="EnabledFlag"/>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="ChannelNumber"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="EnabledFlag"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonShow"/>
                 <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonDelete"/>
             </Grid.ColumnDefinitions>
 
-			<TextBlock Grid.Column="0" Style="{DynamicResource ColumnHeaderStyle}" Text="Use"/>
-			<TextBlock Grid.Column="1" Style="{DynamicResource ColumnHeaderStyle}" Text="Ch #"/>
+			<TextBlock Grid.Column="0" Style="{DynamicResource ColumnHeaderStyle}" Text="Ch #"/>
+			<TextBlock Grid.Column="1" Style="{DynamicResource ColumnHeaderStyle}" Text="Use"/>
 			<TextBlock Grid.Column="2" Style="{DynamicResource ColumnHeaderStyle}" Text="Description"/>
 		</Grid>
 	</DataTemplate>
@@ -40,8 +40,8 @@
         <Setter Property="ColumnDefList">
             <Setter.Value>
                 <res:ColumnDefinitionList>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="EnabledFlag"/>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="ChannelNumber"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="EnabledFlag"/>
                     <ColumnDefinition Width="*" MinWidth="80"/>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="InterfaceType"/>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="ButtonSettings"/>
@@ -56,8 +56,8 @@
     <!-- Physical channel, table header -->
     <DataTemplate x:Key="TextPhysicalHeaderTemplate">
         <res:CustomizableGrid Style="{DynamicResource TextPhysicalChannelRowStyle}">
-            <TextBlock Grid.Column="0" Style="{DynamicResource ColumnHeaderStyle}" Text="Use"/>
-            <TextBlock Grid.Column="1" Style="{DynamicResource ColumnHeaderStyle}" Text="Ch #"/>
+            <TextBlock Grid.Column="0" Style="{DynamicResource ColumnHeaderStyle}" Text="Ch #"/>
+            <TextBlock Grid.Column="1" Style="{DynamicResource ColumnHeaderStyle}" Text="Use"/>
             <TextBlock Grid.Column="2" Style="{DynamicResource ColumnHeaderStyle}" Text="Description"/>
             <TextBlock Grid.Column="3" Style="{DynamicResource ColumnHeaderStyle}" Text="Type"/>
         </res:CustomizableGrid>
@@ -67,10 +67,10 @@
     <!-- Physical channel, table row -->
     <DataTemplate DataType="{x:Type txtch:TextPhysicalChannel}">
         <res:CustomizableGrid Style="{DynamicResource TextPhysicalChannelRowStyle}">
-			<CheckBox Style="{DynamicResource CheckBoxNoTextStyle}" IsChecked="{Binding IsEnabled}"/>
-            <TextBlock Grid.Column="1" Style="{DynamicResource MainTextStyle}"
+            <TextBlock Style="{DynamicResource MainTextStyle}"
 					   VerticalAlignment="Center" HorizontalAlignment="Center"
 					   Text="{Binding Channel}"/>
+			<CheckBox Grid.Column="1" Style="{DynamicResource CheckBoxNoTextStyle}" IsChecked="{Binding IsEnabled}"/>
             <TextBox Grid.Column="2" Style="{DynamicResource TextBoxStyle}" Text="{Binding Description}"/>
 
             <!-- Interface type selector -->

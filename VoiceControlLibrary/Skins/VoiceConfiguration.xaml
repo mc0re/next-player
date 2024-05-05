@@ -4,6 +4,12 @@
 		xmlns:res="http://nextplayer.nikitins.dk/Resources"
 		xmlns:local="clr-namespace:VoiceControlLibrary;assembly=">
 
+    <!-- Channel ComboBox template -->
+    <DataTemplate x:Key="VoiceSelectorTemplate">
+        <TextBlock Style="{DynamicResource MainTextStyle}" Text="{Binding}"/>
+    </DataTemplate>
+
+    
     <DataTemplate x:Key="VoiceSettingHeaderTemplate" DataType="{x:Type local:CommandSettingItem}">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -36,7 +42,7 @@
 					 Text="{Binding Setting.RecognitionText}"/>
 			
             <TextBlock Grid.Column="3" Style="{DynamicResource MainTextStyle}" TextWrapping="Wrap"
-						   Text="{Binding Description}"/>
+				       Text="{Binding Definition.Description}"/>
         </Grid>
     </DataTemplate>
 
@@ -50,14 +56,52 @@
 
             <res:EnvironmentSelector Style="{DynamicResource EnvironmentSelectorStyle}" Padding="2,4">
                 <CheckBox Name="VoiceControl"
+                          Style="{DynamicResource CheckBoxWithTextStyle}"
 						  Content="Allow voice control"
-						  IsChecked="{res:ConfigBinding IsVoiceControlEnabled}"/>
+						  IsChecked="{res:VoiceConfigBinding IsVoiceControlEnabled}"/>
             </res:EnvironmentSelector>
 
             <Border Grid.Row="1" Margin="{TemplateBinding Padding}"
 					IsEnabled="{Binding IsChecked, ElementName=VoiceControl}">
 
                 <StackPanel Grid.IsSharedSizeScope="True">
+                    <Grid Margin="0,0,0,7">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Style="{DynamicResource LabelForTextBoxStyle}"
+								   Text="Feedback channel"/>
+
+                        <ComboBox Name="SelectedChannel" Grid.Column="1"
+                                  Style="{DynamicResource ComboBoxStyle}"
+								  ItemTemplate="{DynamicResource ChannelSelectorTemplate}"
+								  SelectedValuePath="Channel"
+								  SelectedValue="{res:VoiceConfigBinding VoiceControlFeedbackChannel}"
+								  ItemsSource="{res:PlaylistBinding AudioLogicalChannels, Mode=OneWay}"/>
+
+                        <Button Grid.Column="2" Style="{DynamicResource SquareImageButtonStyle}"
+								Command="{StaticResource TestVoiceFeedbackCommand}"
+								Content="{StaticResource PreviewImage}"
+								ToolTipService.ShowOnDisabled="True"
+								ToolTip="Test voice feedback"/>
+
+                        <TextBlock Grid.Column="0" Grid.Row="1" Style="{DynamicResource LabelForTextBoxStyle}"
+								   Text="Feedback voice"/>
+
+                        <ComboBox Grid.Column="1" Grid.Row="1"
+                                  Style="{DynamicResource ComboBoxStyle}"
+								  ItemTemplate="{DynamicResource VoiceSelectorTemplate}"
+								  SelectedValue="{res:VoiceConfigBinding VoiceControlFeedbackVoice}"
+								  ItemsSource="{res:VoiceConfigBinding SynthesizedVoices, Mode=OneWay}"/>
+                    </Grid>
+
                     <ContentControl ContentTemplate="{DynamicResource VoiceSettingHeaderTemplate}"/>
 
                     <ItemsControl ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}"

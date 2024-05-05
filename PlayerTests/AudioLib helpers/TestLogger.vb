@@ -4,7 +4,7 @@ Imports Common
 Public Class TestLogger
     Implements IMessageLog
 
-    Public Sub ClearLog(reason As String) Implements IMessageLog.ClearLog
+    Public Sub ClearLog(reason As String, shortReason As String) Implements IMessageLog.ClearLog
 
     End Sub
 
@@ -44,7 +44,7 @@ Public Class TestLogger
 
     End Sub
 
-    Public Sub LogVoiceInfo(format As String, ParamArray args() As Object) Implements IMessageLog.LogVoiceInfo
+    Public Sub LogVoiceInfo(message As VoiceMessages, ParamArray args() As Object) Implements IMessageLog.LogVoiceInfo
 
     End Sub
 
@@ -58,6 +58,9 @@ Public Class TestLogger
 
     Public Sub LogFigureCacheInfo(size As Long) Implements IMessageLog.LogFigureCacheInfo
 
+    End Sub
+
+    Public Sub LogCommandExecuted(message As CommandMessages, ParamArray args() As Object) Implements IMessageLog.LogCommandExecuted
     End Sub
 
 End Class

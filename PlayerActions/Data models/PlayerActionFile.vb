@@ -575,6 +575,24 @@ Public Class PlayerActionFile
 
 #End Region
 
+
+#Region " MessageLog property "
+
+    Private mMessageLog As IMessageLog
+
+
+    Private ReadOnly Property MessageLog As IMessageLog
+        Get
+            If mMessageLog Is Nothing Then
+                mMessageLog = InterfaceMapper.GetImplementation(Of IMessageLog)()
+            End If
+
+            Return mMessageLog
+        End Get
+    End Property
+
+#End Region
+
 #End Region
 
 
@@ -843,8 +861,7 @@ Public Class PlayerActionFile
 
         If args Is Nothing OrElse String.IsNullOrEmpty(args.ErrorMessage) Then Return
 
-        InterfaceMapper.GetImplementation(Of IMessageLog)().LogAudioError(
-                "{0}: {1}", Path.GetFileName(args.FileName), args.ErrorMessage)
+        MessageLog.LogAudioError("{0}: {1}", Path.GetFileName(args.FileName), args.ErrorMessage)
     End Sub
 
 
@@ -852,8 +869,7 @@ Public Class PlayerActionFile
     ''' There was an error.
     ''' </summary>
     Private Sub MediaFailedHandler(sender As Object, args As MediaFailedEventArgs)
-        InterfaceMapper.GetImplementation(Of IMessageLog)().LogFileError(
-            "{0}: {1}", Path.GetFileName(args.FileName), args.Reason)
+        MessageLog.LogFileError("{0}: {1}", Path.GetFileName(args.FileName), args.Reason)
         IsLoadingFailed = True
         StopPlayer(False)
     End Sub

@@ -22,8 +22,8 @@
 	
 	<Window.Title>
 		<MultiBinding StringFormat="{}{0} - {1}">
-			<Binding Path="AppName"/>
 			<Binding Path="ActionList.Name"/>
+			<Binding Path="AppName"/>
 		</MultiBinding>
 	</Window.Title>
 
@@ -88,6 +88,8 @@
 		<CommandBinding Command="{StaticResource SelectNextCommand}" Executed="SelectNextCommandExecuted" CanExecute="HasNextActionCommandCanExecute"/>
 
 		<CommandBinding Command="{StaticResource ShowTextWindowCommand}" Executed="ShowTextWindowCommandExecuted"/>
+		<CommandBinding Command="{StaticResource WhatCanISayCommand}" Executed="WhatCanISayCommandExecuted"/>
+		<CommandBinding Command="{StaticResource ListTriggersCommand}" Executed="ListTriggersCommandExecuted"/>
     </Window.CommandBindings>
 
     

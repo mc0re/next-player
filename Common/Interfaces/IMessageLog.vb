@@ -3,7 +3,7 @@
     ''' <summary>
     ''' Start a new log section, possibly cleaning up the previous entries.
     ''' </summary>
-    Sub ClearLog(reason As String)
+    Sub ClearLog(reason As String, shortReason As String)
 
 
     ''' <summary>
@@ -46,7 +46,7 @@
 
     Sub LogTriggerMessage(format As String, ParamArray args() As Object)
 
-    Sub LogVoiceInfo(format As String, ParamArray args() As Object)
+    Sub LogVoiceInfo(message As VoiceMessages, ParamArray args() As Object)
 
     Sub LogKeyError(format As String, ParamArray args() As Object)
 
@@ -63,5 +63,11 @@
     Sub LogAudioError(format As String, ParamArray args() As Object)
 
     Sub LogPowerPointError(format As String, ParamArray args() As Object)
+
+
+    ''' <summary>
+    ''' Report that a command is executed successfully. Pass on parameters if needed.
+    ''' </summary>
+    Sub LogCommandExecuted(message As CommandMessages, ParamArray args() As Object)
 
 End Interface

@@ -152,6 +152,7 @@ Public Class PlaylistEnvironmentConfiguration
 		AudioOutput.AfterLoad()
 		AudioOutput.SetRoom(Room)
 		TextOutput.AfterLoad()
+		InterfaceMapper.GetImplementation(Of ISpeechSynthesizer)().Setup()
 
 		mIsLoaded = True
 	End Sub

@@ -52,6 +52,6 @@
 								  Foreground="{DynamicResource MainTextBrush}"
 								  ReportTemplate="{Binding SelectedItem, ElementName=TemplateList}"
 								  Playlist="{Binding Playlist}"
-								  VoiceCommandList="{res:ConfigBinding VoiceCommands, Mode=OneWay}"/>
+								  VoiceCommandList="{res:VoiceConfigBinding VoiceCommands, Mode=OneWay}"/>
 	</Grid>
 </Window>

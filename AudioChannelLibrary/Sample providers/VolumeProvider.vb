@@ -105,6 +105,24 @@ Public Class VolumeProvider
 #End Region
 
 
+#Region " Logger property "
+
+    Private mLogger As IMessageLog
+
+
+    Public ReadOnly Property Logger As IMessageLog
+        Get
+            If mLogger Is Nothing Then
+                mLogger = InterfaceMapper.GetImplementation(Of IMessageLog)(True)
+            End If
+
+            Return mLogger
+        End Get
+    End Property
+
+#End Region
+
+
 #Region " Init and clean-up "
 
     ''' <summary>
@@ -174,11 +192,15 @@ Public Class VolumeProvider
         Dim samplesRead As Integer
 
         Try
-            samplesRead = mSource.Read(mReader.ProvideBuffer(samplesRequired), 0, samplesRequired)
+            Dim buf = mReader.ProvideBuffer(samplesRequired)
+            If buf Is Nothing Then
+                Logger.LogAudioError($"No data provided for {samplesRequired} samples.")
+                Return 0
+            End If
+            samplesRead = mSource.Read(buf, 0, samplesRequired)
         Catch ex As Exception
             ' If something happened to the file reader
-            Dim log = InterfaceMapper.GetImplementation(Of IMessageLog)()
-            log.LogAudioError(ex.Message)
+            Logger.LogAudioError(ex.Message)
             Return 0
         End Try
 

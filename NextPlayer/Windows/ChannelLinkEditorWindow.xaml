@@ -56,9 +56,17 @@
         <ContentPresenter Content="{Binding Link}"
 						  ContentTemplate="{Binding LinkEditorTemplate, RelativeSource={RelativeSource AncestorType=Window}}"/>
 
-        <Button Style="{DynamicResource RectButtonStyle}"
-				Height="30" HorizontalAlignment="Center"
-				Content="Delete" Click="DeleteLinkClick"/>
+        <DockPanel LastChildFill="False">
+            <Button Style="{DynamicResource RectButtonStyle}"
+                    DockPanel.Dock="Left"
+				    Height="30" HorizontalAlignment="Center"
+				    Content="Delete" Click="DeleteLinkClick"/>
+
+            <Button Style="{DynamicResource RectButtonStyle}"
+                    DockPanel.Dock="Right"
+				    Height="30" HorizontalAlignment="Center"
+				    Content="Close" Click="CloseDialogClick"/>
+        </DockPanel>
     </StackPanel>
 
 </Window>

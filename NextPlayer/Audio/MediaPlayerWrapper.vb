@@ -1,4 +1,5 @@
-﻿Imports AudioChannelLibrary
+﻿Imports System.IO
+Imports AudioChannelLibrary
 Imports AudioPlayerLibrary
 Imports Common
 
@@ -73,28 +74,30 @@ Public Class MediaPlayerWrapper
 	Private Sub SetPlayerParams() Handles mPlaybackInfo.PropertyChanged
 		mPlayer.IsMuted = mPlaybackInfo.IsMuted
 		mPlayer.Volume = mPlaybackInfo.Volume
-
 		mPlayer.Balance = If(
-			mPlaybackInfo.PanningModel <> PanningModels.Fixed, mPlaybackInfo.Panning, 0)
+					mPlaybackInfo.PanningModel <> PanningModels.Fixed, mPlaybackInfo.Panning, 0)
 	End Sub
-
 
 #End Region
 
 
 #Region " API "
+	''' <summary>
+	''' MediaPlayer cannot play to a non-default output.
+	''' </summary>
+	''' <param name="channelNo">Ignored</param>
+	Public Sub Open(fileName As String, channelNo As Integer) Implements IAudioPlayer.Open
+		mPlayer.Open(New Uri(fileName))
+	End Sub
 
-    ''' <summary>
-    ''' MediaPlayer cannot play to a non-default output.
-    ''' </summary>
-    ''' <param name="channelNo">Ignored</param>
-    Public Sub Open(fileName As String, channelNo As Integer) Implements IAudioPlayer.Open
-        mPlayer.Open(New Uri(fileName))
-    End Sub
 
-
-    Public Sub Close() Implements IAudioPlayer.Close
+	Public Sub Close() Implements IAudioPlayer.Close
 		mPlayer.Close()
+	End Sub
+
+
+	Public Sub PlayAndForget(strm As Stream, channel As Integer) Implements IVoicePlayer.PlayAndForget
+		' Do nothing, Media Player can only play from URL
 	End Sub
 
 
@@ -106,20 +109,17 @@ Public Class MediaPlayerWrapper
 	Public Sub Play() Implements IAudioPlayer.Play
 		mPlayer.Play()
 	End Sub
-
-
 	Public Sub Pause() Implements IAudioPlayer.Pause
 		mPlayer.Pause()
 	End Sub
-
-
 	Public Sub [Stop]() Implements IAudioPlayer.[Stop]
 		mPlayer.Stop()
 	End Sub
 
+
+
+
 #End Region
-
-
 #Region " Event listeners "
 
 	Private Sub MediaOpenedHandler(sender As Object, args As EventArgs) Handles mPlayer.MediaOpened
@@ -136,15 +136,17 @@ Public Class MediaPlayerWrapper
 		RaiseEvent MediaEnded(sender, New MediaEndedEventArgs With {.FileName = mPlayer.Source.LocalPath})
 	End Sub
 
+
+
+
 #End Region
-
-
 #Region " IDisposable implementation "
 
 	Public Sub Dispose() Implements IDisposable.Dispose
 		mPlayer.Close()
 		mPlayer = Nothing
 	End Sub
+
 
 #End Region
 

@@ -1,4 +1,5 @@
 ﻿Imports Common
+Imports Serilog
 
 
 ''' <summary>
@@ -20,15 +21,33 @@ Public Class NotificationCollection
 #End Region
 
 
-#Region " Logger property "
+#Region " Uiogger property "
 
-    Private mLogger As IMessageLog
+    Private mUiLogger As IMessageLog
 
 
-    Public ReadOnly Property Logger As IMessageLog
+    Public ReadOnly Property UiLogger As IMessageLog
+        Get
+            If mUiLogger Is Nothing Then
+                mUiLogger = InterfaceMapper.GetImplementation(Of IMessageLog)(True)
+            End If
+
+            Return mUiLogger
+        End Get
+    End Property
+
+#End Region
+
+
+#Region " Logger lazy property "
+
+    Private mLogger As ILogger
+
+
+    Private ReadOnly Property Logger As ILogger
         Get
             If mLogger Is Nothing Then
-                mLogger = InterfaceMapper.GetImplementation(Of IMessageLog)(True)
+                mLogger = InterfaceMapper.GetImplementation(Of ILogger)(True)
             End If
 
             Return mLogger
@@ -70,6 +89,25 @@ Public Class NotificationCollection
 
         For Each delNotif In delList
             mNotificationList.Remove(delNotif)
+            Logger.Information($"Notification for {delNotif.Action.Name} removed from the list upon request.")
+        Next
+
+        ReportTriggers()
+    End Sub
+
+
+    ''' <summary>
+    ''' Remove all triggers relying on the given action.
+    ''' </summary>
+    ''' <return>True if the trigger was removed, False if was not found</return>
+    Public Sub ClearDependentNotification(toRemove As IPlayerAction)
+        Dim delList = (
+            From notif In mNotificationList Where notif.Trigger.Action.Equals(toRemove)
+            ).ToList()
+
+        For Each delNotif In delList
+            mNotificationList.Remove(delNotif)
+            Logger.Information($"Notification for '{delNotif.Action.Name}' removed as dependant on '{toRemove.Name}'.")
         Next
 
         ReportTriggers()
@@ -86,6 +124,7 @@ Public Class NotificationCollection
 
         For Each delNotif In delList
             mNotificationList.Remove(delNotif)
+            Logger.Information($"Notification for {delNotif.Action.Name} removed from the list because it's triggered.")
         Next
 
         ReportTriggers()
@@ -112,6 +151,11 @@ Public Class NotificationCollection
                Not notifInfo.IsAfter(curWallTick, curPlayTick) Then
 
                 ' Actual but not yet executed
+                If notifInfo.Trigger.IsAbsolute Then
+                    Logger.Information($"Trigger '{notifInfo.Action.Name}' activated because wall time is between {prevWallTick} and {curWallTick}, must be {notifInfo.Position}.")
+                Else
+                    Logger.Information($"Trigger '{notifInfo.Action.Name}' activated because '{notifInfo.Trigger.Action.Name}' position is between {prevPlayTick} and {curPlayTick}, must be {notifInfo.Position}.")
+                End If
                 notifInfo.IsTriggered = True
                 ReportTriggers()
                 res.Add(notifInfo.Action)
@@ -141,7 +185,10 @@ Public Class NotificationCollection
     ''' </summary>
     Public Sub RecalculateTriggers(curWallTime As Double, curPlayTime As Double)
         For Each ni In mNotificationList
-            ni.Trigger.CalculateEndTime(If(ni.IsAbsolute, curWallTime, curPlayTime))
+            If ni.Trigger.IsAbsolute Then
+                ni.Trigger.CalculateEndTime(If(ni.IsAbsolute, curWallTime, curPlayTime))
+            End If
+
             ni.UpdatePosition(GetStartTime(ni.Action, ni.Trigger))
         Next
 
@@ -221,13 +268,13 @@ Public Class NotificationCollection
 
         ' Check request validity
         If Not refPoint.HasDuration AndAlso triggeredAction.DelayType = DelayTypes.TimedBeforeEnd Then
-            Logger?.LogTriggerMessage("Trying to set before-end-trigger with no end time for '{0}'",
+            UiLogger?.LogTriggerMessage("Trying to set before-end-trigger with no end time for '{0}'",
                                       triggeredAction)
             Return Nothing
         End If
 
         If Not refPoint.HasDuration AndAlso triggeredAction.DelayType = DelayTypes.TimedAfterEnd Then
-            Logger?.LogTriggerMessage("Trying to set after-end-trigger with no end time for '{0}'",
+            UiLogger?.LogTriggerMessage("Trying to set after-end-trigger with no end time for '{0}'",
                                       triggeredAction)
             Return Nothing
         End If
@@ -274,10 +321,11 @@ Public Class NotificationCollection
             Order By tm
             Select New TriggerSummary With {
                 .NextAction = ni.Action.Name,
-                .NextTime = tm
+                .NextTime = tm,
+                .IsAbsolute = ni.IsAbsolute
             }
 
-        Logger?.LogTriggerInfo(seq.ToList())
+        UiLogger?.LogTriggerInfo(seq.ToList())
     End Sub
 
 #End Region

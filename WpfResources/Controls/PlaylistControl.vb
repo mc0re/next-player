@@ -479,9 +479,10 @@ Public Class PlaylistControl
         End If
 
         Dim container = ItemContainerGenerator.ContainerFromItem(act)
-        Dim actListItem = CType(container, PlaylistItem)
-        actListItem.BringIntoView()
+        Dim actListItem = TryCast(container, PlaylistItem)
+        If actListItem Is Nothing Then Return
 
+        actListItem.BringIntoView()
         mLastItemInFocus = actListItem
     End Sub
 

@@ -96,7 +96,7 @@ Public Class AudioManager
     ''' <summary>
     ''' A set of methods to operate on the playlist.
     ''' </summary>
-    Private WithEvents mAudioLib As AudioPlaybackLibrary
+    Private ReadOnly mAudioLib As AudioPlaybackLibrary
 
 
     ''' <summary>
@@ -190,6 +190,15 @@ Public Class AudioManager
 
 
     ''' <inheritdoc/>
+    Public Sub StartWaiting() Implements IAudioManager.StartWaiting
+        StartOperation(Sub()
+                           ProcessActions(mAudioLib.Play(Nothing, ExecutionTypes.MainStopAll))
+                           RaiseStateChanged(CreateState(mAudioLib.PlaybackStatus))
+                       End Sub)
+    End Sub
+
+
+    ''' <inheritdoc/>
     Public Sub Play(item As IPlayerAction, interrupt As ExecutionTypes) Implements IAudioManager.Play
         StartOperation(Sub()
                            ProcessActions(mAudioLib.Play(item, interrupt))
@@ -199,10 +208,14 @@ Public Class AudioManager
 
 
     ''' <inheritdoc/>
-    Public Sub StartWaiting() Implements IAudioManager.StartWaiting
+    Public Sub Restart(item As IPlayerAction, interrupt As ExecutionTypes) Implements IAudioManager.Restart
         StartOperation(Sub()
-                           ProcessActions(mAudioLib.Play(Nothing, ExecutionTypes.MainStopAll))
-                           RaiseStateChanged(CreateState(mAudioLib.PlaybackStatus))
+                           ' Must stop the playback to calculate the correct time
+                           ProcessActions(mAudioLib.StopSingle(item), postAction:=
+                           Sub()
+                               ProcessActions(mAudioLib.Play(item, interrupt))
+                               RaiseStateChanged(CreateState(mAudioLib.PlaybackStatus))
+                           End Sub)
                        End Sub)
     End Sub
 
@@ -325,7 +338,11 @@ Public Class AudioManager
     End Function
 
 
-    Private Sub ProcessActions(playActions As AudioActions, Optional startTimer As Boolean = True)
+    Private Sub ProcessActions(
+        playActions As AudioActions,
+        Optional startTimer As Boolean = True,
+        Optional postAction As Action = Nothing
+        )
         mCallbackSc.Post(Sub()
                              For Each act In playActions.Pausing
                                  act.Stop(True)
@@ -364,6 +381,7 @@ Public Class AudioManager
                              Next
 
                              RaiseStateChanged(CreateState(mAudioLib.PlaybackStatus))
+                             postAction?.Invoke()
                          End Sub, Nothing)
 
         If startTimer Then

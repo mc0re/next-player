@@ -127,8 +127,8 @@
         <Setter Property="ColumnDefList">
             <Setter.Value>
                 <res:ColumnDefinitionList>
-                    <ColumnDefinition Width="Auto" SharedSizeGroup="EnabledFlag"/>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="ChannelNumber"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="EnabledFlag"/>
                     <ColumnDefinition Width="*" MinWidth="80"/>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="InterfaceType"/>
                     <ColumnDefinition Width="*" MinWidth="60"/>
@@ -145,8 +145,8 @@
 	<!-- DataContext is ChannelCollection(Of AudioPhysicalChannel) -->
 	<DataTemplate x:Key="AudioPhysicalHeaderTemplate">
         <res:CustomizableGrid Style="{DynamicResource AudioPhysicalChannelRowStyle}">
-            <TextBlock Grid.Column="0" Style="{DynamicResource ColumnHeaderStyle}" Text="Use"/>
-            <TextBlock Grid.Column="1" Style="{DynamicResource ColumnHeaderStyle}" Text="Ch #"/>
+            <TextBlock Grid.Column="0" Style="{DynamicResource ColumnHeaderStyle}" Text="Ch #"/>
+            <TextBlock Grid.Column="1" Style="{DynamicResource ColumnHeaderStyle}" Text="Use"/>
             <TextBlock Grid.Column="2" Style="{DynamicResource ColumnHeaderStyle}" Text="Description"/>
             <TextBlock Grid.Column="3" Style="{DynamicResource ColumnHeaderStyle}" Text="Interface"/>
             <TextBlock Grid.Column="4" Style="{DynamicResource ColumnHeaderStyle}" Text="Device"/>
@@ -186,10 +186,10 @@
     <DataTemplate DataType="{x:Type audioch:AudioPhysicalChannel}">
         <res:CustomizableGrid Style="{DynamicResource AudioPhysicalChannelRowStyle}">
 			<!-- Base properties -->
-			<CheckBox Style="{DynamicResource CheckBoxNoTextStyle}" IsChecked="{Binding IsEnabled}"/>
-            <TextBlock Grid.Column="1" Style="{DynamicResource MainTextStyle}"
+            <TextBlock Style="{DynamicResource MainTextStyle}"
 					   VerticalAlignment="Center" HorizontalAlignment="Center"
 					   Text="{Binding Channel}"/>
+			<CheckBox Grid.Column="1" Style="{DynamicResource CheckBoxNoTextStyle}" IsChecked="{Binding IsEnabled}"/>
 
             <TextBox Grid.Column="2" Style="{DynamicResource TextBoxStyle}"
 					 Text="{Binding Description}"/>

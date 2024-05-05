@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports System.IO
 Imports System.Threading
 Imports System.Windows.Threading
 Imports AudioChannelLibrary
@@ -257,6 +258,11 @@ Public NotInheritable Class NAudioPlayer
     End Sub
 
 
+    Public Sub PlayAndForget(strm As Stream, channelNo As Integer) Implements IVoicePlayer.PlayAndForget
+        BeginExecute(Sub() PlayUnsafe(strm, channelNo))
+    End Sub
+
+
     ''' <summary>
     ''' Execute the given action on the <see cref="mDispatcher"/> thread and wait for it to finish.
     ''' </summary>
@@ -293,31 +299,7 @@ Public NotInheritable Class NAudioPlayer
 
             mLogicalChannelNr = channelNo
             CreateGeneratorFactory()
-
-            If mInfoList.IsEmpty() Then
-                ' Collect all assigned links and connected physical channels
-                For Each chOutput In mAudioConfig.GetLinks(mLogicalChannelNr)
-                    Dim ph = chOutput.Physical
-                    Dim mpl = ph.AudioInterface.CreatePlayer()
-
-                    ' Error creating a player, skip
-                    If mpl Is Nothing Then Continue For
-
-                    AddHandler mpl.PlaybackStopped, AddressOf PlaybackStoppedHandler
-                    mInfoList.Add(New AudioPlayerInfo With {
-                                  .Channel = ph, .Link = chOutput.Link, .Player = mpl
-                                  })
-                Next
-            End If
-
-            ' For each physical channel create a player with a shared mPlaybackInfo
-            For Each info In mInfoList
-                info.HasStopped = False
-                info.Reader = streamProvider.CreateStream(fileName)
-                info.Provider = New VolumeProvider(
-                    info.Reader.ToSampleProvider(), mPlaybackInfo, info.Channel, info.Link)
-                info.Player.Init(info.Provider)
-            Next
+            CollectLinks(Function() streamProvider.CreateStream(fileName))
 
             mFileName = fileName
             RaiseEvent MediaOpened(Me, EventArgs.Empty)
@@ -368,6 +350,63 @@ Public NotInheritable Class NAudioPlayer
         End If
 
         mFileName = Nothing
+    End Sub
+
+
+    Private Sub PlayUnsafe(strm As Stream, channelNo As Integer)
+        If channelNo = 0 Then
+            channelNo = 1
+        End If
+
+        Try
+            mLogicalChannelNr = channelNo
+            mNofSourceChannels = 1
+            mFileName = "Synthesized"
+            CreateGeneratorFactory()
+
+            ' The WaveFormat must match the generated one in SpeechSynthesizerControl
+            CollectLinks(Function() New RawSourceWaveStream(strm, New WaveFormat(44100, 16, 1)))
+            Play()
+
+            RaiseEvent MediaOpened(Me, EventArgs.Empty)
+
+        Catch ex As Exception
+            CloseUnsafe(False)
+            RaiseEvent MediaFailed(Me, New MediaFailedEventArgs With {.FileName = mFileName, .Reason = ex.Message})
+        End Try
+    End Sub
+
+
+    ''' <summary>
+    ''' Collect all assigned links and connected physical channels.
+    ''' For each physical channel create a player with a shared mPlaybackInfo.
+    ''' </summary>
+    ''' <param name="generateStreamFn">
+    ''' A function to generate a <see cref="WaveStream"/> for each linked physical channel.
+    ''' </param>
+    Private Sub CollectLinks(generateStreamFn As Func(Of WaveStream))
+        If mInfoList.IsEmpty() Then
+            For Each chOutput In mAudioConfig.GetLinks(mLogicalChannelNr)
+                Dim ph = chOutput.Physical
+                Dim mpl = ph.AudioInterface.CreatePlayer()
+
+                ' Error creating a player, skip
+                If mpl Is Nothing Then Continue For
+
+                AddHandler mpl.PlaybackStopped, AddressOf PlaybackStoppedHandler
+                mInfoList.Add(New AudioPlayerInfo With {
+                              .Channel = ph, .Link = chOutput.Link, .Player = mpl
+                              })
+            Next
+        End If
+
+        For Each info In mInfoList
+            info.HasStopped = False
+            info.Reader = generateStreamFn.Invoke()
+            info.Provider = New VolumeProvider(
+                    info.Reader.ToSampleProvider(), mPlaybackInfo, info.Channel, info.Link)
+            info.Player.Init(info.Provider)
+        Next
     End Sub
 
 #End Region

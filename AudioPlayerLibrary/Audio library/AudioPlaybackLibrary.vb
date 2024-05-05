@@ -1,5 +1,6 @@
 ﻿Imports System.Runtime.Remoting.Contexts
 Imports Common
+Imports Serilog
 
 
 ''' <summary>
@@ -76,6 +77,24 @@ Public Class AudioPlaybackLibrary
     ''' The object the library is using for operation.
     ''' </summary>
     Public ReadOnly Property PlaybackStatus As New PlaybackStatus()
+
+#End Region
+
+
+#Region " Logger property "
+
+    Private mLogger As ILogger
+
+
+    Public ReadOnly Property Logger As ILogger
+        Get
+            If mLogger Is Nothing Then
+                mLogger = InterfaceMapper.GetImplementation(Of ILogger)(True)
+            End If
+
+            Return mLogger
+        End Get
+    End Property
 
 #End Region
 
@@ -177,11 +196,14 @@ Public Class AudioPlaybackLibrary
         End If
 
         If act Is Nothing Then
+            Logger.Information("Playlist started in waiting mode.")
             playActions = StartWaiting()
         ElseIf act.ExecutionType = ExecutionTypes.Parallel Then
+            Logger.Information($"Started parallel action '{act.Name}'.")
             playActions = PlayParallel(act)
             act.StartTime = PlaybackStatus.PlaylistTime
         Else
+            Logger.Information($"Started main action '{act?.Name}'.")
             playActions = PlayMain(act, interruptType)
             act.StartTime = PlaybackStatus.PlaylistTime
         End If
@@ -203,6 +225,7 @@ Public Class AudioPlaybackLibrary
         Dim res = New AudioActions()
 
         res.Stopping.Add(act)
+        mNotifications.ClearDependentNotification(act)
         mPlayingList.Remove(act)
         VerifyPlayingStatus()
 
@@ -220,6 +243,8 @@ Public Class AudioPlaybackLibrary
         Dim res = New AudioActions()
 
         For Each act In mPlayingList.ToList()
+            mNotifications.ClearDependentNotification(act)
+
             If act.ExecutionType = ExecutionTypes.Parallel Then
                 res.Stopping.Add(act)
                 mPlayingList.Remove(act)

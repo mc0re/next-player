@@ -10,6 +10,7 @@ Imports AudioChannelLibrary
 Imports AudioPlayerLibrary
 Imports Common
 Imports PlayerActions
+Imports Serilog
 Imports TextChannelLibrary
 Imports TextWindowLibrary
 Imports VoiceControlLibrary
@@ -54,10 +55,19 @@ Class PlayerWindow
     Private WithEvents mVoiceControl As SpeechRecognitionControl
 
 
+    Private mSynthesizer As ISpeechSynthesizer
+
+
     ''' <summary>
     ''' Audio manager to handle multiple playbacks.
     ''' </summary>
     Private WithEvents mAudioMgr As IAudioManager
+
+
+    ''' <summary>
+    ''' Logger.
+    ''' </summary>
+    Private ReadOnly mLogger As ILogger
 
 #End Region
 
@@ -371,6 +381,24 @@ Class PlayerWindow
 
 #End Region
 
+
+#Region " MessageLog property "
+
+    Private mMessageLog As IMessageLog
+
+
+    Private ReadOnly Property MessageLog As IMessageLog
+        Get
+            If mMessageLog Is Nothing Then
+                mMessageLog = InterfaceMapper.GetImplementation(Of IMessageLog)(True)
+            End If
+
+            Return mMessageLog
+        End Get
+    End Property
+
+#End Region
+
 #End Region
 
 
@@ -380,6 +408,9 @@ Class PlayerWindow
     ''' Process configuration options.
     ''' </summary>
     Public Sub New()
+        mLogger = InterfaceMapper.GetImplementation(Of ILogger)()
+        InterfaceMapper.SetInstance(Of ISpeechSynthesizer)(New SpeechSynthesizerControl)
+
         ' Assume that configuration files are loaded
         AppConfiguration.SetUpAudioLib()
         InterfaceMapper.SetInstance(Of IConfiguration)(AppConfiguration.Instance)
@@ -447,16 +478,10 @@ Class PlayerWindow
 
         SetPlaylistInFocus()
 
-        Try
-            Dim vc = InterfaceMapper.GetImplementation(Of IVoiceConfiguration)()
-            If vc.IsVoiceControlEnabled Then
-                mVoiceControl.StartListening(ActionList.MaxParallels, ActionList.Items.Count)
-            End If
-
-        Catch ex As Exception
-            InterfaceMapper.GetImplementation(Of IMessageLog)().LogVoiceInfo(
-                "Error when preparing voice recognition: " & ex.Message)
-        End Try
+        Dim vc = InterfaceMapper.GetImplementation(Of IVoiceConfiguration)()
+        If vc.IsVoiceControlEnabled Then
+            mVoiceControl.StartListening(ActionList.MaxParallels, ActionList.Items.Count)
+        End If
     End Sub
 
 
@@ -481,7 +506,6 @@ Class PlayerWindow
 #Region " Background saving utility "
 
     Private WithEvents mSaveTimer As New Timers.Timer() With {.AutoReset = False}
-
 
     ''' <summary>
     ''' If the playlist is assigned to a file, save it.
@@ -574,11 +598,15 @@ Class PlayerWindow
     ''' </param>
     Private Function LoadPlaylist(fileName As String) As Boolean
         FileCache.Instance.Clear()
-        InterfaceMapper.GetImplementation(Of IMessageLog)().ClearLog("Loading " & fileName)
+        MessageLog.ClearLog("Loading " & fileName, "Loading playlist")
 
         ActionList = PlayerActionCollection.LoadFromFile(fileName)
-        If ActionList Is Nothing Then Return False
+        If ActionList Is Nothing Then
+            mLogger.Information($"Loaded playlist '{fileName}', empty.")
+            Return False
+        End If
 
+        mLogger.Information($"Loaded playlist '{fileName}', {ActionList.Items.Count} items.")
         IsListModified = False
         ResetPlayer()
         AppConfiguration.Instance.LastPlaylistFile = fileName
@@ -620,12 +648,18 @@ Class PlayerWindow
 
             Using writer = File.Open(fileName, FileMode.Create, FileAccess.Write)
                 ActionList.Save(writer, fileName)
-                IsListModified = False
+
+                If IsListModified Then
+                    IsListModified = False
+                    mLogger.Information($"Saved playlist '{fileName}'.")
+                End If
+
                 Return True
             End Using
 
         Catch ex As Exception
             MessageLogger.LogFileError("Error saving playlist: {0}", ex.Message)
+            mLogger.Warning(ex, $"Saving playlist '{fileName}' failed.")
         End Try
 
         Return False
@@ -767,6 +801,7 @@ Class PlayerWindow
         For Each act In From fileName In dlg.FileNames Select New PlayerActionFile(fileName)
             act.AfterLoad(String.Empty)
             AddItemToList(curIdx, act)
+            mLogger.Information($"Added file item '{act.FileToPlay} at index {curIdx}'.")
             curIdx += 1
         Next
 
@@ -779,6 +814,7 @@ Class PlayerWindow
     ''' </summary>
     Private Sub AddActionToPlaylist(action As PlayerAction)
         AddItemToList(Playlist.SelectedIndex, action)
+        mLogger.Information($"Added item '{action.Name} at index {Playlist.SelectedIndex}'.")
     End Sub
 
 #End Region
@@ -807,6 +843,7 @@ Class PlayerWindow
 
         For Each delElem In delList
             ActionList.Items.Remove(delElem)
+            mLogger.Information($"Deleted item '{delElem.Name}'.")
 
             Dim asFile = TryCast(delElem, PlayerActionFile)
             If asFile IsNot Nothing Then
@@ -826,6 +863,7 @@ Class PlayerWindow
             ActionList.Items.RemoveAt(curIdx)
             ActionList.Items.Insert(curIdx - 1, elem)
             Playlist.SelectedIndex = curIdx - 1
+            mLogger.Information($"Moved item '{elem.Name}' from index {curIdx} to {curIdx - 1}.")
         End If
     End Sub
 
@@ -837,6 +875,7 @@ Class PlayerWindow
             ActionList.Items.RemoveAt(curIdx)
             ActionList.Items.Insert(curIdx + 1, elem)
             Playlist.SelectedIndex = curIdx + 1
+            mLogger.Information($"Moved item '{elem.Name}' from index {curIdx} to {curIdx + 1}.")
         End If
     End Sub
 
@@ -873,6 +912,7 @@ Class PlayerWindow
         item.FileToPlay = dlg.FileName
         item.FileTimestamp = Date.MinValue
         item.IsLoadingFailed = True ' To re-calculate duration
+        mLogger.Information($"Replaced file in item '{item.Name}' to '{dlg.FileName}'.")
         item.AfterLoad(String.Empty)
 
         WaveformStorage.ForceUpdate(dlg.FileName, Dispatcher)
@@ -1043,6 +1083,7 @@ Class PlayerWindow
         If item Is Nothing Then Return
 
         item.Volume += AppConfiguration.Instance.VolumeStep
+        MessageLog.LogCommandExecuted(CommandMessages.VolumeSet, item.Volume)
     End Sub
 
 
@@ -1054,6 +1095,7 @@ Class PlayerWindow
         If item Is Nothing Then Return
 
         item.Volume -= AppConfiguration.Instance.VolumeStep
+        MessageLog.LogCommandExecuted(CommandMessages.VolumeSet, item.Volume)
     End Sub
 
 
@@ -1066,6 +1108,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Panning
         item.Balance -= AppConfiguration.Instance.PanningStep
+        MessageLog.LogCommandExecuted(CommandMessages.PanningSet, item.Balance)
     End Sub
 
 
@@ -1078,6 +1121,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Panning
         item.Balance += AppConfiguration.Instance.PanningStep
+        MessageLog.LogCommandExecuted(CommandMessages.PanningSet, item.Balance)
     End Sub
 
 
@@ -1090,6 +1134,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Coordinates
         item.X -= AppConfiguration.Instance.CoordinateStep
+        MessageLog.LogCommandExecuted(CommandMessages.CoordinateXSet, item.X)
     End Sub
 
 
@@ -1102,6 +1147,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Coordinates
         item.X += AppConfiguration.Instance.CoordinateStep
+        MessageLog.LogCommandExecuted(CommandMessages.CoordinateXSet, item.X)
     End Sub
 
 
@@ -1114,6 +1160,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Coordinates
         item.Y -= AppConfiguration.Instance.CoordinateStep
+        MessageLog.LogCommandExecuted(CommandMessages.CoordinateYSet, item.Y)
     End Sub
 
 
@@ -1126,6 +1173,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Coordinates
         item.Y += AppConfiguration.Instance.CoordinateStep
+        MessageLog.LogCommandExecuted(CommandMessages.CoordinateYSet, item.Y)
     End Sub
 
 
@@ -1138,6 +1186,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Coordinates
         item.Z -= AppConfiguration.Instance.CoordinateStep
+        MessageLog.LogCommandExecuted(CommandMessages.CoordinateZSet, item.Z)
     End Sub
 
 
@@ -1150,6 +1199,7 @@ Class PlayerWindow
 
         item.SoundPositionMode = SoundPositionModes.Coordinates
         item.Z += AppConfiguration.Instance.CoordinateStep
+        MessageLog.LogCommandExecuted(CommandMessages.CoordinateZSet, item.Z)
     End Sub
 
 #End Region
@@ -1213,12 +1263,14 @@ Class PlayerWindow
     Private Sub SetActiveCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
         Dim item = CType(Playlist.SelectedItem, PlayerAction)
         SetItemActiveAndPlay(item, ExecutionTypes.MainStopPrev)
+        MessageLog.LogCommandExecuted(CommandMessages.Started, item.Name)
     End Sub
 
 
     Private Sub StopActionCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
         Dim item = CType(Playlist.SelectedItem, PlayerAction)
         mAudioMgr.StopSingle(item)
+        MessageLog.LogCommandExecuted(CommandMessages.Stopped, item.Name)
     End Sub
 
 
@@ -1236,7 +1288,9 @@ Class PlayerWindow
         If selIdx < 0 OrElse selIdx >= Playlist.Items.Count() Then Return
 
         Playlist.SelectedIndex = selIdx
-        Playlist.BringItemToView(CType(Playlist.SelectedItem, PlayerAction))
+        Dim act As PlayerAction = CType(Playlist.SelectedItem, PlayerAction)
+        Playlist.BringItemToView(act)
+        MessageLog.LogCommandExecuted(CommandMessages.Selected, selIdx + 1, act.Name)
     End Sub
 
 
@@ -1284,6 +1338,29 @@ Class PlayerWindow
         Else
             ActionControl.Action = args.AddedItems.OfType(Of PlayerAction)().LastOrDefault()
         End If
+    End Sub
+
+
+    Private Sub WhatCanISayCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
+        Dim commands = mVoiceControl.VoiceOperationList.
+            Where(Function(v) v.Setting.IsEnabled AndAlso Not v.Definition.Flags.HasFlag(CommandFlags.HideFromList)).
+            Select(Function(v)
+                       If (v.Definition.ParameterType = CommandParameterTypes.ItemIndex) Then
+                           Return IIf(ActionList.Items.Count > 0, $"{v.Setting.RecognitionText} 1 to {ActionList.Items.Count}", "")
+                       ElseIf (v.Definition.ParameterType = CommandParameterTypes.ParallelIndex) Then
+                           Return IIf(ActionList.MaxParallels > 0, $"{v.Setting.RecognitionText} 1 to {ActionList.MaxParallels}", "")
+                       Else
+                           Return v.Setting.RecognitionText
+                       End If
+                   End Function)
+
+        Dim str = String.Join(", ", commands)
+        MessageLog.LogVoiceInfo(VoiceMessages.YieldCommandList, str)
+    End Sub
+
+
+    Private Sub ListTriggersCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
+        MessageLog.LogVoiceInfo(VoiceMessages.YieldTriggerList)
     End Sub
 
 #End Region
@@ -1360,7 +1437,7 @@ Class PlayerWindow
     Private Sub ActionList_MouseDoubleClick(sender As Object, args As MouseButtonEventArgs)
         Dim item = GetActionFromEventSource(args.OriginalSource)
 
-        SetItemActiveAndPlay(item, ExecutionTypes.MainStopPrev)
+        SetItemActiveAndPlay(item, ExecutionTypes.MainStopPrev, item.Equals(ReplayAction))
     End Sub
 
 #End Region
@@ -1388,10 +1465,18 @@ Class PlayerWindow
     ''' Whether the action is coming from UI and shall interrupt previous actions.
     ''' It is not, when it comes from Next button or a trigger.
     ''' </param>
-    Private Sub SetItemActiveAndPlay(item As IPlayerAction, interrupt As ExecutionTypes)
+    Private Sub SetItemActiveAndPlay(
+        item As IPlayerAction,
+        interrupt As ExecutionTypes,
+        Optional restart As Boolean = False
+        )
         If item Is Nothing Then Return
 
-        mAudioMgr.Play(item, interrupt)
+        If restart Then
+            mAudioMgr.Restart(item, ExecutionTypes.MainStopPrev)
+        Else
+            mAudioMgr.Play(item, interrupt)
+        End If
     End Sub
 
 
@@ -1402,9 +1487,11 @@ Class PlayerWindow
     Private Sub PlayNextCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
         If NextAction IsNot Nothing Then
             SetItemActiveAndPlay(NextAction, ExecutionTypes.MainContinuePrev)
+            MessageLog.LogCommandExecuted(CommandMessages.Started, NextAction.Name)
             SetPlaylistInFocus()
         ElseIf ActionList.GlobalParallelList.Any() Then
             mAudioMgr.StartWaiting()
+            MessageLog.LogCommandExecuted(CommandMessages.StartPassive)
         End If
     End Sub
 
@@ -1414,7 +1501,10 @@ Class PlayerWindow
     ''' Parallel actions are left untouched.
     ''' </summary>
     Private Sub PlayAgainCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
-        SetItemActiveAndPlay(ReplayAction, ExecutionTypes.MainStopAll)
+        If ReplayAction Is Nothing Then Return
+
+        SetItemActiveAndPlay(ReplayAction, ExecutionTypes.MainStopAll, True)
+        MessageLog.LogCommandExecuted(CommandMessages.Started, ReplayAction.Name)
         SetPlaylistInFocus()
     End Sub
 
@@ -1424,6 +1514,7 @@ Class PlayerWindow
     ''' </summary>
     Private Sub StopCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
         mAudioMgr.PauseAll()
+        MessageLog.LogCommandExecuted(CommandMessages.StoppedAll)
         SetPlaylistInFocus()
     End Sub
 
@@ -1441,7 +1532,7 @@ Class PlayerWindow
     ''' Stop all sounds, reset the player state.
     ''' </summary>
     Private Sub ResetPlaylistCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
-        InterfaceMapper.GetImplementation(Of IMessageLog)().ClearLog("Reset playlist")
+        MessageLog.ClearLog("Reset playlist", "Playlist reset")
         ResetPlayer()
         SetPlaylistInFocus()
     End Sub
@@ -1452,7 +1543,7 @@ Class PlayerWindow
     ''' unless specified by a clock or manual starts.
     ''' </summary>
     Private Sub StartPlaylistCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
-        InterfaceMapper.GetImplementation(Of IMessageLog)().ClearLog("Start playlist in passive mode")
+        MessageLog.ClearLog("Start playlist in passive mode", "Passive mode, waiting")
         mAudioMgr.StartWaiting()
         SetPlaylistInFocus()
     End Sub
@@ -1472,8 +1563,10 @@ Class PlayerWindow
 
             If act.IsPlaying Then
                 mAudioMgr.StopSingle(act)
+                MessageLog.LogCommandExecuted(CommandMessages.Stopped, act.Name)
             Else
                 mAudioMgr.Play(act, ExecutionTypes.Parallel)
+                MessageLog.LogCommandExecuted(CommandMessages.Started, act.Name)
             End If
         End If
     End Sub

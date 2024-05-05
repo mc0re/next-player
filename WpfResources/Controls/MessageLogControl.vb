@@ -1,5 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
+Imports AudioChannelLibrary
+Imports AudioPlayerLibrary
 Imports Common
 
 
@@ -7,6 +9,14 @@ Imports Common
 Public Class MessageLogControl
     Inherits Control
     Implements IMessageLog
+
+    <Flags>
+    Private Enum LogDestinations
+        MessageBox = 1
+        Speech = 2
+        All = 3
+    End Enum
+
 
 #Region " Fields "
 
@@ -24,6 +34,42 @@ Public Class MessageLogControl
 #Region " OfflineText property "
 
     Public Property OfflineText As String
+
+#End Region
+
+
+#Region " VoiceConfig property "
+
+    Private mVoiceConfig As IVoiceConfiguration
+
+
+    Public ReadOnly Property VoiceConfig As IVoiceConfiguration
+        Get
+            If mVoiceConfig Is Nothing Then
+                mVoiceConfig = InterfaceMapper.GetImplementation(Of IVoiceConfiguration)()
+            End If
+
+            Return mVoiceConfig
+        End Get
+    End Property
+
+#End Region
+
+
+#Region " Speaker property "
+
+    Private mSpeaker As ISpeechSynthesizer
+
+
+    Public ReadOnly Property Speaker As ISpeechSynthesizer
+        Get
+            If mSpeaker Is Nothing Then
+                mSpeaker = InterfaceMapper.GetImplementation(Of ISpeechSynthesizer)()
+            End If
+
+            Return mSpeaker
+        End Get
+    End Property
 
 #End Region
 
@@ -256,8 +302,9 @@ Public Class MessageLogControl
 
 #Region " IMessageLog implementation "
 
-    Public Sub ClearLog(reason As String) Implements IMessageLog.ClearLog
-        AddText("--- " & reason)
+    Public Sub ClearLog(reason As String, shortReason As String) Implements IMessageLog.ClearLog
+        AddMessage(LogDestinations.MessageBox, "--- " & reason)
+        AddMessage(LogDestinations.Speech, shortReason)
     End Sub
 
 
@@ -281,8 +328,59 @@ Public Class MessageLogControl
     End Sub
 
 
-    Public Sub LogVoiceInfo(format As String, ParamArray args() As Object) Implements IMessageLog.LogVoiceInfo
-        AddText(format, args)
+    Public Sub LogVoiceInfo(message As VoiceMessages, ParamArray args() As Object) Implements IMessageLog.LogVoiceInfo
+        Select Case message
+            Case VoiceMessages.ErrorInStartListening
+                AddTextMessage(String.Format("Error when preparing voice recognition: {0}.", args))
+                AddVoiceMessage("Error when preparing voice recognition")
+
+            Case VoiceMessages.ErrorInGrammar
+                AddTextMessage(String.Format("Error when building grammar: {0}.", args))
+                AddVoiceMessage("Error when building grammar")
+
+            Case VoiceMessages.CommandNotFound
+                AddTextMessage(String.Format("Command '{0}' not found.", args))
+                AddVoiceMessage(String.Format("Command '{0}' not found.", args))
+
+            Case VoiceMessages.RecognitionStarted
+                AddTextMessage("Voice recognition started.")
+                AddVoiceMessage("Voice recognition started.")
+
+            Case VoiceMessages.RecognitionStopped
+                AddTextMessage("Voice recognition stopped.")
+                AddVoiceMessage("Voice recognition stopped.")
+
+            Case VoiceMessages.RecognitionUpdated
+                AddTextMessage("Voice commands updated.")
+                AddVoiceMessage("Voice commands updated.")
+
+            Case VoiceMessages.CommandRecognized
+                AddTextMessage(String.Format("Voice command recognized '{0}', confidence {1:F2}.", args))
+                AddVoiceMessage(CStr(args(0)))
+
+            Case VoiceMessages.CommandRecognizedNoConfirmation
+                AddTextMessage(String.Format("Voice command recognized '{0}', confidence {1:F2}.", args))
+
+            Case VoiceMessages.CommandNotInList
+                AddTextMessage(String.Format("Voice command '{0}' not found in the list.", args))
+                AddVoiceMessage(String.Format("'{0}' not found.", args))
+
+            Case VoiceMessages.CommandRejected
+                AddTextMessage(String.Format("Voice command '{0}' rejected, confidence {1:F2}.", args))
+                AddVoiceMessage(String.Format("'{0}' rejected.", args))
+
+            Case VoiceMessages.YieldCommandList
+                AddVoiceMessage(String.Format("Possible commands: {0}", args))
+
+            Case VoiceMessages.YieldTriggerList
+                AddVoiceMessage(String.Format("Current triggers: {0}", GenerateTriggersList()))
+
+            Case VoiceMessages.NoItemSelected
+                AddVoiceMessage("No item is selected in the playlist, command ignored.")
+
+            Case Else
+                AddTextMessage(String.Format("Unknown voice message '{0}'.", message))
+        End Select
     End Sub
 
 
@@ -345,27 +443,114 @@ Public Class MessageLogControl
         Dispatcher.BeginInvoke(Sub() FigureCacheSize = size)
     End Sub
 
+
+    Public Sub LogCommandExecuted(message As CommandMessages, ParamArray args() As Object) Implements IMessageLog.LogCommandExecuted
+        Select Case message
+            Case CommandMessages.VolumeSet
+                AddVoiceMessage(String.Format("Volume {0:F2}.", args))
+
+            Case CommandMessages.PanningSet
+                AddVoiceMessage(String.Format("Panning {0:F2}.", args))
+
+            Case CommandMessages.CoordinateXSet
+                AddVoiceMessage(String.Format("X {0:F2}.", args))
+
+            Case CommandMessages.CoordinateYSet
+                AddVoiceMessage(String.Format("Y {0:F2}.", args))
+
+            Case CommandMessages.CoordinateZSet
+                AddVoiceMessage(String.Format("Z {0:F2}.", args))
+
+            Case CommandMessages.Started
+                AddVoiceMessage(String.Format("Playing {0}.", args))
+
+            Case CommandMessages.StartPassive
+                AddVoiceMessage("Waiting for command or time.")
+
+            Case CommandMessages.Stopped
+                AddVoiceMessage(String.Format("Stopped {0}.", args))
+
+            Case CommandMessages.StoppedAll
+                AddVoiceMessage("Playlist stopped.")
+
+            Case CommandMessages.Selected
+                AddVoiceMessage(String.Format("Selected {0}, {1}.", args))
+
+            Case Else
+                AddTextMessage(String.Format("Unknown command message '{0}'.", message))
+        End Select
+    End Sub
+
 #End Region
 
 
 #Region " Utility "
 
+    ''' <summary>
+    ''' Post the text onto the UI and to the voice feedback.
+    ''' </summary>
     Private Sub AddText(format As String, ParamArray args() As Object)
-        Dim str = String.Format(format, args)
-        If str = mLastLine Then Return
+        Dispatcher.BeginInvoke(Sub() AddMessage(LogDestinations.All, format, args))
+    End Sub
 
-        mLastLine = str
+
+    ''' <summary>
+    ''' Post the text onto the UI and/or to the voice feedback, depending on <paramref name="mode"/>.
+    ''' </summary>
+    Private Sub AddMessage(mode As LogDestinations, format As String, ParamArray args() As Object)
+        Dim str = String.Format(format, args)
+        If mode.HasFlag(LogDestinations.MessageBox) Then
+            AddTextMessage(str)
+        End If
+
+        If mode.HasFlag(LogDestinations.Speech) Then
+            AddVoiceMessage(str)
+        End If
+    End Sub
+
+
+    Private Sub AddTextMessage(message As String)
+        If message = mLastLine Then Return
+
+        mLastLine = message
 
         Dispatcher.BeginInvoke(
             Sub()
                 If IsLoaded Then
-                    Text = Text & str & vbCrLf
+                    Text = Text & message & vbCrLf
                     mScroller?.ScrollToEnd()
                 Else
-                    OfflineText = OfflineText & str & vbCrLf
+                    OfflineText = OfflineText & message & vbCrLf
                 End If
             End Sub)
     End Sub
+
+
+    Private Sub AddVoiceMessage(str As String)
+        Dispatcher.BeginInvoke(
+            Sub()
+                Speaker?.Speak(str)
+            End Sub)
+    End Sub
+
+
+    Private Function GenerateTriggersList() As Object
+        If NextTriggerList.Count = 0 Then Return "None"
+
+        Dim lst = NextTriggerList.Select(Function(t) $"{t.NextAction} at {TimeToHuman(t.IsAbsolute, t.NextTime)}")
+        Return String.Join(", ", lst)
+    End Function
+
+
+    Private Function TimeToHuman(isAbsolute As Boolean, time As Date) As String
+        If isAbsolute Then
+            Return "Exactly " + time.ToString("T")
+        Else
+            Dim hr = If(time.Hour > 0, $"{time.Hour} hour ", "")
+            Dim ms = $"{time.Minute}:{time.Second}"
+            Return hr + ms
+        End If
+    End Function
 
 #End Region
 

@@ -1,17 +1,18 @@
 ﻿Imports AudioChannelLibrary
+Imports Common
 
 
 Public Interface IAudioPlayer
-	Inherits IDurationPlayer
+	Inherits IDurationPlayer, IVoicePlayer
 
 #Region " Events "
 
-    ''' <summary>
-    ''' The media playback has naturally ended.
-    ''' </summary>
-    <CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly",
-                                  Justification:="I want 'args', CA wants 'e'.")>
-    Event MediaEnded(sender As Object, args As MediaEndedEventArgs)
+	''' <summary>
+	''' The media playback has naturally ended.
+	''' </summary>
+	<CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly",
+								  Justification:="I want 'args', CA wants 'e'.")>
+	Event MediaEnded(sender As Object, args As MediaEndedEventArgs)
 
 #End Region
 

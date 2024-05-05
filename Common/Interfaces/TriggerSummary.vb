@@ -21,7 +21,7 @@ Public Class TriggerSummary
     ''' Time when the trigger shall fire, can be absolute or playlist.
     ''' </summary>
     Public Property NextTime As Date
-
+    Public Property IsAbsolute As Boolean
 
     ''' <summary>
     ''' For debugging.

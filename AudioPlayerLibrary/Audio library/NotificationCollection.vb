@@ -147,8 +147,8 @@ Public Class NotificationCollection
 
         For Each notifInfo In mNotificationList.ToList()
             If Not notifInfo.IsTriggered AndAlso
-               notifInfo.IsAfter(prevWallTick, prevPlayTick) AndAlso
-               Not notifInfo.IsAfter(curWallTick, curPlayTick) Then
+               notifInfo.IsActual(prevWallTick, prevPlayTick) AndAlso
+               Not notifInfo.IsActual(curWallTick, curPlayTick, True) Then
 
                 ' Actual but not yet executed
                 If notifInfo.Trigger.IsAbsolute Then
@@ -208,7 +208,7 @@ Public Class NotificationCollection
         Dim notif = GetTriggerInfo(act)
 
         ' Only add future triggers
-        If notif IsNot Nothing AndAlso notif.IsAfter(lastWallTick, lastPlayTick) Then
+        If notif IsNot Nothing AndAlso notif.IsActual(lastWallTick, lastPlayTick) Then
             ' Clean-up the list
             RemoveTriggeredNotifications()
             ClearNotification(act)
@@ -308,7 +308,7 @@ Public Class NotificationCollection
 
 
     ''' <summary>
-    ''' Report triger status to the logger.
+    ''' Report trigger status to the logger.
     ''' </summary>
     ''' <remarks>
     ''' List all not yet started triggers.

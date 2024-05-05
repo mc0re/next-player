@@ -8,6 +8,13 @@ Public Class AudioPlaybackInfo
     Inherits PropertyChangedHelper
     Implements IPositionRelative, ISimpleVolume, ISimplePanning
 
+#Region " ActionName property (for identification) "
+
+    Public Property ActionName As String
+
+#End Region
+
+
 #Region " IsMuted property "
 
     Private mIsMuted As Boolean

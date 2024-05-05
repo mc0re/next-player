@@ -63,7 +63,8 @@ Public Module ColorUtility
 
 
 	''' <summary>
-	''' Convert any color type (String, System.Drawing.Color or System.Windows.Media.Color) to System.Windows.Media.Color.
+	''' Convert any color type (Integer, String, System.Drawing.Color or System.Windows.Media.Color)
+	''' to System.Windows.Media.Color.
 	''' </summary>
 	Public Function ColorToWpfColor(value As Object) As Color
 		Dim clr As Color
@@ -71,12 +72,19 @@ Public Module ColorUtility
 		If value Is DependencyProperty.UnsetValue Then
 			' This can happen, for instance, during ClearData
 			Return Colors.Transparent
+
+		ElseIf TypeOf value Is Integer Then
+			clr = DrawingColorToWpfColor(System.Drawing.Color.FromArgb(CInt(value)))
+
 		ElseIf TypeOf value Is String Then
 			clr = GetColorByName(value.ToString())
+
 		ElseIf TypeOf value Is System.Drawing.Color Then
 			clr = DrawingColorToWpfColor(CType(value, System.Drawing.Color))
+
 		ElseIf TypeOf value Is Color Then
 			clr = CType(value, Color)
+
 		Else
 			Throw New ArgumentException("Wrong parameter type to ColorToWpfColor")
 		End If

@@ -253,6 +253,8 @@ Public Class SpeechRecognitionControl
     ''' <returns>False if no commands, True if commands are set up, and the engine can be started</returns>
     Public Function StartListening(maxPars As Integer, maxItems As Integer) As Boolean
         Try
+            If mSpeechRecognizer Is Nothing Then Return False
+
             Dim gr = PrepareGrammar(maxPars, maxItems)
             RemoveHandler mSpeechRecognizer.RecognizerUpdateReached, AddressOf SpeechRecognitionOffHandler
             RemoveHandler mSpeechRecognizer.RecognizerUpdateReached, AddressOf SpeechRecognitionOnHandler

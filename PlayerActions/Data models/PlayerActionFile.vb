@@ -700,7 +700,9 @@ Public Class PlayerActionFile
         End If
 
         mPlayer.Execute(Sub()
-                            mPlayer.PlaybackInfo = New AudioPlaybackInfo()
+                            mPlayer.PlaybackInfo = New AudioPlaybackInfo With {
+                                .ActionName = Name
+                            }
                             SetPlaybackInfo(Volume)
                             SetPlayPosition(StartPosition)
                         End Sub)
@@ -727,7 +729,7 @@ Public Class PlayerActionFile
 
 
     ''' <summary>
-    ''' Stop prodycing the sound.
+    ''' Stop producing the sound.
     ''' </summary>
     Public Overrides Sub [Stop](intendedResume As Boolean)
         If intendedResume And mPlayer IsNot Nothing Then

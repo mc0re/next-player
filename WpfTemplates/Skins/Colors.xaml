@@ -10,6 +10,8 @@
 	<!-- General opacity settings -->
 	<system:Double x:Key="DisabledElementOpacity">0.6</system:Double>
 	<system:Double x:Key="MouseOverOpacity">0.6</system:Double>
+	<system:Double x:Key="MouseOverOnOpacity">0.8</system:Double>
+	<system:Double x:Key="MouseOverOffOpacity">0.3</system:Double>
 	<system:Double x:Key="DisabledTextOpacity">0.4</system:Double>
 	<system:Double x:Key="SkippedAudioBgOpacity">0.5</system:Double>
     <system:Double x:Key="ScrollThumbOpacity">0.25</system:Double>

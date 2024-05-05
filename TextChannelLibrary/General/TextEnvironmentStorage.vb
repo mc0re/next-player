@@ -8,7 +8,7 @@ Public Class TextEnvironmentStorage
 
 	Public Sub HideAll() Implements ITextEnvironmentStorage.HideAll
 		For Each ph In Physical
-			ph.HideText()
+			ph.SendText(Nothing)
 		Next
 	End Sub
 

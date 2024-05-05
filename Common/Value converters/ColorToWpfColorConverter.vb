@@ -24,17 +24,17 @@ Public Class ColorToWpfColorConverter
 	Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
 #Enable Warning CC0108 ' You should use nameof instead of the parameter element name string
 		If value Is Nothing Then Return Binding.DoNothing
-		Dim cOut = ColorToWpfColor(value)
+		Dim color = ColorToWpfColor(value)
 
 		Dim removeAlpha = (parameter IsNot Nothing) AndAlso CBool(parameter)
 		If removeAlpha Then
-			cOut.A = Byte.MaxValue
+			color.A = Byte.MaxValue
 		End If
 
 		If targetType Is GetType(Brush) Then
-			Return New SolidColorBrush(cOut)
+			Return New SolidColorBrush(color)
 		Else
-			Return cOut
+			Return color
 		End If
 	End Function
 
@@ -55,7 +55,9 @@ Public Class ColorToWpfColorConverter
 			clr = WpfColorToDrawingColor(CType(value, Color))
 		End If
 
-		If targetType Is GetType(Brush) Then
+		If targetType Is GetType(Integer) Then
+			Return clr.ToArgb()
+		ElseIf targetType Is GetType(Brush) Then
 			Return New SolidColorBrush(ColorToWpfColor(clr))
 		Else
 			Return clr

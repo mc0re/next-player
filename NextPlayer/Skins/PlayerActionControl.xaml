@@ -382,6 +382,7 @@
 				<Grid Name="TextInnerGrid">
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
 					
@@ -402,8 +403,63 @@
 								  SelectedValue="{Binding Channel}"
 								  ItemsSource="{res:PlaylistBinding TextLogicalChannels, Mode=OneWay}"/>
                     </DockPanel>
-					
-					<TextBox Grid.Row="1" Style="{DynamicResource TextBoxStyle}"
+
+                    <Grid Grid.Row="1" Margin="0,0,0,7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <CheckBox Style="{StaticResource CheckBoxWithTextStyle}"
+                                  Content="Scroll"
+                                  IsChecked="{Binding Scroll}"
+                                  ToolTip="Enable automatic text scrolling, like karaoke"/>
+
+                        <TextBox Style="{DynamicResource TextBoxStyle}"
+                                 Grid.Column="1"
+								 IsEnabled="{Binding Scroll}"
+								 Text="{Binding ScrollStart, Converter={StaticResource TimeSpanFormatConverter}}"
+                                 ToolTip="How long to wait before start scrolling"/>
+
+                        <TextBox Style="{DynamicResource TextBoxStyle}"
+                                 Grid.Column="2"
+                                 Margin="7,0"
+								 IsEnabled="{Binding Scroll}"
+								 Text="{Binding ScrollDuration, Converter={StaticResource TimeSpanFormatConverter}}"
+                                 ToolTip="How long to scroll after the initial wait"/>
+
+                        <CheckBox Style="{StaticResource CheckBoxWithTextStyle}"
+                                  Grid.Column="4"
+                                  Content="Hide"
+                                  IsChecked="{Binding AutoHide}"
+                                  ToolTip="Auto-hide the text window"/>
+
+                        <TextBox Style="{DynamicResource TextBoxStyle}"
+                                 Grid.Column="5"
+								 IsEnabled="{Binding AutoHide}"
+                                 Margin="7,0"
+								 Text="{Binding AutoHidePeriod, Converter={StaticResource TimeSpanFormatConverter}}"
+                                 ToolTip="Hide the text after this period (0 means 'forever')"/>
+
+                        <Slider Grid.Row="1" Grid.ColumnSpan="3" Margin="7,0"
+                                Visibility="{Binding Scroll, Converter={StaticResource BooleanToVisibleCollapsedConverter}}"
+								IsEnabled="{Binding Scroll}"
+								VerticalAlignment="Center"
+								Value="{Binding ScrollPosition, Mode=TwoWay}" Minimum="0" Maximum="1"
+								SmallChange="0.01"
+								LargeChange="0.1"
+								ToolTip="Text scrolling position"/>
+                    </Grid>
+                    
+					<TextBox Grid.Row="2" Style="{DynamicResource TextBoxStyle}"
 							 TextWrapping="Wrap" AcceptsReturn="True"
 							 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
 							 VerticalAlignment="Stretch"

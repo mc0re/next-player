@@ -53,12 +53,15 @@ Public Class NotificationInfo
 #Region " API "
 
     ''' <summary>
-    ''' Whether the notification is scheduled after the given time.
+    ''' Whether the notification is scheduled at or after the given time.
     ''' </summary>
     ''' <param name="wallTick">Absolute (wall clock) time</param>
     ''' <param name="playTick">Playlist time</param>
-    Public Function IsAfter(wallTick As Double, playTick As Double) As Boolean
-        Return If(IsAbsolute, Position > wallTick, Position > playTick)
+    ''' <param name="strictFuture">Whether to check strictly "after"; used for negative tests</param>
+    Public Function IsActual(wallTick As Double, playTick As Double, Optional strictFuture As Boolean = False) As Boolean
+        Return If(strictFuture,
+            If(IsAbsolute, Position > wallTick, Position > playTick),
+            If(IsAbsolute, Position >= wallTick, Position >= playTick))
     End Function
 
 

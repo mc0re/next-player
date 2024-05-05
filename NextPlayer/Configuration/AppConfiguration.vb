@@ -6,6 +6,8 @@ Imports AudioChannelLibrary
 Imports AudioPlayerLibrary
 Imports Common
 Imports PlayerActions
+Imports TextChannelLibrary
+Imports TextWindowLibrary
 Imports VoiceControlLibrary
 Imports WpfResources
 
@@ -616,6 +618,7 @@ Public Class AppConfiguration
         this.mCurrentEnvironment = appSett
 
         SetUpAudioLib()
+        SetUpTextLib()
         this.IsVoiceControlEnabled = appSett.IsVoiceControlEnabled
         this.VoiceControlFeedbackChannel = appSett.VoiceControlFeedbackChannel
         this.VoiceControlFeedbackVoice = appSett.VoiceControlFeedbackVoice
@@ -823,11 +826,12 @@ Public Class AppConfiguration
 #End Region
 
 
-#Region " Audio utility "
+#Region " Channel utility "
 
     Public Shared Sub SetUpAudioLib()
         If Instance Is Nothing Then Return
 
+        ' Set default interface
         InterfaceMapper.SetType(Of IAudioOutputInterface, WaveOutAudioInterface)()
 
         If CType(Instance.CurrentEnvironment, AppEnvironmentConfiguration).UseNAudio Then
@@ -839,6 +843,16 @@ Public Class AppConfiguration
             InterfaceMapper.SetType(Of IAudioPlayer, MediaPlayerWrapper)()
             InterfaceMapper.SetType(Of IVoicePlayer, MediaPlayerWrapper)()
         End If
+    End Sub
+
+
+    Public Shared Sub SetUpTextLib()
+        If Instance Is Nothing Then Return
+
+        InterfaceMapper.SetInstance(Of ITextRendererFactory)(New TextRendererFactory())
+
+        ' Set default interface
+        InterfaceMapper.SetType(Of ITextOutputInterface, RenderTextInterface)()
     End Sub
 
 #End Region

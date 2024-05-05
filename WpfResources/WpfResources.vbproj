@@ -155,6 +155,7 @@
     <Compile Include="Value converters\BooleanNotConverter.vb" />
     <Compile Include="Value converters\BooleanOrConverter.vb" />
     <Compile Include="Value converters\DelayTypeToStringConverter.vb" />
+    <Compile Include="Value converters\DoubleToMarginConverter.vb" />
     <Compile Include="Value converters\GridLengthConverter.vb" />
     <Compile Include="Value converters\IconPathConverter.vb" />
     <Compile Include="Value converters\MappingHasMoreThanOneSetConverter.vb" />

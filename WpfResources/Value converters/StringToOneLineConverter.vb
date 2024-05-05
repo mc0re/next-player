@@ -1,9 +1,15 @@
-﻿''' <summary>
+﻿Imports System.Text.RegularExpressions
+''' <summary>
 ''' Remove all CR/LFs.
 ''' </summary>
 <ValueConversion(GetType(String), GetType(String))>
 Public Class StringToOneLineConverter
 	Implements IValueConverter
+
+	Private Shared sNewLines As New Regex($"[{vbCr}{vbLf}]+[ {vbCr}{vbLf}]*")
+
+	Public Property NewLine As String = " | "
+
 
 #Region " IValueConverter implementation "
 
@@ -13,7 +19,7 @@ Public Class StringToOneLineConverter
 		Dim str = CStr(value)
 		If String.IsNullOrEmpty(str) Then Return str
 
-		str = str.Replace(vbCr, " "c).Replace(vbLf, " "c)
+		str = sNewLines.Replace(str, NewLine)
 
 		Return str
 	End Function

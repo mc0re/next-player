@@ -131,9 +131,21 @@ Public Class AudioPlaybackLibrary
 
         If act Is Nothing Then
             PlaybackStatus.NextAction = PlaylistStructureLibrary.GetFirstAction(mActionList)
-            PlaybackStatus.ActiveParallels = PlaylistStructureLibrary.GetGlobalParallels(mActionList)
         Else
             PlaybackStatus.NextAction = act.NextAction
+        End If
+
+        SetParallelActions(act)
+    End Sub
+
+
+    ''' <summary>
+    ''' The playlist structure has changed, update active actions.
+    ''' </summary>
+    Public Sub SetParallelActions(act As IPlayerAction)
+        If act Is Nothing Then
+            PlaybackStatus.ActiveParallels = PlaylistStructureLibrary.GetGlobalParallels(mActionList)
+        Else
             PlaybackStatus.ActiveParallels = act.Parallels.Concat(PlaylistStructureLibrary.GetGlobalParallels(mActionList)).ToList()
         End If
     End Sub
@@ -421,7 +433,7 @@ Public Class AudioPlaybackLibrary
             mNotifications.Clear()
         End If
 
-        ' Only add audio-related actions to the interal list
+        ' Only add audio-related actions to the internal list
         If isProducer OrElse TryCast(act, ISoundAutomation) IsNot Nothing Then
             mPlayingList.Add(act)
         End If
@@ -559,7 +571,7 @@ Public Class AudioPlaybackLibrary
     ''' A list of potential triggers are all actions that have one of <paramref name="starting"/>
     ''' as a reference.
     ''' 
-    ''' Global parallels and wall-clock dependant items
+    ''' Global parallels and wall-clock dependent items
     ''' are also added to the list of potential triggers.
     ''' 
     ''' Potential, because those already in <paramref name="starting"/> shall not come twice.

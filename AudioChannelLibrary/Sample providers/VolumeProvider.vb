@@ -1,4 +1,4 @@
-﻿Imports System.Runtime.InteropServices
+Imports System.Runtime.InteropServices
 Imports Common
 Imports NAudio.Wave
 
@@ -200,7 +200,8 @@ Public Class VolumeProvider
             samplesRead = mSource.Read(buf, 0, samplesRequired)
         Catch ex As Exception
             ' If something happened to the file reader
-            Logger.LogAudioError(ex.Message)
+            Dim log = InterfaceMapper.GetImplementation(Of IMessageLog)()
+            log.LogAudioError("Error playing '{0}': {1}", mPlaybackInfo.ActionName, ex.Message)
             Return 0
         End Try
 

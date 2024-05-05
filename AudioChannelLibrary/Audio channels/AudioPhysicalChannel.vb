@@ -5,6 +5,9 @@ Imports NAudio.Wave
 Imports NAudio.Wave.SampleProviders
 
 
+''' <summary>
+''' Manages a connection to the physical audio output device.
+''' </summary>
 <Serializable>
 <CLSCompliant(True)>
 Public Class AudioPhysicalChannel
@@ -13,7 +16,7 @@ Public Class AudioPhysicalChannel
 
 #Region " Constants "
 
-    Private Const DefaultDeviceName As String = "Audio device"
+    Private Const DefaultChannelDescription As String = "Audio device"
 
 #End Region
 
@@ -270,7 +273,7 @@ Public Class AudioPhysicalChannel
     ''' Create a default output.
     ''' </summary>
     Public Sub New()
-        Description = DefaultDeviceName
+        Description = DefaultChannelDescription
 
         Dim defAudioType = InterfaceMapper.GetImplementingType(Of IAudioOutputInterface)()
 

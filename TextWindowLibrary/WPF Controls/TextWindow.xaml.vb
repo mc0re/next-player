@@ -1,11 +1,12 @@
 ﻿Imports System.ComponentModel
-
+Imports TextChannelLibrary
 
 ''' <summary>
 ''' Show text in a coloured window.
 ''' </summary>
 <TemplatePart(Name:="PART_ToolTipContainer")>
 Public Class TextWindow
+	Implements ITextRenderer
 
 #Region " Events "
 
@@ -54,17 +55,35 @@ Public Class TextWindow
 #End Region
 
 
+#Region " Channel dependency property "
+
+	Public Shared ReadOnly ChannelProperty As DependencyProperty = DependencyProperty.Register(
+		NameOf(Channel), GetType(TextPhysicalChannel), GetType(TextWindow))
+
+
+	Public Property Channel As TextPhysicalChannel
+		Get
+			Return CType(GetValue(ChannelProperty), TextPhysicalChannel)
+		End Get
+		Set(value As TextPhysicalChannel)
+			SetValue(ChannelProperty, value)
+		End Set
+	End Property
+
+#End Region
+
+
 #Region " Configuration dependency property "
 
 	Public Shared ReadOnly ConfigurationProperty As DependencyProperty = DependencyProperty.Register(
-		NameOf(Configuration), GetType(TextWindowPhysicalChannel), GetType(TextWindow))
+		NameOf(Configuration), GetType(RenderTextInterface), GetType(TextWindow))
 
 
-	Public Property Configuration As TextWindowPhysicalChannel
+	Public Property Configuration As RenderTextInterface
 		Get
-			Return CType(GetValue(ConfigurationProperty), TextWindowPhysicalChannel)
+			Return CType(GetValue(ConfigurationProperty), RenderTextInterface)
 		End Get
-		Set(value As TextWindowPhysicalChannel)
+		Set(value As RenderTextInterface)
 			SetValue(ConfigurationProperty, value)
 			AddHandler value.PropertyChanged, AddressOf ConfigurationPropertyChanged
 		End Set
@@ -104,6 +123,24 @@ Public Class TextWindow
 #End Region
 
 
+#Region " ScrollPosition dependency property "
+
+	Public Shared ReadOnly ScrollPositionProperty As DependencyProperty = DependencyProperty.Register(
+		NameOf(ScrollPosition), GetType(Double), GetType(TextWindow))
+
+
+	Public Property ScrollPosition As Double Implements ITextRenderer.ScrollPosition
+		Get
+			Return CDbl(GetValue(ScrollPositionProperty))
+		End Get
+		Set(value As Double)
+			SetValue(ScrollPositionProperty, value)
+		End Set
+	End Property
+
+#End Region
+
+
 #Region " Init and clean-up "
 
 	Public Sub New()
@@ -112,6 +149,37 @@ Public Class TextWindow
 
 		' Add any initialization after the InitializeComponent() call.
 		mToolTipContainer = CType(FindName(NameOf(PART_ToolTipContainer)), FrameworkElement)
+	End Sub
+
+#End Region
+
+
+#Region " ITextRenderer API "
+
+	Private Sub ShowText(text As String) Implements ITextRenderer.Show
+		' To switch focus back
+		Dim oldWin = Application.Current.Windows.OfType(Of Window)().SingleOrDefault(Function(w) w.IsActive)
+
+		Me.Text = text
+
+		If Not IsVisible Then
+			Show()
+		End If
+
+		Topmost = True
+		Channel.IsActive = True
+
+		' Set the focus back to main window
+		If oldWin IsNot Nothing Then
+			oldWin.Focus()
+		End If
+	End Sub
+
+
+	Private Sub HideText() Implements ITextRenderer.Hide
+		Text = String.Empty
+		Hide()
+		Channel.IsActive = False
 	End Sub
 
 #End Region
@@ -126,12 +194,22 @@ Public Class TextWindow
 
 
 	Private Sub MouseDownHandler(sender As Object, args As MouseButtonEventArgs) Handles Me.MouseDown
-		mMouseDownCoords = args.GetPosition(Application.Current.MainWindow)
+		Try
+			mMouseDownCoords = Mouse.GetPosition(Application.Current.MainWindow)
+		Catch
+			' Swallow
+		End Try
 	End Sub
 
 
 	Private Sub MouseMoveHandler(sender As Object, args As MouseEventArgs) Handles Me.MouseMove
-		Dim mouseCoords = args.GetPosition(Application.Current.MainWindow)
+		Dim mouseCoords As Point
+		Try
+			mouseCoords = Mouse.GetPosition(Application.Current.MainWindow)
+		Catch
+			Return
+		End Try
+
 		Dim moved = mouseCoords - mMouseDownCoords
 
 		If (args.LeftButton <> MouseButtonState.Pressed AndAlso

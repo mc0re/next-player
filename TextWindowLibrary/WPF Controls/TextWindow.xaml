@@ -20,22 +20,86 @@
 		<common:ColorToWpfColorConverter x:Key="ColorConverter"/>
 		<common:StringFormatConverter x:Key="StringFormatConverter"/>
         <res:BooleanToVisibilityConverter x:Key="BooleanToVisibleCollapsedConverter"/>
+        <res:DoubleToMarginConverter x:Key="DoubleToMarginConverter"/>
 
+
+        <Style x:Key="DisplayText" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+            <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource TemplatedParent}}"/>
+        </Style>
+        
+        
+        <ControlTemplate x:Key="ZoomedTextNoScroll" TargetType="{x:Type txt:ScalableTextControl}">
+            <Viewbox Stretch="Uniform">
+                <TextBlock Style="{StaticResource DisplayText}"
+                           Foreground="{TemplateBinding Foreground}"
+                           Text="{Binding Text}"/>
+            </Viewbox>
+		</ControlTemplate>
 		
-        <ControlTemplate x:Key="ShowAllText" TargetType="{x:Type txt:ScalableTextControl}">
-			<Border Background="{TemplateBinding Background}">
-				<Viewbox Stretch="Uniform">
-					<TextBlock Foreground="{TemplateBinding Foreground}"
-							   Text="{Binding Text}"/>
-				</Viewbox>
-			</Border>
+		
+        <ControlTemplate x:Key="FixedTextNoScroll" TargetType="{x:Type txt:ScalableTextControl}">
+            <TextBlock Style="{StaticResource DisplayText}"
+                       FontSize="{Binding Configuration.FontSize}"
+					   Text="{Binding Text}"/>
+		</ControlTemplate>
+		
+		
+        <ControlTemplate x:Key="FixedTextHorizontalScroll" TargetType="{x:Type txt:ScalableTextControl}">
+            <ScrollViewer x:Name="PART_ScrollViewer"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Disabled">
+                <TextBlock Style="{StaticResource DisplayText}"
+						   FontSize="{Binding Configuration.FontSize}"
+						   Text="{Binding Text, Converter={StaticResource StringToOneLineConverter}}"/>
+            </ScrollViewer>
+		</ControlTemplate>
+		
+		
+        <ControlTemplate x:Key="FixedTextVerticalScroll" TargetType="{x:Type txt:ScalableTextControl}">
+            <ScrollViewer x:Name="PART_ScrollViewer"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Hidden">
+				<TextBlock Style="{StaticResource DisplayText}"
+						   FontSize="{Binding Configuration.FontSize}"
+						   Text="{Binding Text}"
+                           TextWrapping="Wrap"/>
+            </ScrollViewer>
 		</ControlTemplate>
 		
 		
 		<Style x:Key="ScalableTextStyle" TargetType="{x:Type txt:ScalableTextControl}">
 			<Setter Property="Foreground" Value="{Binding Configuration.Foreground, Converter={StaticResource ColorConverter}}"/>
-			<Setter Property="Background" Value="{Binding Configuration.Background, Converter={StaticResource ColorConverter}}"/>
-			<Setter Property="Template" Value="{DynamicResource ShowAllText}"/>
+            <Setter Property="Template" Value="{DynamicResource ZoomedTextNoScroll}"/>
+            
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Configuration.ScrollMode}" Value="None"/>
+                        <Condition Binding="{Binding Configuration.IsDynamic}" Value="False"/>
+                    </MultiDataTrigger.Conditions>
+
+                    <Setter Property="Template" Value="{DynamicResource FixedTextNoScroll}"/>
+                </MultiDataTrigger>
+
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Configuration.ScrollMode}" Value="Horizontal"/>
+                        <Condition Binding="{Binding Configuration.IsDynamic}" Value="False"/>
+                    </MultiDataTrigger.Conditions>
+
+                    <Setter Property="Template" Value="{DynamicResource FixedTextHorizontalScroll}"/>
+                </MultiDataTrigger>
+
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Configuration.ScrollMode}" Value="Vertical"/>
+                        <Condition Binding="{Binding Configuration.IsDynamic}" Value="False"/>
+                    </MultiDataTrigger.Conditions>
+
+                    <Setter Property="Template" Value="{DynamicResource FixedTextVerticalScroll}"/>
+                </MultiDataTrigger>
+            </Style.Triggers>
 		</Style>
 	</Window.Resources>
 	
@@ -47,28 +111,41 @@
 
 	<Border Name="PART_ToolTipContainer"
 			ToolTipService.IsEnabled="False"
-			ToolTipService.InitialShowDelay="0">
+			ToolTipService.InitialShowDelay="0"
+			Background="{Binding Configuration.Background, Converter={StaticResource ColorConverter}}"
+            Padding="{Binding Configuration.Margin, Converter={StaticResource DoubleToMarginConverter}}">
 
         <Border.ToolTip>
 			<ToolTip>
 				<ToolTip.Content>
-					<TextBlock>
-						<TextBlock.Text>
-							<MultiBinding Converter="{StaticResource StringFormatConverter}"
-										  ConverterParameter="Pos ({0}, {1}), size {2} x {3}">
+                    <StackPanel>
+						<TextBlock>
+							<TextBlock.Text>
+								<MultiBinding Converter="{StaticResource StringFormatConverter}"
+											  ConverterParameter="Position (click): {0}, {1}">
 
-								<Binding Path="Configuration.Left"/>
-								<Binding Path="Configuration.Top"/>
-								<Binding Path="Configuration.Width"/>
-								<Binding Path="Configuration.Height"/>
-							</MultiBinding>
-						</TextBlock.Text>
-					</TextBlock>
+									<Binding Path="Configuration.Left"/>
+									<Binding Path="Configuration.Top"/>
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+						<TextBlock>
+							<TextBlock.Text>
+								<MultiBinding Converter="{StaticResource StringFormatConverter}"
+											  ConverterParameter="Size (right-click): {0} x {1}">
+
+									<Binding Path="Configuration.Width"/>
+									<Binding Path="Configuration.Height"/>
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+                    </StackPanel>
 				</ToolTip.Content>
 			</ToolTip>
 		</Border.ToolTip>
 
-        <txt:ScalableTextControl Style="{DynamicResource ScalableTextStyle}"
-								 Text="{Binding Text}"/>
+        <txt:ScalableTextControl Style="{StaticResource ScalableTextStyle}"
+								 Text="{Binding Text}"
+                                 Position="{Binding ScrollPosition}"/>
 	</Border>
 </Window>

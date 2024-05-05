@@ -479,9 +479,12 @@ Public Class PlaylistControl
         End If
 
         Dim container = ItemContainerGenerator.ContainerFromItem(act)
-        Dim actListItem = TryCast(container, PlaylistItem)
-        If actListItem Is Nothing Then Return
+        If container Is Nothing Then
+            ' Can happen if an action was deleted in the meantime
+            Return
+        End If
 
+        Dim actListItem = CType(container, PlaylistItem)
         actListItem.BringIntoView()
         mLastItemInFocus = actListItem
     End Sub

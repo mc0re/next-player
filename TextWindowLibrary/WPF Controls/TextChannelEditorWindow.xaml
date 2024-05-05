@@ -130,7 +130,8 @@
 						   VerticalAlignment="Center"
 						   Text="Scroll"/>
                 <local:ScrollModeControl Style="{DynamicResource ScrollModesControlStyle}"
-                                          Grid.Row="3" Grid.Column="1"/>
+                                         Grid.Row="3" Grid.Column="1"
+                                         IsEnabled="{Binding IsDynamic, Converter={StaticResource BooleanNotConverter}}"/>
             </Grid>
         </DataTemplate>
     </Window.Resources>

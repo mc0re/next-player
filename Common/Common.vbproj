@@ -79,6 +79,8 @@
     </Compile>
     <Compile Include="Interfaces\CommandMessages.vb" />
     <Compile Include="Interfaces\IPlaylistAction.vb" />
+    <Compile Include="Interfaces\IPlaylistConfigurationItem.vb" />
+    <Compile Include="Interfaces\ISkinConfiguration.vb" />
     <Compile Include="Interfaces\ISpeechSynthesizer.vb" />
     <Compile Include="Interfaces\ITimeService.vb" />
     <Compile Include="Interfaces\IVoicePlayer.vb" />

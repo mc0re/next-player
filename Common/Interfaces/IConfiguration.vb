@@ -7,7 +7,7 @@
 Public Interface IConfiguration
 	Inherits IVolumeConfiguration, IEffectDurationConfiguration
 
-	ReadOnly Property Skin As Object    ' SkinConfiguration
+	ReadOnly Property Skin As ISkinConfiguration
 
 	Property CurrentActionCollection As IPlaylist
 
@@ -15,6 +15,16 @@ Public Interface IConfiguration
 
 	Property CurrentEnvironment As INotifyPropertyChanged
 
+
+	''' <summary>
+	''' Adjust the list of environments.
+	''' </summary>
+	Sub SetEnvironments(environmentList As IEnumerable(Of IPlaylistConfigurationItem))
+
+
+	''' <summary>
+	''' The name of the current environment.
+	''' </summary>
 	Property EnvironmentName As String
 
 End Interface

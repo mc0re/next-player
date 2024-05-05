@@ -1,7 +1,5 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
-Imports AudioChannelLibrary
-Imports AudioPlayerLibrary
 Imports Common
 
 

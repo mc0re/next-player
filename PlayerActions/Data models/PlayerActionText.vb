@@ -275,6 +275,8 @@ Public Class PlayerActionText
         ' Avoid occasional Null-reference exceptions
         If ch Is Nothing Then Return
 
+        ch.SetClient(Me)
+
         If String.IsNullOrEmpty(Text) Then
             ch.HideText()
             MyBase.Stop(False)

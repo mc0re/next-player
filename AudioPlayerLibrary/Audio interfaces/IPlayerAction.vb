@@ -1,13 +1,10 @@
-﻿Public Interface IPlayerAction
-    Inherits IDurationElement
+﻿Imports Common
+
+
+Public Interface IPlayerAction
+    Inherits IPlaylistAction, IDurationElement
 
 #Region " Essential properties "
-
-    ''' <summary>
-    ''' Display name.
-    ''' </summary>
-    Property Name As String
-
 
     ''' <summary>
     ''' Whether an action can be executed by calling Start.
@@ -165,19 +162,6 @@
     ''' Prepare before the Start (when starting, not resuming).
     ''' </summary>
     Sub PrepareStart()
-
-
-    ''' <summary>
-    ''' Start or resume the sound producing / automation.
-    ''' </summary>
-    Sub Start()
-
-
-    ''' <summary>
-    ''' Stop producing the sound / automation and any timers.
-    ''' </summary>
-    ''' <param name="intendedResume">Whether a resume might be expected. If not, shut down.</param>
-    Sub [Stop](intendedResume As Boolean)
 
 
     ''' <summary>

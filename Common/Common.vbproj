@@ -78,6 +78,7 @@
       <Link>CommonAssemblyInfo.vb</Link>
     </Compile>
     <Compile Include="Interfaces\CommandMessages.vb" />
+    <Compile Include="Interfaces\IPlaylistAction.vb" />
     <Compile Include="Interfaces\ISpeechSynthesizer.vb" />
     <Compile Include="Interfaces\ITimeService.vb" />
     <Compile Include="Interfaces\IVoicePlayer.vb" />

@@ -53,19 +53,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.Interop, Version=17.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.VisualStudio.Interop.17.8.37221\lib\net472\Microsoft.VisualStudio.Interop.dll</HintPath>
+      <HintPath>..\packages\Microsoft.VisualStudio.Interop.17.9.37000\lib\net472\Microsoft.VisualStudio.Interop.dll</HintPath>
     </Reference>
-    <Reference Include="NetOffice, Version=1.9.4.0, Culture=neutral, PublicKeyToken=297f57b43ae7c1de, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetOfficeFw.Core.1.9.4\lib\net462\NetOffice.dll</HintPath>
+    <Reference Include="NetOffice, Version=1.9.5.0, Culture=neutral, PublicKeyToken=297f57b43ae7c1de, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetOfficeFw.Core.1.9.5\lib\net462\NetOffice.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="netstandard" />
-    <Reference Include="OfficeApi, Version=1.9.4.0, Culture=neutral, PublicKeyToken=297f57b43ae7c1de, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetOfficeFw.Office.1.9.4\lib\net462\OfficeApi.dll</HintPath>
+    <Reference Include="OfficeApi, Version=1.9.5.0, Culture=neutral, PublicKeyToken=297f57b43ae7c1de, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetOfficeFw.Office.1.9.5\lib\net462\OfficeApi.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="PowerPointApi, Version=1.9.4.0, Culture=neutral, PublicKeyToken=297f57b43ae7c1de, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetOfficeFw.PowerPoint.1.9.4\lib\net462\PowerPointApi.dll</HintPath>
+    <Reference Include="PowerPointApi, Version=1.9.5.0, Culture=neutral, PublicKeyToken=297f57b43ae7c1de, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetOfficeFw.PowerPoint.1.9.5\lib\net462\PowerPointApi.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -78,8 +78,8 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="VBIDEApi, Version=1.9.4.0, Culture=neutral, PublicKeyToken=297f57b43ae7c1de, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetOfficeFw.VBIDE.1.9.4\lib\net462\VBIDEApi.dll</HintPath>
+    <Reference Include="VBIDEApi, Version=1.9.5.0, Culture=neutral, PublicKeyToken=297f57b43ae7c1de, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetOfficeFw.VBIDE.1.9.5\lib\net462\VBIDEApi.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

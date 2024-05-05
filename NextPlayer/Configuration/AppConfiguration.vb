@@ -1,5 +1,4 @@
-﻿Imports System.Collections.ObjectModel
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports System.IO
 Imports System.Reflection
 Imports AudioChannelLibrary
@@ -8,7 +7,6 @@ Imports Common
 Imports PlayerActions
 Imports TextChannelLibrary
 Imports TextWindowLibrary
-Imports VoiceControlLibrary
 Imports WpfResources
 
 
@@ -197,7 +195,7 @@ Public Class AppConfiguration
     End Property
 
 
-    Public ReadOnly Property SkinGeneric As Object Implements IConfiguration.Skin
+    Public ReadOnly Property SkinGeneric As ISkinConfiguration Implements IConfiguration.Skin
         Get
             Return Skin
         End Get
@@ -411,13 +409,19 @@ Public Class AppConfiguration
     End Property
 
 
+    ''' <summary>
+    ''' Set the current environment to the one given by <see cref="EnvironmentName"/> property.
+    ''' If not found, set to the first one.
+    ''' </summary>
     Private Shared Sub EnvironmentNameChanged(obj As DependencyObject, args As DependencyPropertyChangedEventArgs)
         Dim this = CType(obj, AppConfiguration)
         Dim newName = CStr(args.NewValue)
         this.SaveIfNeeded(Function() this.EnvironmentName)
 
-        Dim env = this.EnvironmentSettingsList.FirstOrDefault(Function(e) e.Name = newName)
-        If env Is Nothing Then env = this.EnvironmentSettingsList.First()
+        Dim env = If(this.EnvironmentSettingsList.FirstOrDefault(Function(e) e.Name = newName),
+                     this.EnvironmentSettingsList.FirstOrDefault())
+
+        If env Is Nothing Then Return
         If ReferenceEquals(this.CurrentEnvironment, env) Then Return
 
         this.CurrentEnvironment = env
@@ -677,7 +681,7 @@ Public Class AppConfiguration
 #End Region
 
 
-#Region " Settings utility "
+#Region " AppSettings utility "
 
     Private mLoading As Boolean
 
@@ -810,6 +814,33 @@ Public Class AppConfiguration
         If pi.GetCustomAttribute(Of SaveOnChangeAttribute)() Is Nothing Then Return
 
         SaveSettings()
+    End Sub
+
+#End Region
+
+
+#Region " Environment methods "
+
+    Public Sub SetEnvironments(envList As IEnumerable(Of IPlaylistConfigurationItem)) Implements IConfiguration.SetEnvironments
+        Dim oldName = EnvironmentName
+        Dim oldEnv = If(mCurrentEnvironment, New AppEnvironmentConfiguration)
+
+        EnvironmentSettingsList.Clear()
+
+        For Each envName In envList.Select(Function(e) e.Name).Distinct()
+            Dim envSett = oldEnv.Clone(Of AppEnvironmentConfiguration)()
+            envSett.Name = envName
+            EnvironmentSettingsList.Add(envSett)
+        Next
+
+        ' None defined - create a default one
+        If EnvironmentSettingsList.IsEmpty() Then
+            EnvironmentSettingsList.Add(oldEnv.Clone(Of AppEnvironmentConfiguration)())
+        End If
+
+        If EnvironmentSettingsList.All(Function(e) e.Name <> oldName) Then
+            EnvironmentName = EnvironmentSettingsList.First().Name
+        End If
     End Sub
 
 

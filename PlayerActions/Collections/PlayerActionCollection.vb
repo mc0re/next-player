@@ -856,8 +856,9 @@ Public Class PlayerActionCollection
         AudioLogicalChannels.AfterLoad()
         TextLogicalChannels.AfterLoad()
 
-        ' Set current environment
+        ' Adjust environments
         Dim config = InterfaceMapper.GetImplementation(Of IConfiguration)()
+        config.SetEnvironments(EnvironmentList)
         EnvironmentName = config.EnvironmentName
 
         ' Adjust audio file paths

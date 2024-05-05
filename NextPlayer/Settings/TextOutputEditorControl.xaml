@@ -71,7 +71,10 @@
 					   VerticalAlignment="Center" HorizontalAlignment="Center"
 					   Text="{Binding Channel}"/>
 			<CheckBox Grid.Column="1" Style="{DynamicResource CheckBoxNoTextStyle}" IsChecked="{Binding IsEnabled}"/>
-            <TextBox Grid.Column="2" Style="{DynamicResource TextBoxStyle}" Text="{Binding Description}"/>
+            <TextBox Grid.Column="2" Style="{DynamicResource TextBoxStyle}"
+                     Background="{Binding TextInterface.Background, Converter={StaticResource ColorToWpfColorConverter}}"
+                     Foreground="{Binding TextInterface.Foreground, Converter={StaticResource ColorToWpfColorConverter}}"
+                     Text="{Binding Description}"/>
 
             <!-- Interface type selector -->
             <ComboBox Grid.Column="3" Style="{DynamicResource ComboBoxStyle}"

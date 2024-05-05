@@ -12,7 +12,6 @@ Imports Common
 Imports PlayerActions
 Imports Serilog
 Imports TextChannelLibrary
-Imports TextWindowLibrary
 Imports VoiceControlLibrary
 Imports WpfResources
 

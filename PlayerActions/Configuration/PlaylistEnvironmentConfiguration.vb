@@ -10,6 +10,7 @@ Imports LicenseLibrary
 <Serializable>
 Public Class PlaylistEnvironmentConfiguration
 	Inherits PropertyChangedHelper
+	Implements IPlaylistConfigurationItem
 
 #Region " Fields "
 
@@ -23,10 +24,8 @@ Public Class PlaylistEnvironmentConfiguration
 	Private mName As String
 
 
-	''' <summary>
-	''' Configuration name.
-	''' </summary>
-	Public Property Name As String
+	''' <inheritdoc/>
+	Public Property Name As String Implements IPlaylistConfigurationItem.Name
 		Get
 			Return mName
 		End Get

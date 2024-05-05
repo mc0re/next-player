@@ -9,6 +9,7 @@ Imports System.IO
 ''' </summary>
 Public Class SkinConfiguration
 	Inherits PropertyChangedHelper
+	Implements ISkinConfiguration
 
 #Region " Common settings "
 

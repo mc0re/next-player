@@ -92,7 +92,6 @@ Public Class PlaylistItem
 		NameOf(DragPositionBrush), GetType(Brush), GetType(PlaylistItem))
 
 
-	<CodeAnalysis.SuppressMessage("Design", "CC0021:You should use nameof instead of the parameter element name string", Justification:="Brushes is a category")>
 	<Category("Brushes"), Description("Points to the target of drag-and-drop action")>
 	Public Property DragPositionBrush As Brush
 		Get

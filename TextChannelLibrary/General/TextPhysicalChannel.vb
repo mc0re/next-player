@@ -96,15 +96,12 @@ Public Class TextPhysicalChannel
             mTextInterface.SetChannel(Me)
             RaisePropertyChanged(NameOf(TextInterface))
 
-            Dim implInfo = TextInterfaceTypeList.FirstOrDefault(
-                Function(m) m.ImplementingType = value.GetType())
-
-            If implInfo Is Nothing Then
-                implInfo = New TypeImplementationInfo With {
+            Dim implInfo = If(TextInterfaceTypeList.FirstOrDefault(
+                Function(m) m.ImplementingType = value.GetType()),
+                New TypeImplementationInfo With {
                     .Name = "Undefined " & value.GetType().Name,
                     .ImplementingType = value.GetType()
-                    }
-            End If
+                    })
 
             TextInterfaceType = implInfo
         End Set

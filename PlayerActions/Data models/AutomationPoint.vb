@@ -6,11 +6,13 @@ Imports Common
 ''' A single point on an automation curve.
 ''' X - time, Y - value.
 ''' </summary>
+<Serializable>
 Public Class AutomationPoint
     Implements INotifyPropertyChanged
 
 #Region " INotifyPropertyChanged implementation "
 
+    <NonSerialized>
     Public Event PropertyChanged(sender As Object, e As PropertyChangedEventArgs) Implements INotifyPropertyChanged.PropertyChanged
 
 

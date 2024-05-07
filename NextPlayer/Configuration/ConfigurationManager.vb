@@ -111,17 +111,14 @@ Public Class ConfigurationManager
 		Dim coll = AppConfiguration.Instance.CurrentActionCollectionTyped.EnvironmentList
 
 		Dim existingForEnv = coll.FirstOrDefault(Function(c) c.Name = envName)
-		Dim existingForMachine = coll.FirstOrDefault(Function(c) c.MachineName = machineName)
+		Dim existingForMachine = If(coll.FirstOrDefault(Function(c) c.MachineName = machineName), New PlaylistEnvironmentConfiguration())
 
-		If existingForMachine Is Nothing Then
-			existingForMachine = New PlaylistEnvironmentConfiguration()
-		End If
-
-		Dim newEnv = If(existingForEnv Is Nothing,
+		Dim newEnv = If(existingForEnv IsNot Nothing,
+			existingForEnv.Clone(),
 			New PlaylistEnvironmentConfiguration() With {
 				.MachineId = existingForMachine.MachineId,
 				.MachineName = existingForMachine.MachineName
-			}, existingForEnv.Clone())
+			})
 
 		coll.Add(newEnv)
 		RaiseEvent ConfigurationChanged()

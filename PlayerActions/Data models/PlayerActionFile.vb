@@ -10,6 +10,7 @@ Imports Common
 ''' <summary>
 ''' An action to play audio from a file.
 ''' </summary>
+<Serializable()>
 Public Class PlayerActionFile
     Inherits PlayerAction
     Implements IInputFile, ISoundProducer, IPositionRelative
@@ -25,6 +26,7 @@ Public Class PlayerActionFile
 
 #Region " ISoundProducer.PositionChanged implementation "
 
+    <NonSerialized()>
     Public Event PositionChanged(sender As ISoundProducer) Implements ISoundProducer.PositionChanged
 
 #End Region
@@ -32,6 +34,7 @@ Public Class PlayerActionFile
 
 #Region " ISoundProducer.EndReached implementation "
 
+    <NonSerialized()>
     Public Event EndReached(sender As ISoundProducer) Implements ISoundProducer.EndReached
 
 
@@ -442,7 +445,7 @@ Public Class PlayerActionFile
         mEffectiveVolume = newVolume
 
         Dim lastEffect = (From ef In Effects Where ef.IsPlaying).LastOrDefault()
-        If lastEffect IsNot Nothing AndAlso sender IsNot Nothing AndAlso Not sender Is lastEffect Then
+        If lastEffect IsNot Nothing AndAlso sender IsNot Nothing AndAlso sender IsNot lastEffect Then
             Return
         End If
 

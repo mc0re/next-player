@@ -4,6 +4,7 @@
 ''' <summary>
 ''' This is a sorted by X list of AutomationPoint objects.
 ''' </summary>
+<Serializable>
 Public Class AutomationPointCollection
 	Inherits BindingList(Of AutomationPoint)
 
@@ -15,7 +16,7 @@ Public Class AutomationPointCollection
 		If pt.Y > 1 Then pt.Y = 1
 
 		mSortedList.Add(pt)
-		mSortedList = mSortedList.OrderBy(Of Double)(Function(p) p.X).ToList()
+		mSortedList = mSortedList.OrderBy(Function(p) p.X).ToList()
 
 		RaiseListChangedEvents = False
 		MyBase.Clear()

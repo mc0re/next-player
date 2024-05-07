@@ -123,9 +123,7 @@ Public Class PlaylistEnvironmentConfiguration
 		RaisePropertyChanged(NameOf(Room))
 		If Not mIsLoaded Then Return
 
-		If AudioOutput IsNot Nothing Then
-			AudioOutput.SetRoom(mRoom)
-		End If
+		AudioOutput?.SetRoom(mRoom)
 	End Sub
 
 #End Region

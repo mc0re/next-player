@@ -9,6 +9,9 @@ Imports Common
 ''' <summary>
 ''' An automation base class, regulating a parameter over time.
 ''' </summary>
+<Serializable>
+<XmlInclude(GetType(PlayerActionPanningAutomation))>
+<XmlInclude(GetType(PlayerActionEffect))>
 Public MustInherit Class PlayerActionAutomation
     Inherits PlayerAction
     Implements ISoundAutomation
@@ -206,19 +209,16 @@ Public MustInherit Class PlayerActionAutomation
     ''' <remarks>The one playing longest from now is the main timeline.</remarks>
     Private Function AssignTimeline() As Boolean
         Dim targets = TargetList.ToList()
-        Dim tline = (
+        Dim tline = If((
             From target In targets
             Where target.IsPlaying AndAlso target.ExecutionType <> ExecutionTypes.Parallel
             Order By target.Duration - target.PlayPosition Descending
-        ).FirstOrDefault()
-
-        If tline Is Nothing Then
-            tline = (
-                From target In targets
-                Where target.IsPlaying AndAlso target.ExecutionType = ExecutionTypes.Parallel
-                Order By target.Duration - target.PlayPosition Descending
-            ).FirstOrDefault()
-        End If
+        ).FirstOrDefault(),
+        (
+            From target In targets
+            Where target.IsPlaying AndAlso target.ExecutionType = ExecutionTypes.Parallel
+            Order By target.Duration - target.PlayPosition Descending
+        ).FirstOrDefault())
 
         TimelineTarget = tline
         Return TimelineTarget IsNot Nothing
@@ -266,7 +266,6 @@ Public MustInherit Class PlayerActionAutomation
     ''' <summary>
     ''' Get interpolated value.
     ''' </summary>
-    <CodeAnalysis.SuppressMessage("Style", "CC0013:Use Ternary operator.", Justification:="To avoid casting issues")>
     Protected Function GetAnimationValue(pos As Double, pointList As AutomationPointCollection) As Double
         Dim prevSet = False
         Dim prevPt As AutomationPoint = pointList.FirstOrDefault()

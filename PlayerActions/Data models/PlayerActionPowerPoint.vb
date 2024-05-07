@@ -6,6 +6,7 @@ Imports AudioPlayerLibrary
 ''' <summary>
 ''' Sets a given slide on a running PowerPoint instance.
 ''' </summary>
+<Serializable()>
 Public Class PlayerActionPowerPoint
 	Inherits PlayerAction
 	Implements ICommandIssuer

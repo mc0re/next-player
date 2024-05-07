@@ -170,9 +170,7 @@ Public Class TextWindow
 		Channel.IsActive = True
 
 		' Set the focus back to main window
-		If oldWin IsNot Nothing Then
-			oldWin.Focus()
-		End If
+		oldWin?.Focus()
 	End Sub
 
 

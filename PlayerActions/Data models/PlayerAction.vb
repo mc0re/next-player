@@ -19,16 +19,18 @@ Imports Common
 ''' - Add specific report line(s) to standard templates
 ''' </remarks>
 <Serializable()>
-<XmlInclude(GetType(PlayerActionFile))>
-<XmlInclude(GetType(PlayerActionEffect))>
-<XmlInclude(GetType(PlayerActionPowerPoint))>
+<XmlInclude(GetType(PlayerActionAutomation))>
 <XmlInclude(GetType(PlayerActionComment))>
+<XmlInclude(GetType(PlayerActionEffect))>
+<XmlInclude(GetType(PlayerActionFile))>
+<XmlInclude(GetType(PlayerActionPowerPoint))>
 <XmlInclude(GetType(PlayerActionText))>
 Public MustInherit Class PlayerAction
     Implements INotifyPropertyChanged, IDurationElement, IPlayerAction, ICloneable
 
 #Region " INotifyPropertyChanged implementation "
 
+    <NonSerialized()>
     Public Event PropertyChanged(sender As Object, args As PropertyChangedEventArgs) Implements INotifyPropertyChanged.PropertyChanged
 
 
@@ -375,7 +377,6 @@ Public MustInherit Class PlayerAction
 #Region " DelayReferenceName read-only notifying property "
 
     <XmlIgnore()>
-    <CodeAnalysis.SuppressMessage("Style", "CC0013:Use Ternary operator.", Justification:="To avoid casting issues")>
     Public ReadOnly Property DelayReferenceName As String
         Get
             If ReferenceAction IsNot Nothing Then

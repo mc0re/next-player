@@ -53,7 +53,7 @@ Public Class SpeechRecognitionControl
     ''' <summary>
     ''' Common target control for all commands.
     ''' </summary>
-    Private mCommandTarget As Control
+    Private ReadOnly mCommandTarget As Control
 
 #End Region
 

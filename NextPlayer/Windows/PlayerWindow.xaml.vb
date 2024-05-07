@@ -88,8 +88,8 @@ Class PlayerWindow
 
     Private Shared ReadOnly ActionListPropertyKey As DependencyPropertyKey = DependencyProperty.RegisterReadOnly(
         NameOf(ActionList), GetType(PlayerActionCollection), GetType(PlayerWindow),
-        New PropertyMetadata(Nothing, New PropertyChangedCallback(AddressOf ActionListChanged)))
-
+        New PropertyMetadata(Nothing, New PropertyChangedCallback(AddressOf ActionListChanged),
+                             New CoerceValueCallback(AddressOf ActionListNotNull)))
 
     Public Shared ReadOnly ActionListProperty As DependencyProperty = ActionListPropertyKey.DependencyProperty
 
@@ -115,11 +115,17 @@ Class PlayerWindow
 
         this.mActionList = value
         this.mAudioMgr.SetPlaylist(value)
-
-        If this.mVoiceControl IsNot Nothing Then
-            this.mVoiceControl.Restart(value.MaxParallels, value.Items.Count)
-        End If
+        this.mVoiceControl?.Restart(value.MaxParallels, value.Items.Count)
     End Sub
+
+
+    Private Shared Function ActionListNotNull(d As DependencyObject, baseValue As Object) As Object
+        If baseValue Is Nothing Then
+            Return New PlayerActionCollection()
+        End If
+
+        Return baseValue
+    End Function
 
 #End Region
 
@@ -601,14 +607,15 @@ Class PlayerWindow
         MessageLog.ClearLog("Loading " & fileName, "Loading playlist")
 
         ActionList = PlayerActionCollection.LoadFromFile(fileName)
-        If ActionList Is Nothing Then
+        ResetPlayer()
+        IsListModified = False
+
+        If ActionList Is Nothing OrElse ActionList.Items.Count = 0 Then
             mLogger.Information($"Loaded playlist '{fileName}', empty.")
             Return False
         End If
 
         mLogger.Information($"Loaded playlist '{fileName}', {ActionList.Items.Count} items.")
-        IsListModified = False
-        ResetPlayer()
         AppConfiguration.Instance.LastPlaylistFile = fileName
 
         Return True
@@ -637,7 +644,6 @@ Class PlayerWindow
     ''' <summary>
     ''' Save the current playlist to the given file.
     ''' </summary>
-    <CodeAnalysis.SuppressMessage("Microsoft.Design", "CC0004:Catch block cannot be empty", Justification:="<Pending>")>
     Private Function SavePlaylist(fileName As String) As Boolean
         Try
             If File.Exists(fileName) Then
@@ -1642,7 +1648,6 @@ Class PlayerWindow
     ''' <summary>
     ''' Show About dialog
     ''' </summary>
-    <CodeAnalysis.SuppressMessage("Microsoft.Design", "CC0004:Catch block cannot be empty", Justification:="<Pending>")>
     Private Sub ShowAboutCommandExecuted(sender As Object, args As ExecutedRoutedEventArgs)
         Dim wnd As New AboutWindow()
         AddHandler wnd.Closed, AddressOf DialogClosedHandler

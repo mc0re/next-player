@@ -6,6 +6,7 @@ Imports Common
 ''' <summary>
 ''' An audio effect, regulating panning over time.
 ''' </summary>
+<Serializable>
 Public Class PlayerActionPanningAutomation
     Inherits PlayerActionAutomation
 

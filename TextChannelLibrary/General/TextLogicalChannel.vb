@@ -31,10 +31,7 @@ Public Class TextLogicalChannel
 	''' As only one user makes sense at a time, the previous one should be stopped.
 	''' </summary>
 	Public Sub SetClient(client As IPlaylistAction)
-		If mClient IsNot Nothing Then
-			mClient.Stop(False)
-		End If
-
+		mClient?.Stop(False)
 		mClient = client
 	End Sub
 

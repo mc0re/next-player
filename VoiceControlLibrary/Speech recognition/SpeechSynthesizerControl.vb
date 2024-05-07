@@ -10,7 +10,7 @@ Public NotInheritable Class SpeechSynthesizerControl
 
 #Region " Fields "
 
-    Private mSynth As New SpeechSynthesizer
+    Private ReadOnly mSynth As New SpeechSynthesizer
 
 
     Private mPlayer As IVoicePlayer

@@ -179,8 +179,6 @@ Public Class PlaylistControl
     ''' Allow all effects.
     ''' Check whether this is before or after the item.
     ''' </summary>
-    <CodeAnalysis.SuppressMessage("Design", "CC0021:You should use nameof instead of the parameter element name string", Justification:="Style is not a name")>
-    <CodeAnalysis.SuppressMessage("Style", "CC0014:Use Ternary operator.", Justification:="If is more readable here")>
     Private Sub DragOverHandler(sender As Object, args As DragEventArgs) Handles Me.DragOver
         Dim coordRelToList = args.GetPosition(Me)
         Dim newItem = FindVisualParent(Of PlaylistItem)(TryCast(InputHitTest(coordRelToList), DependencyObject))
@@ -225,8 +223,6 @@ Public Class PlaylistControl
     ''' <summary>
     ''' The item is dropped.
     ''' </summary>
-    <CodeAnalysis.SuppressMessage("Design", "CC0021:You should use nameof instead of the parameter element name string", Justification:="Style is not a name")>
-    <CodeAnalysis.SuppressMessage("Style", "CC0014:Use Ternary operator.", Justification:="If is more readable here")>
     Private Sub DropHandler(sender As Object, args As DragEventArgs) Handles Me.Drop
         ' Find index to insert
         Dim idx = -1
@@ -338,7 +334,7 @@ Public Class PlaylistControl
     ''' Check the dragging coordinates, set flags.
     ''' </summary>
     Private Sub CheckCoordinates(coord As Point, oldTarget As PlaylistItem, newTarget As PlaylistItem)
-        If Not oldTarget Is newTarget Then
+        If oldTarget IsNot newTarget Then
             ' The item has changed, release the old item.
             If oldTarget IsNot Nothing Then
                 oldTarget.IsDraggingOverTop = False

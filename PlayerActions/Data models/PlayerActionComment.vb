@@ -1,4 +1,5 @@
-﻿Public Class PlayerActionComment
+﻿<Serializable()>
+Public Class PlayerActionComment
 	Inherits PlayerAction
 
 #Region " Description notifying property "

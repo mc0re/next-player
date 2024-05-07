@@ -938,13 +938,10 @@ Public Class AppConfiguration
         ' Keeps the order of the app commands.
         For Each appGroup In AppCommandList
             For Each appCmd In appGroup
-                Dim toAdd = cmdList.FirstOrDefault(Function(c) c.CommandName = appCmd.CommandName)
-
-                If toAdd Is Nothing Then
-                    toAdd = New VoiceCommandConfigItem(appCmd.CommandName, appCmd.DefaultText) With {
+                Dim toAdd = If(cmdList.FirstOrDefault(Function(c) c.CommandName = appCmd.CommandName),
+                    New VoiceCommandConfigItem(appCmd.CommandName, appCmd.DefaultText) With {
                         .IsEnabled = False
-                    }
-                End If
+                    })
 
                 toAdd.Definition = appCmd
 

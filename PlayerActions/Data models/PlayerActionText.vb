@@ -8,6 +8,7 @@ Imports TextChannelLibrary
 ''' <summary>
 ''' Show text in a prepared window.
 ''' </summary>
+<Serializable()>
 Public Class PlayerActionText
     Inherits PlayerAction
 
@@ -323,11 +324,15 @@ Public Class PlayerActionText
     ''' </summary>
     Private Const TimerStep As Double = 100
 
+
+    <NonSerialized>
     Private mTimer As DispatcherTimer
+
 
     ''' <summary>
     ''' Previous tick timestamp.
     ''' </summary>
+    <NonSerialized>
     Private mLastTickTime As DateTime
 
 

@@ -6,6 +6,7 @@ Imports Common
 ''' <summary>
 ''' An audio effect, regulating volume over time.
 ''' </summary>
+<Serializable()>
 Public Class PlayerActionEffect
     Inherits PlayerActionAutomation
 

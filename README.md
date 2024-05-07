@@ -13,7 +13,7 @@ Points of interest:
 - Voice control
 - Playlist printing
 - PowerPoint integration
-- Show text blocks on top of the screen
+- Show text windows on the screen, the text can be moving (simple karaoke)
 
 User manual is in `NextPlayer\Resources\LocalHelp.rtf` file.
 

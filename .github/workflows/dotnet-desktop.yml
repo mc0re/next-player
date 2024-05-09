@@ -17,7 +17,7 @@ jobs:
 
     env:
       Solution_Name: NextPlayer.sln
-      Test_Project_Path: **\*Tests.*proj
+      Test_Project_Path: '**\*Tests.*proj'
 
     steps:
     - name: Checkout

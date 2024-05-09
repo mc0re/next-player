@@ -21,7 +21,7 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PlayerTests", "PlayerTests\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8C85FFC1-9917-4EFC-B4D4-0AE4103BD1F2}"
 	ProjectSection(SolutionItems) = preProject
-		.tfignore = .tfignore
+		.gitignore = .gitignore
 		CodeClone.codeclonesettings = CodeClone.codeclonesettings
 		CodeCoverage.runsettings = CodeCoverage.runsettings
 		NextPlayer.vsmdi = NextPlayer.vsmdi

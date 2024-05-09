@@ -99,6 +99,7 @@
     <Compile Include="Controls\EffectTypeControl.vb" />
     <Compile Include="Controls\EnvironmentSelector.vb" />
     <Compile Include="Controls\FontEditorControl.vb" />
+    <Compile Include="Controls\InsertItemsEventArgs.vb" />
     <Compile Include="Controls\MessageLogControl.vb" />
     <Compile Include="Controls\ParallelPlayButton.vb" />
     <Compile Include="Controls\PlayerActionControl.vb" />

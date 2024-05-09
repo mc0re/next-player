@@ -13,6 +13,7 @@ Public Class PlayerActionPowerPoint
 
 #Region " Fields "
 
+	<NonSerialized>
 	Private WithEvents mRefreshTimer As New Timer With {.AutoReset = True}
 
 #End Region

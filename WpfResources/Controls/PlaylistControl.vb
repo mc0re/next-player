@@ -18,30 +18,6 @@ End Enum
 
 
 ''' <summary>
-''' Definition of event arguments.
-''' </summary>
-Public Class InsertItemsEventArgs
-    Inherits RoutedEventArgs
-
-    Public Property InsertIndex As Integer
-
-    Public Property ItemList As IEnumerable(Of PlayerAction)
-
-
-    Public Sub New(evt As RoutedEvent)
-        MyBase.New(evt)
-    End Sub
-
-End Class
-
-
-''' <summary>
-''' Delegate type for handling InsertItem event.
-''' </summary>
-Public Delegate Sub InsertItemsEventHandler(sender As Object, args As InsertItemsEventArgs)
-
-
-''' <summary>
 ''' The main song list.
 ''' </summary>
 ''' <remarks>
@@ -124,28 +100,8 @@ Public Class PlaylistControl
 
     Private mKeyBindingHolder As UIElement
 
-#End Region
 
-
-#Region " Init and clean-up "
-
-    Private Sub LoadedHandler() Handles Me.Loaded
-        mKeyBindingHolder = FindMeOrVisualChild(Me, Function(c) CType(c, UIElement).InputBindings.Count > 0)
-    End Sub
-
-#End Region
-
-
-#Region " Override item type "
-
-    Protected Overrides Function IsItemItsOwnContainerOverride(item As Object) As Boolean
-        Return TypeOf item Is PlaylistItem
-    End Function
-
-
-    Protected Overrides Function GetContainerForItemOverride() As DependencyObject
-        Return New PlaylistItem()
-    End Function
+    Private mLastItemInFocus As Control
 
 #End Region
 
@@ -169,6 +125,29 @@ Public Class PlaylistControl
             SetValue(IsDraggingToEndPropertyKey, value)
         End Set
     End Property
+
+#End Region
+
+
+#Region " Init and clean-up "
+
+    Private Sub LoadedHandler() Handles Me.Loaded
+        mKeyBindingHolder = FindMeOrVisualChild(Me, Function(c) CType(c, UIElement).InputBindings.Count > 0)
+    End Sub
+
+#End Region
+
+
+#Region " Override item type "
+
+    Protected Overrides Function IsItemItsOwnContainerOverride(item As Object) As Boolean
+        Return TypeOf item Is PlaylistItem
+    End Function
+
+
+    Protected Overrides Function GetContainerForItemOverride() As DependencyObject
+        Return New PlaylistItem()
+    End Function
 
 #End Region
 
@@ -435,9 +414,6 @@ Public Class PlaylistControl
 
 #Region " Focus "
 
-    Private mLastItemInFocus As Control
-
-
     Public Sub SetFocusToMe()
         If mLastItemInFocus IsNot Nothing Then
             mLastItemInFocus.Focus()
@@ -449,17 +425,19 @@ Public Class PlaylistControl
 
 
     Private Sub GotFocusHandler() Handles Me.GotFocus
-        Dim cont = TryCast(ItemContainerGenerator.ContainerFromItem(SelectedItem), FrameworkElement)
+        If SelectedItem Is Nothing Then Return
 
-        If cont IsNot Nothing Then
-            Try
-                cont.Focus()
-            Catch ex As Exception
-                ' Apparently, a CLR exception can occur here, probably due to PInvoke
-                InterfaceMapper.GetImplementation(Of IMessageLog)().LogFileError(
-                    $"Exception when setting focus: {ex.Message}")
-            End Try
-        End If
+        Dim cont = TryCast(ItemContainerGenerator.ContainerFromItem(SelectedItem), FrameworkElement)
+        If cont Is Nothing Then Return
+
+        Try
+            cont.Focus()
+            BringItemToView(CType(SelectedItem, IPlayerAction))
+        Catch ex As Exception
+            ' Apparently, a CLR exception can occur here, probably due to PInvoke
+            InterfaceMapper.GetImplementation(Of IMessageLog)().LogFileError(
+                $"Exception when setting focus: {ex.Message}")
+        End Try
     End Sub
 
 

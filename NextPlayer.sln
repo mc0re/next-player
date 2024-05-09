@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		CodeClone.codeclonesettings = CodeClone.codeclonesettings
 		CodeCoverage.runsettings = CodeCoverage.runsettings
+		.github\workflows\dotnet-desktop.yml = .github\workflows\dotnet-desktop.yml
 		NextPlayer.vsmdi = NextPlayer.vsmdi
 		Docs\Storage.dgml = Docs\Storage.dgml
 		Docs\Triggers.dgml = Docs\Triggers.dgml
@@ -95,7 +96,7 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "GeometryVisualizersTests", 
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DrawingLibrary", "DrawingLibrary\DrawingLibrary.vbproj", "{E2B37E68-5FD4-45C0-9355-B7D8DE8B8B72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoiceControlLibraryTests", "UnitTestProject1\VoiceControlLibraryTests.csproj", "{B5BD8E13-8E95-4A2C-9C3C-A5FB5FA6AD38}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoiceControlLibraryTests", "VoiceControlLibraryTests\VoiceControlLibraryTests.csproj", "{B5BD8E13-8E95-4A2C-9C3C-A5FB5FA6AD38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -42,14 +42,14 @@ jobs:
       uses: darenm/Setup-VSTest@v1.3
 
     - name: Restore NuGet Packages
-      run: nuget restore $Solution_Name
+      run: nuget restore ${{env.Solution_Name}}
  
-    - name: Build and Publish Web App
-      run: msbuild $Solution_Name /p:Configuration=Release /p:Platform="Any CPU"
+    - name: Build the code
+      run: msbuild ${{env.Solution_Name}} /p:Configuration=Release /p:Platform="Any CPU"
 
     # Execute all unit tests in the solution
     - name: Execute unit tests
-      run: vstest.console.exe /Platform:x64 $Solution_Name
+      run: vstest.console.exe /Platform:x64 ${{env.Solution_Name}}
 
     # Upload the package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts

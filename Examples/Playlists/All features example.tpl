@@ -35,7 +35,7 @@ To start any parallel action, one could:
       <HasDuration>true</HasDuration>
       <Duration>76069</Duration>
       <FileToPlay>../Source files/Big Ben chime.mp3</FileToPlay>
-      <FileTimestamp>2021-01-24T14:52:24.628734+01:00</FileTimestamp>
+      <FileTimestamp>2024-02-11T13:14:42.8313616+01:00</FileTimestamp>
       <IsMuted>false</IsMuted>
       <Volume>0.38</Volume>
       <SoundPositionMode>FixedToChannels</SoundPositionMode>
@@ -56,7 +56,7 @@ To start any parallel action, one could:
       <HasDuration>true</HasDuration>
       <Duration>1011</Duration>
       <FileToPlay>../Source files/184618__kim-headlee__lkf10.wav</FileToPlay>
-      <FileTimestamp>2021-01-24T14:52:24.3684669+01:00</FileTimestamp>
+      <FileTimestamp>2024-02-11T13:14:42.1539259+01:00</FileTimestamp>
       <IsMuted>false</IsMuted>
       <Volume>0.69</Volume>
       <SoundPositionMode>Panning</SoundPositionMode>
@@ -89,7 +89,7 @@ The circle next to the clock indicates available and active effects.</Descriptio
       <HasDuration>true</HasDuration>
       <Duration>126433</Duration>
       <FileToPlay>../Source files/350495__frankum__dulcet-flute-music-track stereo.mp3</FileToPlay>
-      <FileTimestamp>2021-01-24T14:52:24.6167678+01:00</FileTimestamp>
+      <FileTimestamp>2024-02-11T13:14:42.7917961+01:00</FileTimestamp>
       <IsMuted>false</IsMuted>
       <Volume>0.24</Volume>
       <SoundPositionMode>Coordinates</SoundPositionMode>
@@ -110,7 +110,7 @@ The circle next to the clock indicates available and active effects.</Descriptio
       <HasDuration>true</HasDuration>
       <Duration>208065</Duration>
       <FileToPlay>../Source files/danosongs.com-love-letters-instr.mp3</FileToPlay>
-      <FileTimestamp>2021-01-24T14:52:24.6566599+01:00</FileTimestamp>
+      <FileTimestamp>2024-02-11T13:14:42.9153716+01:00</FileTimestamp>
       <IsMuted>false</IsMuted>
       <Volume>0.9</Volume>
       <SoundPositionMode>Panning</SoundPositionMode>
@@ -195,7 +195,7 @@ To start any parallel action, one could:
       <HasDuration>true</HasDuration>
       <Duration>3815</Duration>
       <FileToPlay>../Source files/337436__robinhood76__06384-magic-collect-ding.wav</FileToPlay>
-      <FileTimestamp>2021-01-24T14:52:24.3794034+01:00</FileTimestamp>
+      <FileTimestamp>2024-02-11T13:14:42.1722264+01:00</FileTimestamp>
       <IsMuted>false</IsMuted>
       <Volume>1</Volume>
       <SoundPositionMode>Panning</SoundPositionMode>
@@ -227,7 +227,7 @@ To start any parallel action, one could:
       <HasDuration>true</HasDuration>
       <Duration>3815</Duration>
       <FileToPlay>../Source files/337436__robinhood76__06384-magic-collect-ding.wav</FileToPlay>
-      <FileTimestamp>2021-01-24T14:52:24.3794034+01:00</FileTimestamp>
+      <FileTimestamp>2024-02-11T13:14:42.1722264+01:00</FileTimestamp>
       <IsMuted>false</IsMuted>
       <Volume>1</Volume>
       <SoundPositionMode>Panning</SoundPositionMode>
@@ -259,7 +259,7 @@ To start any parallel action, one could:
       <HasDuration>true</HasDuration>
       <Duration>182126</Duration>
       <FileToPlay>../Source files/danosongs.com-undiscovered-creature-instr.mp3</FileToPlay>
-      <FileTimestamp>2021-01-24T14:52:24.817231+01:00</FileTimestamp>
+      <FileTimestamp>2024-02-11T13:14:43.3155042+01:00</FileTimestamp>
       <IsMuted>false</IsMuted>
       <Volume>1</Volume>
       <SoundPositionMode>Panning</SoundPositionMode>
@@ -348,6 +348,11 @@ Then the text is hidden by sending an empty text to the channel.</Description>
       <Text>Text to be shown
 Can be multiline</Text>
       <Channel>1</Channel>
+      <Scroll>true</Scroll>
+      <ScrollStart>0</ScrollStart>
+      <ScrollDuration>0</ScrollDuration>
+      <AutoHide>false</AutoHide>
+      <AutoHidePeriod>0</AutoHidePeriod>
     </PlayerAction>
     <PlayerAction xsi:type="PlayerActionText">
       <IsEnabled>true</IsEnabled>
@@ -359,12 +364,17 @@ Can be multiline</Text>
       <HasDuration>true</HasDuration>
       <Duration>0</Duration>
       <Channel>1</Channel>
+      <Scroll>false</Scroll>
+      <ScrollStart>0</ScrollStart>
+      <ScrollDuration>0</ScrollDuration>
+      <AutoHide>false</AutoHide>
+      <AutoHidePeriod>0</AutoHidePeriod>
     </PlayerAction>
   </Items>
   <UseSettingsForManual>true</UseSettingsForManual>
   <PresentationFile>
     <FileName>../Source files/Slides.pptx</FileName>
-    <FileTimestamp>2021-01-24T14:52:24.6297333+01:00</FileTimestamp>
+    <FileTimestamp>2024-02-11T13:14:42.8333709+01:00</FileTimestamp>
   </PresentationFile>
   <AudioLogicalChannels>
     <AudioLogicalChannel>
@@ -562,16 +572,22 @@ Can be multiline</Text>
       </AudioOutput>
       <TextOutput>
         <Physical>
-          <TextPhysicalChannel xsi:type="TextWindowPhysicalChannel">
+          <TextPhysicalChannel>
             <Channel>1</Channel>
             <Description>Text output</Description>
             <IsEnabled>true</IsEnabled>
-            <Left>738</Left>
-            <Top>361</Top>
-            <Width>400</Width>
-            <Height>100</Height>
-            <Background>-12237963</Background>
-            <Foreground>-1</Foreground>
+            <TextInterface xsi:type="RenderTextInterface">
+              <Left>0</Left>
+              <Top>0</Top>
+              <Width>400</Width>
+              <Height>100</Height>
+              <Background>-16777216</Background>
+              <Foreground>-1</Foreground>
+              <Margin>20</Margin>
+              <IsDynamic>true</IsDynamic>
+              <FontSize>20</FontSize>
+              <ScrollMode>None</ScrollMode>
+            </TextInterface>
           </TextPhysicalChannel>
         </Physical>
         <Links>
@@ -1909,27 +1925,39 @@ Can be multiline</Text>
       </AudioOutput>
       <TextOutput>
         <Physical>
-          <TextPhysicalChannel xsi:type="TextWindowPhysicalChannel">
+          <TextPhysicalChannel>
             <Channel>1</Channel>
             <Description>Left text</Description>
             <IsEnabled>true</IsEnabled>
-            <Left>0</Left>
-            <Top>0</Top>
-            <Width>400</Width>
-            <Height>100</Height>
-            <Background>-16777216</Background>
-            <Foreground>-1</Foreground>
+            <TextInterface xsi:type="RenderTextInterface">
+              <Left>0</Left>
+              <Top>0</Top>
+              <Width>400</Width>
+              <Height>100</Height>
+              <Background>-16777216</Background>
+              <Foreground>-1</Foreground>
+              <Margin>20</Margin>
+              <IsDynamic>true</IsDynamic>
+              <FontSize>20</FontSize>
+              <ScrollMode>None</ScrollMode>
+            </TextInterface>
           </TextPhysicalChannel>
-          <TextPhysicalChannel xsi:type="TextWindowPhysicalChannel">
+          <TextPhysicalChannel>
             <Channel>2</Channel>
             <Description>Right text</Description>
             <IsEnabled>true</IsEnabled>
-            <Left>1000</Left>
-            <Top>0</Top>
-            <Width>400</Width>
-            <Height>100</Height>
-            <Background>-9761798</Background>
-            <Foreground>-2556030</Foreground>
+            <TextInterface xsi:type="RenderTextInterface">
+              <Left>0</Left>
+              <Top>0</Top>
+              <Width>400</Width>
+              <Height>100</Height>
+              <Background>-16777216</Background>
+              <Foreground>-1</Foreground>
+              <Margin>20</Margin>
+              <IsDynamic>true</IsDynamic>
+              <FontSize>20</FontSize>
+              <ScrollMode>None</ScrollMode>
+            </TextInterface>
           </TextPhysicalChannel>
         </Physical>
         <Links>
@@ -2344,27 +2372,39 @@ Can be multiline</Text>
       </AudioOutput>
       <TextOutput>
         <Physical>
-          <TextPhysicalChannel xsi:type="TextWindowPhysicalChannel">
+          <TextPhysicalChannel>
             <Channel>1</Channel>
             <Description>Text left</Description>
             <IsEnabled>true</IsEnabled>
-            <Left>-2</Left>
-            <Top>859</Top>
-            <Width>400</Width>
-            <Height>100</Height>
-            <Background>-14671750</Background>
-            <Foreground>-1</Foreground>
+            <TextInterface xsi:type="RenderTextInterface">
+              <Left>0</Left>
+              <Top>0</Top>
+              <Width>400</Width>
+              <Height>100</Height>
+              <Background>-16777216</Background>
+              <Foreground>-1</Foreground>
+              <Margin>20</Margin>
+              <IsDynamic>true</IsDynamic>
+              <FontSize>20</FontSize>
+              <ScrollMode>None</ScrollMode>
+            </TextInterface>
           </TextPhysicalChannel>
-          <TextPhysicalChannel xsi:type="TextWindowPhysicalChannel">
+          <TextPhysicalChannel>
             <Channel>2</Channel>
             <Description>Text right</Description>
             <IsEnabled>true</IsEnabled>
-            <Left>543</Left>
-            <Top>864</Top>
-            <Width>400</Width>
-            <Height>100</Height>
-            <Background>-16777216</Background>
-            <Foreground>-3277002</Foreground>
+            <TextInterface xsi:type="RenderTextInterface">
+              <Left>0</Left>
+              <Top>0</Top>
+              <Width>400</Width>
+              <Height>100</Height>
+              <Background>-16777216</Background>
+              <Foreground>-1</Foreground>
+              <Margin>20</Margin>
+              <IsDynamic>true</IsDynamic>
+              <FontSize>20</FontSize>
+              <ScrollMode>None</ScrollMode>
+            </TextInterface>
           </TextPhysicalChannel>
         </Physical>
         <Links>
@@ -2974,6 +3014,174 @@ Can be multiline</Text>
         <XRight>1</XRight>
         <YFront>1</YFront>
         <YBack>0.5</YBack>
+        <ZAbove>1</ZAbove>
+        <ZBelow>0</ZBelow>
+        <AudienceLeft>0</AudienceLeft>
+        <AudienceRight>0</AudienceRight>
+        <AudienceFront>0</AudienceFront>
+        <AudienceBack>0</AudienceBack>
+      </Room>
+    </PlaylistEnvironmentConfiguration>
+    <PlaylistEnvironmentConfiguration>
+      <Name>Default</Name>
+      <MachineId>BD00-7BB1-5A11-351A-54BF-5F23-89E8-D040:E1A9-41EE-385F-54F8-8CEA-8DD1-31C3-F7AD:4037-04F2-AD45-9018-DD31-7C9D-9F55-624A:F2A0-F1E1-6D79-FFF7-001A-73C6-0D22-E0E9</MachineId>
+      <MachineName>MC-ASPIRE</MachineName>
+      <AudioOutput>
+        <Physical>
+          <AudioPhysicalChannel>
+            <Channel>1</Channel>
+            <Description>Default device</Description>
+            <IsEnabled>true</IsEnabled>
+            <AudioInterface xsi:type="WaveOutAudioInterface">
+              <Channels>2</Channels>
+              <DeviceNumber>-1</DeviceNumber>
+            </AudioInterface>
+            <DeviceChannel>1</DeviceChannel>
+            <Volume>1</Volume>
+            <Delay>0</Delay>
+            <ReversedPhase>false</ReversedPhase>
+            <X>-1</X>
+            <Y>0</Y>
+            <Z>0</Z>
+          </AudioPhysicalChannel>
+          <AudioPhysicalChannel>
+            <Channel>2</Channel>
+            <Description>Default device</Description>
+            <IsEnabled>true</IsEnabled>
+            <AudioInterface xsi:type="WaveOutAudioInterface">
+              <Channels>2</Channels>
+              <DeviceNumber>-1</DeviceNumber>
+            </AudioInterface>
+            <DeviceChannel>2</DeviceChannel>
+            <Volume>1</Volume>
+            <Delay>0</Delay>
+            <ReversedPhase>false</ReversedPhase>
+            <X>1</X>
+            <Y>0</Y>
+            <Z>0</Z>
+          </AudioPhysicalChannel>
+        </Physical>
+        <Links>
+          <IsEnabled>true</IsEnabled>
+          <Logical>1</Logical>
+          <Physical>1</Physical>
+          <Volume>1</Volume>
+          <Delay>0</Delay>
+          <ReversedPhase>false</ReversedPhase>
+          <MappingCollection>
+            <AudioChannelLinkMapping>
+              <NofChannels>2</NofChannels>
+              <Panning>-1</Panning>
+              <MappingList>
+                <AudioChannelMappingItem>
+                  <IsSet>true</IsSet>
+                </AudioChannelMappingItem>
+                <AudioChannelMappingItem>
+                  <IsSet>true</IsSet>
+                </AudioChannelMappingItem>
+              </MappingList>
+            </AudioChannelLinkMapping>
+            <AudioChannelLinkMapping>
+              <NofChannels>1</NofChannels>
+              <Panning>-1</Panning>
+              <MappingList>
+                <AudioChannelMappingItem>
+                  <IsSet>true</IsSet>
+                </AudioChannelMappingItem>
+              </MappingList>
+            </AudioChannelLinkMapping>
+          </MappingCollection>
+        </Links>
+        <Links>
+          <IsEnabled>true</IsEnabled>
+          <Logical>1</Logical>
+          <Physical>2</Physical>
+          <Volume>1</Volume>
+          <Delay>0</Delay>
+          <ReversedPhase>false</ReversedPhase>
+          <MappingCollection>
+            <AudioChannelLinkMapping>
+              <NofChannels>2</NofChannels>
+              <Panning>1</Panning>
+              <MappingList>
+                <AudioChannelMappingItem>
+                  <IsSet>true</IsSet>
+                </AudioChannelMappingItem>
+                <AudioChannelMappingItem>
+                  <IsSet>true</IsSet>
+                </AudioChannelMappingItem>
+              </MappingList>
+            </AudioChannelLinkMapping>
+            <AudioChannelLinkMapping>
+              <NofChannels>1</NofChannels>
+              <Panning>1</Panning>
+              <MappingList>
+                <AudioChannelMappingItem>
+                  <IsSet>true</IsSet>
+                </AudioChannelMappingItem>
+              </MappingList>
+            </AudioChannelLinkMapping>
+          </MappingCollection>
+        </Links>
+      </AudioOutput>
+      <TextOutput>
+        <Physical>
+          <TextPhysicalChannel>
+            <Channel>1</Channel>
+            <Description>Text output</Description>
+            <IsEnabled>true</IsEnabled>
+            <TextInterface xsi:type="RenderTextInterface">
+              <Left>0</Left>
+              <Top>0</Top>
+              <Width>400</Width>
+              <Height>100</Height>
+              <Background>-16777216</Background>
+              <Foreground>-1</Foreground>
+              <Margin>20</Margin>
+              <IsDynamic>true</IsDynamic>
+              <FontSize>20</FontSize>
+              <ScrollMode>None</ScrollMode>
+            </TextInterface>
+          </TextPhysicalChannel>
+          <TextPhysicalChannel>
+            <Channel>2</Channel>
+            <Description>Text output</Description>
+            <IsEnabled>true</IsEnabled>
+            <TextInterface xsi:type="RenderTextInterface">
+              <Left>696</Left>
+              <Top>-3</Top>
+              <Width>400</Width>
+              <Height>100</Height>
+              <Background>-6769295</Background>
+              <Foreground>-13104254</Foreground>
+              <Margin>20</Margin>
+              <IsDynamic>false</IsDynamic>
+              <FontSize>36</FontSize>
+              <ScrollMode>Horizontal</ScrollMode>
+            </TextInterface>
+          </TextPhysicalChannel>
+        </Physical>
+        <Links>
+          <IsEnabled>true</IsEnabled>
+          <Logical>1</Logical>
+          <Physical>1</Physical>
+        </Links>
+        <Links>
+          <IsEnabled>true</IsEnabled>
+          <Logical>1</Logical>
+          <Physical>2</Physical>
+        </Links>
+        <Links>
+          <IsEnabled>true</IsEnabled>
+          <Logical>2</Logical>
+          <Physical>1</Physical>
+        </Links>
+      </TextOutput>
+      <Room>
+        <XLeft>1</XLeft>
+        <XRight>1</XRight>
+        <YFront>1</YFront>
+        <YBack>1</YBack>
         <ZAbove>1</ZAbove>
         <ZBelow>0</ZBelow>
         <AudienceLeft>0</AudienceLeft>

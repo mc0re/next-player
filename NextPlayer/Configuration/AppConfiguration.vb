@@ -8,6 +8,7 @@ Imports PlayerActions
 Imports TextChannelLibrary
 Imports TextWindowLibrary
 Imports WpfResources
+Imports DrawingLibrary
 
 
 ''' <summary>
@@ -728,6 +729,7 @@ Public Class AppConfiguration
                 .StatusWindowSplit = envConfig.StatusWindowSplit
             }
 
+            envSett.PlayerWindowPosition.LimitByDisplay()
             EnvironmentSettingsList.Add(envSett)
         Next
 

@@ -18,6 +18,7 @@ jobs:
     env:
       Solution_Name: NextPlayer.sln
       Test_Project_Path: '**\*Tests.*proj'
+      Installer_Project_Path: SetupNextPlayer\SetupNextPlayer.vdproj
       Setup_Path: $GITHUB_WORKSPACE/setup
 
     steps:
@@ -48,6 +49,16 @@ jobs:
     - name: Create putput directory
       run: mkdir -p ${{env.Setup_Path}}
 
+    - name: Build the code
+      run: msbuild ${{env.Solution_Name}} /p:Configuration=${{matrix.configuration}} /p:Platform="Any CPU"
+
+    # Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: vstest.console.exe /Platform:x64 ${{env.Solution_Name}}
+
+    - name: Setup VS Dev Environment
+      uses: seanmiddleditch/gha-setup-vsdevenv@v4
+
     - name: Update output path in the project
       if: ${{ matrix.configuration == 'Release' }}
       shell: bash
@@ -55,12 +66,9 @@ jobs:
         OUTPATH=$(echo '${{env.Setup_Path}}' | sed 's/\\/\\\\/g')
         find . -name '*.vdproj' | xargs -I {} sed -i -E 's/"OutputFilename" = "([0-9]+):.+(\\\\SetupNextPlayer.msi)"/"OutputFilename" = "\1:'$OUTPATH'\2"/g' {}
 
-    - name: Build the code
-      run: msbuild ${{env.Solution_Name}} /p:Configuration=${{matrix.configuration}} /p:Platform="Any CPU"
-
-    # Execute all unit tests in the solution
-    - name: Execute unit tests
-      run: vstest.console.exe /Platform:x64 ${{env.Solution_Name}}
+    - name: Build installer
+      if: ${{ matrix.configuration == 'Release' }}
+      run: devenv.com ${{env.Installer_Project_Path}} /build "${{matrix.configuration}}|Any CPU"
 
     # Upload the package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts

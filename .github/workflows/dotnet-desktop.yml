@@ -19,7 +19,7 @@ jobs:
       Solution_Name: NextPlayer.sln
       Test_Project_Path: '**\*Tests.*proj'
       Installer_Project_Path: SetupNextPlayer\SetupNextPlayer.vdproj
-      Setup_Path: $GITHUB_WORKSPACE/setup
+      Setup_Path: ${{ github.workspace }}\setup
 
     steps:
     - name: Checkout

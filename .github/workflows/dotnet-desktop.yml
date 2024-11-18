@@ -50,12 +50,12 @@ jobs:
 
     - name: Update output path in the project
       if: ${{ matrix.configuration == 'Release' }}
+      shell: bash
       run:
         OUTPATH=$(echo '${{env.Setup_Path}}' | sed 's/\\/\\\\/g')
         find . -name '*.vdproj' | xargs -I {} sed -i -E 's/"OutputFilename" = "([0-9]+):.+(\\\\SetupNextPlayer.msi)"/"OutputFilename" = "\1:'$OUTPATH'\2"/g' {}
 
     - name: Build the code
-      shell: bash
       run: msbuild ${{env.Solution_Name}} /p:Configuration=${{matrix.configuration}} /p:Platform="Any CPU"
 
     # Execute all unit tests in the solution

@@ -18,6 +18,7 @@ jobs:
     env:
       Solution_Name: NextPlayer.sln
       Test_Project_Path: '**\*Tests.*proj'
+      Setup_Path: ..\Setup
 
     steps:
     - name: Checkout
@@ -44,8 +45,14 @@ jobs:
     - name: Restore NuGet Packages
       run: nuget restore ${{env.Solution_Name}}
  
+    - name: Update output path
+      if: ${{ matrix.configuration == 'Release' }}
+      run:
+        OUTPATH=$(echo '${{env.Setup_Path}}' | sed 's/\\/\\\\/g')
+        find . -name '*.vdproj' | xargs -I {} sed -i -E 's/"OutputFilename" = "([0-9]+):.+(\\\\SetupNextPlayer.msi)"/"OutputFilename" = "\1:'$OUTPATH'\2"/g' {}
+
     - name: Build the code
-      run: msbuild ${{env.Solution_Name}} /p:Configuration=Release /p:Platform="Any CPU"
+      run: msbuild ${{env.Solution_Name}} /p:Configuration=${{matrix.configuration}} /p:Platform="Any CPU"
 
     # Execute all unit tests in the solution
     - name: Execute unit tests
@@ -53,7 +60,8 @@ jobs:
 
     # Upload the package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
+      if: ${{ matrix.configuration == 'Release' }}
       uses: actions/upload-artifact@v3
       with:
         name: setup
-        path: ..\Setup
+        path: ${{env.Setup_Path}}

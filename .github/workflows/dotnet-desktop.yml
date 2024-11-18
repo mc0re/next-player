@@ -61,6 +61,13 @@ jobs:
 
     - name: Update output path in the project
       if: ${{ matrix.configuration == 'Release' }}
+      run: |
+        $OUTPATH = $('${{env.Setup_Path}}' -replace '\\', '\\')
+        ls -Recurse -Include '*.vdproj' | %{ $p = Get-Content $_ ; $r = $p -replace '"OutputFilename" = "([0-9]+):.+(\\\\SetupNextPlayer.msi)"', ('"OutputFilename" = "$1:' + $OUTPATH + '$2"') ; $r | Set-Content $_ }
+        echo "Output path set to '$OUTPATH'."
+
+    - name: Update output path in the project
+      if: ${{ matrix.configuration == 'Disabled' }}
       shell: bash
       run: |
         OUTPATH=$(echo '${{env.Setup_Path}}' | sed 's/\\/\\\\/g')
@@ -68,6 +75,7 @@ jobs:
         echo "Output path set to '$OUTPATH'."
 
     - name: Fix error 8000000A (DisableOutOfProc)
+      if: ${{ matrix.configuration == 'Release' }}
       run: |
         $visualStudioWherePath = ('{0}/Microsoft Visual Studio/Installer/vswhere.exe' -f ${Env:ProgramFiles(x86)});
         $visualStudioInstallationPath = & $visualStudioWherePath -latest -products 'Microsoft.VisualStudio.Product.Enterprise' -property 'installationPath';

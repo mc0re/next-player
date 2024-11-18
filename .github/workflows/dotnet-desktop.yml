@@ -65,6 +65,7 @@ jobs:
       run:
         OUTPATH=$(echo '${{env.Setup_Path}}' | sed 's/\\/\\\\/g')
         find . -name '*.vdproj' | xargs -I {} sed -i -E 's/"OutputFilename" = "([0-9]+):.+(\\\\SetupNextPlayer.msi)"/"OutputFilename" = "\1:'$OUTPATH'\2"/g' {}
+        echo "Output path set to '$OUTPATH'."
 
     - name: Fix error 8000000A (DisableOutOfProc)
       run: |

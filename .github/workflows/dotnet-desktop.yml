@@ -66,6 +66,15 @@ jobs:
         OUTPATH=$(echo '${{env.Setup_Path}}' | sed 's/\\/\\\\/g')
         find . -name '*.vdproj' | xargs -I {} sed -i -E 's/"OutputFilename" = "([0-9]+):.+(\\\\SetupNextPlayer.msi)"/"OutputFilename" = "\1:'$OUTPATH'\2"/g' {}
 
+    - name: Fix error 8000000A (DisableOutOfProc)
+      run: |
+        $visualStudioWherePath = ('{0}/Microsoft Visual Studio/Installer/vswhere.exe' -f ${Env:ProgramFiles(x86)});
+        $visualStudioInstallationPath = & $visualStudioWherePath -latest -products 'Microsoft.VisualStudio.Product.Enterprise' -property 'installationPath';
+        $currentWorkingDirectory = ('{0}/Common7/IDE/CommonExtensions/Microsoft/VSI/DisableOutOfProcBuild' -f $visualStudioInstallationPath);
+        Set-Location -Path $currentWorkingDirectory;
+        $disableOutOfProcBuildPath = ('{0}/DisableOutOfProcBuild.exe' -f $currentWorkingDirectory);
+        & $disableOutOfProcBuildPath;
+        
     - name: Build installer
       if: ${{ matrix.configuration == 'Release' }}
       run: devenv.com ${{env.Installer_Project_Path}} /build "${{matrix.configuration}}|Any CPU"

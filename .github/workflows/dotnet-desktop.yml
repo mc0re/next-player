@@ -18,7 +18,7 @@ jobs:
     env:
       Solution_Name: NextPlayer.sln
       Test_Project_Path: '**\*Tests.*proj'
-      Setup_Path: ..\Setup
+      Setup_Path: $GITHUB_WORKSPACE/setup
 
     steps:
     - name: Checkout
@@ -44,14 +44,18 @@ jobs:
 
     - name: Restore NuGet Packages
       run: nuget restore ${{env.Solution_Name}}
- 
-    - name: Update output path
+
+    - name: Create putput directory
+      run: mkdir -p ${{env.Setup_Path}}
+
+    - name: Update output path in the project
       if: ${{ matrix.configuration == 'Release' }}
       run:
         OUTPATH=$(echo '${{env.Setup_Path}}' | sed 's/\\/\\\\/g')
         find . -name '*.vdproj' | xargs -I {} sed -i -E 's/"OutputFilename" = "([0-9]+):.+(\\\\SetupNextPlayer.msi)"/"OutputFilename" = "\1:'$OUTPATH'\2"/g' {}
 
     - name: Build the code
+      shell: bash
       run: msbuild ${{env.Solution_Name}} /p:Configuration=${{matrix.configuration}} /p:Platform="Any CPU"
 
     # Execute all unit tests in the solution

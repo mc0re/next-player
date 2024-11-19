@@ -18,6 +18,8 @@ jobs:
     env:
       Solution_Name: NextPlayer.sln
       Test_Project_Path: '**\*Tests.*proj'
+      Installer_Project_Path: SetupNextPlayer\SetupNextPlayer.vdproj
+      Setup_Path: ${{ github.workspace }}\setup
 
     steps:
     - name: Checkout
@@ -42,18 +44,46 @@ jobs:
       uses: darenm/Setup-VSTest@v1.3
 
     - name: Restore NuGet Packages
-      run: nuget restore ${{env.Solution_Name}}
- 
+      run: nuget restore "${{env.Solution_Name}}"
+
+    - name: Create output directory
+      run: mkdir -p "${{env.Setup_Path}}"
+
     - name: Build the code
-      run: msbuild ${{env.Solution_Name}} /p:Configuration=Release /p:Platform="Any CPU"
+      run: msbuild "${{env.Solution_Name}}" /p:Configuration=${{matrix.configuration}} /p:Platform="Any CPU"
 
     # Execute all unit tests in the solution
     - name: Execute unit tests
-      run: vstest.console.exe /Platform:x64 ${{env.Solution_Name}}
+      run: vstest.console.exe /Platform:x64 "${{env.Solution_Name}}"
+
+    - name: Setup VS Dev Environment
+      uses: seanmiddleditch/gha-setup-vsdevenv@v4
+
+    - name: Update output path in the project
+      if: ${{ matrix.configuration == 'Release' }}
+      run: |
+        $OUTPATH = $("${{env.Setup_Path}}" -replace '\\', '\\')
+        ls -Recurse -Include '*.vdproj' | %{ $p = Get-Content $_ ; $r = $p -replace '"OutputFilename" = "([0-9]+):.+(\\\\SetupNextPlayer.msi)"', ('"OutputFilename" = "$1:' + $OUTPATH + '$2"') ; $r | Set-Content $_ }
+        echo "Output path set to '$OUTPATH'."
+
+    - name: Fix error 8000000A (DisableOutOfProc)
+      if: ${{ matrix.configuration == 'Release' }}
+      run: |
+        $visualStudioWherePath = ('{0}/Microsoft Visual Studio/Installer/vswhere.exe' -f ${Env:ProgramFiles(x86)});
+        $visualStudioInstallationPath = & $visualStudioWherePath -latest -products 'Microsoft.VisualStudio.Product.Enterprise' -property 'installationPath';
+        $currentWorkingDirectory = ('{0}/Common7/IDE/CommonExtensions/Microsoft/VSI/DisableOutOfProcBuild' -f $visualStudioInstallationPath);
+        Set-Location -Path $currentWorkingDirectory;
+        $disableOutOfProcBuildPath = ('{0}/DisableOutOfProcBuild.exe' -f $currentWorkingDirectory);
+        & $disableOutOfProcBuildPath;
+        
+    - name: Build installer
+      if: ${{ matrix.configuration == 'Release' }}
+      run: devenv.com "${{env.Installer_Project_Path}}" /build "${{matrix.configuration}}|Any CPU"
 
     # Upload the package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
+      if: ${{ matrix.configuration == 'Release' }}
       uses: actions/upload-artifact@v3
       with:
         name: setup
-        path: ..\Setup
+        path: ${{env.Setup_Path}}

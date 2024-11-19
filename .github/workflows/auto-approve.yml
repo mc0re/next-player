@@ -1,0 +1,25 @@
+name: Auto-approve PRs
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Auto-approve PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        shell: bash
+        run: |
+          pr_author=$(jq -r .pull_request.user.login "$GITHUB_EVENT_PATH")
+          if [ "$pr_author" == "${{ github.actor }}" ]; then
+            echo "Approving PR created by $pr_author"
+            gh pr review ${{ github.event.pull_request.number }} --approve
+          else
+            echo "PR created by $pr_author, not ${{ github.actor }}. Skipping approval."
+          fi
